@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
 import DrawerMenu from "./Layout/Menu";
 import Header from "./Layout/Header";
 import Router from "./router/router";
@@ -38,8 +37,9 @@ export default function Dashboard() {
       <DrawerMenu isOpen={open} handleClose={handleDrawerClose} />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Router />
-        <Container maxWidth="lg" className={classes.container}></Container>
+        <Container maxWidth="lg" className={classes.container}>
+          <Router />
+        </Container>
       </main>
     </div>
   );

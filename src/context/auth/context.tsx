@@ -6,12 +6,14 @@ export interface AuthAPI {
   isAuthenticated: boolean;
   login: Auth;
   register: Auth;
+  getUserData: () => void;
 }
 
 const initialState: AuthAPI = {
   isAuthenticated: false,
   login: (email, password) => {},
-  register: (email, password) => {}
+  register: (email, password) => {},
+  getUserData: () => {}
 };
 
 const context = createContext<AuthAPI>(initialState);

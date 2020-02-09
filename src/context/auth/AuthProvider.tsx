@@ -1,7 +1,7 @@
 import React, { ReactNode, useReducer } from "react";
 import context, { AuthAPI } from "./context";
-import authReducer from "./AuthStateReducer";
-import request from "../request";
+import authReducer, { UserData } from "./AuthStateReducer";
+import request from "../../utils/request";
 
 interface Props {
   children: ReactNode;
@@ -40,9 +40,19 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     });
   };
 
-  const getInfo = () => {};
+  const getUserData = () => {
+    const header: RequestInit = {
+      method: "GET"
+    };
 
-  const logout = () => {};
+    request("/user/{}", header).then((userData: UserData) => {
+      dispatch({ type: "LOAD_USER", payload: userData });
+    });
+  };
+
+  const logout = () => {
+    dispatch({ type: "LOGOUT" });
+  };
 
   return (
     <context.Provider
@@ -51,7 +61,8 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
           isAuthenticated: state.isAuthenticated,
           login,
           register,
-          logout
+          logout,
+          getUserData
         } as AuthAPI
       }
     >
