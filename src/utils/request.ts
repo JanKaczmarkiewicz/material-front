@@ -1,6 +1,6 @@
 /* eslint-disable no-throw-literal */
 export default (input: string, init: RequestInit = {}) =>
-  fetch(`http://localhost:5000/api${input}`, setAdditionalHeaders(init))
+  fetch(`/api${input}`, setAdditionalHeaders(init))
     .then((res: Body) => res.json())
     .then((data: any) => {
       if (data.errors) throw { type: "ERROR", payload: data.errors };

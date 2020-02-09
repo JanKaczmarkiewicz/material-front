@@ -1,4 +1,4 @@
-import React, { ReactNode, useReducer } from "react";
+import React, { ReactNode, useReducer, useEffect } from "react";
 import context, { AuthAPI } from "./context";
 import authReducer, { UserData } from "./AuthStateReducer";
 import request from "../../utils/request";
@@ -10,7 +10,7 @@ interface Props {
 export type AuthState = {
   isAuthenticated: boolean;
   name: string;
-  email: string;
+  phone: string;
 };
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
@@ -18,21 +18,28 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     isAuthenticated: !!localStorage.getItem("token")
   } as AuthState);
 
-  const login = (email: string, password: string) => {
+  useEffect(() => {
+    if (state.isAuthenticated) {
+      getUserData();
+    }
+  }, [state.isAuthenticated]);
+
+  const login = (phone: string, password: string) => {
     const header: RequestInit = {
       method: "POST",
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ phone, password })
     };
+    console.log("start");
 
     request("/auth", header).then((token: string) => {
       dispatch({ type: "AUTH_SUCCESS", payload: token });
     });
   };
 
-  const register = (email: string, password: string) => {
+  const register = (phone: string, password: string) => {
     const header: RequestInit = {
       method: "POST",
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ phone, password })
     };
 
     request("/user", header).then((token: string) => {

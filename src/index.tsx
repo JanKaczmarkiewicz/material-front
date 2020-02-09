@@ -3,11 +3,14 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { BrowserRouter } from "react-router-dom";
+import AuthProvider from "./context/auth/AuthProvider";
 ReactDOM.render(
-  <BrowserRouter>
-    <CssBaseline />
-    <App></App>
-  </BrowserRouter>,
+  <AuthProvider>
+    <BrowserRouter>
+      <CssBaseline />
+      <App></App>
+    </BrowserRouter>
+  </AuthProvider>,
   document.getElementById("root")
 );
 

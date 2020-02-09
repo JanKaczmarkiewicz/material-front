@@ -2,7 +2,7 @@ import React from "react";
 import Dashboard from "../routes/Dashboard";
 import Add from "../routes/Add";
 import Users from "../routes/Users";
-
+import Login from "../routes/Login";
 import { Switch, Route } from "react-router-dom";
 
 const Router: React.FC = () => {
@@ -14,6 +14,10 @@ const Router: React.FC = () => {
 
       <Route path="/dashboard" exact>
         <Dashboard />
+      </Route>
+
+      <Route path="/login" exact>
+        <Login />
       </Route>
       <Route path="/users" exact>
         <Users />
