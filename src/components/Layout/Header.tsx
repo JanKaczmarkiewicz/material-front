@@ -9,8 +9,10 @@ import {
   Badge
 } from "@material-ui/core";
 
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import MenuIcon from "@material-ui/icons/Menu";
+import {
+  Notifications as NotificationsIcon,
+  Menu as MenuIcon
+} from "@material-ui/icons";
 
 const drawerWidth = 240;
 

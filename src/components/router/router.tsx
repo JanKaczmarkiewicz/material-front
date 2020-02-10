@@ -4,6 +4,7 @@ import Add from "../routes/Add";
 import Users from "../routes/Users";
 import Login from "../routes/Login";
 import { Switch, Route } from "react-router-dom";
+import UnloggedRoute from "./UnloggedRoute";
 
 const Router: React.FC = () => {
   return (
@@ -16,9 +17,10 @@ const Router: React.FC = () => {
         <Dashboard />
       </Route>
 
-      <Route path="/login" exact>
+      <UnloggedRoute path="/login" exact>
         <Login />
-      </Route>
+      </UnloggedRoute>
+
       <Route path="/users" exact>
         <Users />
       </Route>
