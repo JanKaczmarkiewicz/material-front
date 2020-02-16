@@ -3,8 +3,9 @@ import Drawer from "@material-ui/core/Drawer";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { IconButton, Divider, List } from "@material-ui/core";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
 import AddIcon from "@material-ui/icons/Add";
@@ -38,6 +39,11 @@ const navbarSeed: seed = [
     icon: <AddIcon />,
     text: "Dodaj",
     link: "add"
+  },
+  {
+    icon: <FormatListBulletedIcon />,
+    text: "Dane",
+    link: "data"
   }
 ];
 
