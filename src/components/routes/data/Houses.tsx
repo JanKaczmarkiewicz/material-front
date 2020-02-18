@@ -1,14 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import DataTemplate from "../../Layout/DataTable/DataTable";
 
 interface House {
   number: string;
-  street: String;
+  street: string;
 }
 
-const emptyRow: House = {
-  number: "",
-  street: ""
+const Houses: React.FC = () => {
+  const [items, setItems] = useState<House[]>([]);
+  // useEffect(() => {
+  //   fetch(`http://localhost:3001/api/street`)
+  //     .then(res => res.json())
+  //     .then(res =>
+  //       setData(
+  //         res.data.reduce(
+  //           (obj: any, { id, name }: any) => ({ ...obj, [name]: id }),
+  //           {}
+  //         )
+  //       )
+  //     );
+  // }, []);
+
+  // console.log(data);
+
+  // const fieldsConfig: FieldsConfig = {
+  //   number: {
+  //     validate: value => true,
+  //     initialValue: "",
+  //     element: TextInput
+  //   } as FieldConfig<House["number"]>,
+  //   street: {
+  //     validate: value => true,
+  //     initialValue: "",
+
+  //     element: createAutocompleteInput({ options: data })
+  //   } as FieldConfig<House["number"]>
+  // };
+
+  const handleAddition = (data: any) => {
+    setItems([...items, data]);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    if (typeof index === "number") {
+      setItems([
+        ...items.slice(0, index),
+        { ...items[index], [e.target.name]: e.target.value },
+        ...items.slice(index + 1)
+      ]);
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    const tItems = [...items];
+    tItems.splice(index, 1);
+    setItems(tItems);
+  };
+
+  return (
+    <DataTemplate<House>
+      items={rows}
+      title={title}
+      categoryNames={categoryNames}
+      deleteItem={handleDelete}
+      addItem={handleAddition}
+      editItem={handleChange}
+    />
+  );
 };
 
 const rows: House[] = [
@@ -17,20 +79,6 @@ const rows: House[] = [
 ];
 
 const title = "Domy";
-
 const categoryNames = ["Numer", "Ulica"];
 
-interface Props {}
-
-const Acolytes: React.FC<Props> = props => {
-  return (
-    <DataTemplate<House>
-      initialState={rows}
-      title={title}
-      categoryNames={categoryNames}
-      emptyRow={emptyRow}
-    />
-  );
-};
-
-export default Acolytes;
+export default Houses;

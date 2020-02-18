@@ -27,14 +27,13 @@ const categoryNames = ["Imię", "Stopień", "Odbyte kolendy", "Telefon"];
 interface Props {}
 
 const Acolytes: React.FC<Props> = props => {
-  return (
-    <DataTemplate<Acolyte>
-      initialState={rows}
-      title={title}
-      categoryNames={categoryNames}
-      emptyRow={emptyRow}
-    />
-  );
+  return null;
+  // <DataTemplate<Acolyte>
+  //   initialState={rows}
+  //   title={title}
+  //   categoryNames={categoryNames}
+  //   emptyRow={emptyRow}
+  // />
 };
 
 export default Acolytes;

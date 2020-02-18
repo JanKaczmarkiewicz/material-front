@@ -19,9 +19,9 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   } as AuthState);
 
   useEffect(() => {
-    if (state.isAuthenticated) {
-      getUserData();
-    }
+    // if (state.isAuthenticated) {
+    //   getUserData();
+    // }
   }, [state.isAuthenticated]);
 
   const login = (phone: string, password: string) => {

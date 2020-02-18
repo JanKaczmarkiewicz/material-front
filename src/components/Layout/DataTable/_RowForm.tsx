@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
-import RawRowForm from "./RawRowForm";
+import RawRowForm from "./_RawRowForm";
 
 interface Props {
   onSubmit(data: Object): void;
   values: any;
-  controlled?: boolean;
 }
 
 const RowForm: React.FC<Props> = ({ onSubmit, values }) => {

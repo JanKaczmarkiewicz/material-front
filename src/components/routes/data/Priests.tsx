@@ -18,14 +18,13 @@ const categoryNames = ["Imię"];
 interface Props {}
 
 const Priests: React.FC<Props> = props => {
-  return (
-    <DataTemplate<Priest>
-      initialState={rows}
-      title={title}
-      categoryNames={categoryNames}
-      emptyRow={emptyRow}
-    />
-  );
+  return null;
+  // <DataTemplate<Priest>
+  //   initialState={rows}
+  //   title={title}
+  //   categoryNames={categoryNames}
+  //   emptyRow={emptyRow}
+  // />
 };
 
 export default Priests;
