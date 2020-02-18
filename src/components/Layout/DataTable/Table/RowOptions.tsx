@@ -7,21 +7,13 @@ interface Props {
   onEdit: () => void;
 }
 
-const RowOptions: React.FC<Props> = props => {
+const RowOptions: React.FC<Props> = ({ onDelete, onEdit }) => {
   return (
     <TableCell align="right">
-      <IconButton
-        onClick={() => {
-          setEditedItem(index);
-        }}
-      >
+      <IconButton onClick={onDelete}>
         <Edit />
       </IconButton>
-      <IconButton
-        onClick={() => {
-          deleteItem(index);
-        }}
-      >
+      <IconButton onClick={onDelete}>
         <Delete />
       </IconButton>
     </TableCell>
