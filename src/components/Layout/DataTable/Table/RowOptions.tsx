@@ -10,7 +10,7 @@ interface Props {
 const RowOptions: React.FC<Props> = ({ onDelete, onEdit }) => {
   return (
     <TableCell align="right">
-      <IconButton onClick={onDelete}>
+      <IconButton onClick={onEdit}>
         <Edit />
       </IconButton>
       <IconButton onClick={onDelete}>

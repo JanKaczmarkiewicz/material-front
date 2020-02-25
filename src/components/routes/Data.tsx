@@ -34,8 +34,8 @@ const seed: Seed = [
 const Data: React.FC = () => {
   return (
     <Grid container spacing={3}>
-      {seed.map(props => (
-        <Grid item xs={12} sm={6} md={4}>
+      {seed.map((props, index) => (
+        <Grid item xs={12} sm={6} md={4} key={index}>
           <Card {...props} />
         </Grid>
       ))}

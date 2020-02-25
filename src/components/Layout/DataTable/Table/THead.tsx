@@ -10,7 +10,7 @@ const THead: React.FC<Props> = ({ categories }) => {
     <TableHead>
       <TableRow>
         {categories.map(category => (
-          <TableCell>{category}</TableCell>
+          <TableCell key={category}>{category}</TableCell>
         ))}
         <TableCell></TableCell>
       </TableRow>

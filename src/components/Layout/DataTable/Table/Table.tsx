@@ -6,7 +6,7 @@ import {
 } from "@material-ui/core";
 
 interface Props {
-  children: React.ReactChildren;
+  children: React.ReactNode;
 }
 
 const useStyles = makeStyles({
