@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -6,13 +6,15 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  Badge
+  Badge,
+  Button
 } from "@material-ui/core";
 
 import {
   Notifications as NotificationsIcon,
   Menu as MenuIcon
 } from "@material-ui/icons";
+import useAuthContext from "../../context/auth/context";
 
 const drawerWidth = 240;
 
@@ -23,6 +25,9 @@ type Props = {
 
 const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
   const classes = useStyles();
+
+  const { user } = useAuthContext();
+
   return (
     <AppBar
       position="absolute"
@@ -50,6 +55,13 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
         >
           Dashboard
         </Typography>
+        {user ? (
+          `Witamy, ${user.username}`
+        ) : (
+          <Button variant="contained" color="secondary">
+            login
+          </Button>
+        )}
         <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">
             <NotificationsIcon />

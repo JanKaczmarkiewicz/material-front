@@ -1,18 +1,12 @@
 import { AuthState } from "./AuthProvider";
-
-export interface UserData {
-  id: string | null;
-  name: string | null;
-  email: string | null;
-}
-
+import { User } from "./context";
 type Token = string;
 
 export type AuthAction =
   | { type: "AUTH_SUCCESS"; payload: Token }
   | { type: "AUTH_FAILED" }
   | { type: "LOGOUT" }
-  | { type: "LOAD_USER"; payload: UserData };
+  | { type: "LOAD_USER"; payload: User };
 
 const authReducer = (state: AuthState, action: AuthAction) => {
   switch (action.type) {

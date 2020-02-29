@@ -1,6 +1,6 @@
 import React, { ReactNode, useReducer, useEffect } from "react";
-import context, { AuthAPI } from "./context";
-import authReducer, { UserData } from "./AuthStateReducer";
+import { User, AuthProvider as Provider, AuthAPI } from "./context";
+import authReducer from "./AuthStateReducer";
 import request from "../../utils/request";
 
 interface Props {
@@ -9,52 +9,72 @@ interface Props {
 
 export type AuthState = {
   isAuthenticated: boolean;
-  name: string;
-  phone: string;
+  user: User | null;
+};
+
+const model = {
+  userData: "{username}"
 };
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, {
-    isAuthenticated: !!localStorage.getItem("token")
+    isAuthenticated: !!localStorage.getItem("token"),
+    user: null
   } as AuthState);
 
   useEffect(() => {
-    // if (state.isAuthenticated) {
-    //   getUserData();
-    // }
+    if (state.isAuthenticated) {
+      getUserData();
+    }
   }, [state.isAuthenticated]);
 
   const login = (phone: string, password: string) => {
-    const header: RequestInit = {
-      method: "POST",
-      body: JSON.stringify({ phone, password })
-    };
-    console.log("start");
+    const query = `mutation{
+      login (input: {identifier: "${phone}", password:"${password}"}) {
+        jwt
+      }
+    }`;
 
-    request("/auth", header).then((token: string) => {
-      dispatch({ type: "AUTH_SUCCESS", payload: token });
-    });
+    request(query).then(
+      ({
+        data: {
+          login: { jwt }
+        }
+      }) => {
+        dispatch({ type: "AUTH_SUCCESS", payload: jwt });
+      }
+    );
   };
 
-  const register = (phone: string, password: string) => {
-    const header: RequestInit = {
-      method: "POST",
-      body: JSON.stringify({ phone, password })
-    };
+  // const register = (phone: string, password: string) => {
+  //   const query = `mutation{
+  //     register (input: {identifier: "${phone}", password:"${password}"}) {
+  //       jwt
+  //     }
+  //   }`;
 
-    request("/user", header).then((token: string) => {
-      dispatch({ type: "AUTH_SUCCESS", payload: token });
-    });
-  };
+  //   request(query).then(
+  //     ({
+  //       data: {
+  //         register: { jwt }
+  //       }
+  //     }) => {
+  //       dispatch({ type: "AUTH_SUCCESS", payload: jwt });
+  //     }
+  //   );
+  // };
 
   const getUserData = () => {
-    const header: RequestInit = {
-      method: "GET"
-    };
+    const query = `
+      query {
+        loggedUserData  ${model.userData}
+      }`;
 
-    request("/user/{}", header).then((userData: UserData) => {
-      dispatch({ type: "LOAD_USER", payload: userData });
-    });
+    request(query, { useAuthorizationToken: true }).then(
+      ({ data: { loggedUserData } }) => {
+        dispatch({ type: "LOAD_USER", payload: loggedUserData });
+      }
+    );
   };
 
   const logout = () => {
@@ -62,19 +82,19 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   };
 
   return (
-    <context.Provider
+    <Provider
       value={
         {
           isAuthenticated: state.isAuthenticated,
           login,
-          register,
+          user: state.user,
           logout,
           getUserData
         } as AuthAPI
       }
     >
       {children}
-    </context.Provider>
+    </Provider>
   );
 };
 

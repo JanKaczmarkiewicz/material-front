@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Button,
@@ -12,10 +12,9 @@ import {
 } from "@material-ui/core";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-
 import { makeStyles } from "@material-ui/core/styles";
 
-import context from "../../context/auth/context";
+import useAuthContext from "../../context/auth/context";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -40,8 +39,7 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  const { login } = useContext(context);
-
+  const { login } = useAuthContext();
   const [input, setInput] = useState({ phone: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

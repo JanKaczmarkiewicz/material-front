@@ -1,21 +1,17 @@
-import { createContext } from "react";
+import createContext from "../util";
 
-type Auth = (email: string, password: string) => void;
-
-export interface AuthAPI {
-  isAuthenticated: boolean;
-  login: Auth;
-  register: Auth;
-  getUserData: () => void;
-}
-
-const initialState: AuthAPI = {
-  isAuthenticated: false,
-  login: (email, password) => {},
-  register: (email, password) => {},
-  getUserData: () => {}
+export type User = {
+  username: string;
 };
 
-const context = createContext<AuthAPI>(initialState);
+export type AuthAPI = {
+  isAuthenticated: false;
+  login: (name: string, email: string) => void;
+  getUserData: () => void;
+  user: User | null;
+};
 
-export default context;
+const [useAuthContext, AuthProvider] = createContext<AuthAPI>();
+
+export default useAuthContext;
+export { AuthProvider };
