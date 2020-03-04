@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -15,6 +15,7 @@ import {
   Menu as MenuIcon
 } from "@material-ui/icons";
 import useAuthContext from "../../context/auth/context";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -55,18 +56,25 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
         >
           Dashboard
         </Typography>
-        {user ? (
-          `Witamy, ${user.username}`
-        ) : (
-          <Button variant="contained" color="secondary">
+        {!user ? (
+          <Button
+            variant="contained"
+            color="secondary"
+            component={Link}
+            to="/login"
+          >
             login
           </Button>
+        ) : (
+          <>
+            {`Witamy, ${user.username}!`}
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          </>
         )}
-        <IconButton color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
       </Toolbar>
     </AppBar>
   );
