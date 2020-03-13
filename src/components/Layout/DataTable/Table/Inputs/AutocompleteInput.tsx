@@ -17,6 +17,12 @@ const AutocompleteInput: React.FC<Props> = ({
   value,
   name
 }) => {
+  console.log({
+    options,
+    onChange,
+    value,
+    name
+  });
   const handleChange = (event: React.ChangeEvent<{}>, value: any) => {
     setInput(value.name);
     onChange({ [name]: value.id });
@@ -27,7 +33,7 @@ const AutocompleteInput: React.FC<Props> = ({
   return (
     <Autocomplete
       options={options}
-      renderOption={({ name, id }: any) => <div>{name}</div>}
+      renderOption={({ name }: any) => <div>{name}</div>}
       inputValue={input}
       getOptionLabel={({ name }) => name}
       filterOptions={filterOptions}
