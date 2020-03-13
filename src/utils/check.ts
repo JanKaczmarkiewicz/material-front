@@ -1,5 +1,5 @@
 export default (check: boolean, error: string) => {
-  if (check) {
+  if (!check) {
     throw new Error(error);
   }
 };
