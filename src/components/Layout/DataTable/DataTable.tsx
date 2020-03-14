@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import check from "../../../utils/check";
 
-import { TableBody, Paper } from "@material-ui/core";
+import { TableBody, Paper, Toolbar } from "@material-ui/core";
 
 import Title from "../../Title";
 import THead from "./Table/THead";
@@ -57,7 +57,9 @@ function DataTable<T>(props: Props<T>) {
 
   return (
     <Paper>
-      <Title>{title}</Title>
+      <Toolbar>
+        <Title>{title}</Title>
+      </Toolbar>
       <Table>
         <THead config={config} />
         <TableBody>{rows}</TableBody>

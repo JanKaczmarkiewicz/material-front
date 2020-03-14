@@ -35,6 +35,7 @@ const AutocompleteInput: React.FC<Props> = ({
       options={options}
       renderOption={({ name }: any) => <div>{name}</div>}
       inputValue={input}
+      disableClearable
       getOptionLabel={({ name }) => name}
       filterOptions={filterOptions}
       onChange={handleChange}
@@ -42,7 +43,6 @@ const AutocompleteInput: React.FC<Props> = ({
         return (
           <TextField
             {...params}
-            label="Combo box"
             variant="outlined"
             fullWidth
             onChange={e => {
