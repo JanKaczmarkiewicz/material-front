@@ -15,20 +15,15 @@ export type AutocompleteConfig = { type: "AUTOCOMPLETE"; options: any[] };
 export type InputConfig = TextInputConfig | AutocompleteConfig;
 
 const InputFactory = (config: InputConfig, genericProps: InputProps) => {
-  console.log("configerror", config);
-  try {
-    switch (config.type) {
-      case "TEXT":
-        return <TextInput {...genericProps} />;
+  switch (config.type) {
+    case "TEXT":
+      return <TextInput {...genericProps} />;
 
-      case "AUTOCOMPLETE":
-        return <AutocompleteInput {...genericProps} options={config.options} />;
+    case "AUTOCOMPLETE":
+      return <AutocompleteInput {...genericProps} options={config.options} />;
 
-      default:
-        break;
-    }
-  } catch (error) {
-    console.log("configerror", config);
+    default:
+      break;
   }
 };
 

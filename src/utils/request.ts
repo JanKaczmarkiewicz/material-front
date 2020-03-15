@@ -13,8 +13,6 @@ export default (query: string, requestOptions: RequestOptions = {}) => {
     },
     body: JSON.stringify({ query })
   };
-  console.log(options);
-
   return fetch(`http://localhost:1337/graphql`, options).then((res: Body) =>
     res.json()
   );
