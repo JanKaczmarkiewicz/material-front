@@ -2,6 +2,8 @@ import React from "react";
 import { TableRow, TableCell } from "@material-ui/core";
 import RowOptions from "./RowOptions";
 
+import { Edit, Delete } from "@material-ui/icons";
+
 interface Props {
   data: any;
   deleteItem: () => void;
@@ -15,11 +17,17 @@ function TDisplayRow({ data, startEditItem, deleteItem }: Props) {
         <TableCell>{data[key]}</TableCell>
       ))}
       <RowOptions
-        onDelete={() => {
-          deleteItem();
+        delete={{
+          renderIcon: () => <Delete />,
+          handler: () => {
+            deleteItem();
+          }
         }}
-        onEdit={() => {
-          startEditItem();
+        edit={{
+          renderIcon: () => <Edit />,
+          handler: () => {
+            startEditItem();
+          }
         }}
       />
     </TableRow>

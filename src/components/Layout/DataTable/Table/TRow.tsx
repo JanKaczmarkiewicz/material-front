@@ -9,6 +9,7 @@ interface Props {
   data: any;
   deleteItem: () => void;
   startEditItem: () => void;
+  onFormClose: () => void;
   config: TableConfig;
   isFormOpen: boolean;
   onChange: PassUpdate;
@@ -24,7 +25,8 @@ function TRow({
   deleteItem,
   config,
   isFormOpen,
-  onChange
+  onChange,
+  onFormClose
 }: Props) {
   // <props transformation>
   const displayValues = Object.keys(data).reduce((values, key) => {
@@ -40,7 +42,12 @@ function TRow({
   // </props transformation>
 
   return isFormOpen ? (
-    <TRowForm config={formConfig} data={displayValues} onChange={onChange} />
+    <TRowForm
+      config={formConfig}
+      data={displayValues}
+      onChange={onChange}
+      onFormClose={onFormClose}
+    />
   ) : (
     <TDisplayRow
       data={displayValues}

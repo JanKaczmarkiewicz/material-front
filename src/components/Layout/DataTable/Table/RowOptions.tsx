@@ -1,21 +1,21 @@
 import React from "react";
 import { TableCell, IconButton } from "@material-ui/core";
-import { Edit, Delete } from "@material-ui/icons";
 
 interface Props {
-  onDelete: () => void;
-  onEdit: () => void;
+  [key: string]: {
+    renderIcon: () => JSX.Element;
+    handler: () => void;
+  };
 }
 
-const RowOptions: React.FC<Props> = ({ onDelete, onEdit }) => {
+const RowOptions: React.FC<Props> = props => {
   return (
     <TableCell align="right">
-      <IconButton onClick={onEdit}>
-        <Edit />
-      </IconButton>
-      <IconButton onClick={onDelete}>
-        <Delete />
-      </IconButton>
+      {Object.keys(props).map(key => (
+        <IconButton onClick={props[key].handler}>
+          {props[key].renderIcon()}
+        </IconButton>
+      ))}
     </TableCell>
   );
 };

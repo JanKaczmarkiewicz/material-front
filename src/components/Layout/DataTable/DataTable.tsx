@@ -44,6 +44,7 @@ function DataTable<T>(props: Props<T>) {
       startEditItem={() => setEditedItem(index)}
       isFormOpen={editedItem === index}
       onChange={editItem(index)}
+      onFormClose={() => setEditedItem(null)}
     />
   ));
 
