@@ -17,18 +17,12 @@ const AutocompleteInput: React.FC<Props> = ({
   value,
   name
 }) => {
-  console.log({
-    options,
-    onChange,
-    value,
-    name
-  });
   const handleChange = (event: React.ChangeEvent<{}>, value: any) => {
     setInput(value.name);
     onChange({ [name]: value.id });
   };
 
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(value);
 
   return (
     <Autocomplete

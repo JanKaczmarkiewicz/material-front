@@ -6,10 +6,9 @@ import { TableBody, Paper, Toolbar } from "@material-ui/core";
 import Title from "../../Title";
 import THead from "./Table/THead";
 import TFooter from "./Table/TFooter";
-import validateProps from "./Table/validateProps";
 import TRow from "./Table/TRow";
 import Table from "./Table/Table";
-import TRowForm from "./Table/TRowForm";
+import validateProps from "./Table/validateProps";
 
 import { TableConfig } from "./Table/types";
 
@@ -36,24 +35,17 @@ function DataTable<T>(props: Props<T>) {
 
   const { title, items, deleteItem, addItem, config, editItem } = props;
 
-  const formConfig = Object.keys(config).reduce(
-    (obj, name) => ({ ...obj, [name]: config[name].form }),
-    {}
-  );
-
-  const rows = items.map((data: any, index) =>
-    editedItem === index ? (
-      <TRowForm config={formConfig} data={data} onChange={editItem(index)} />
-    ) : (
-      <TRow
-        config={config}
-        key={index}
-        data={data}
-        deleteItem={() => deleteItem(index)}
-        startEditItem={() => setEditedItem(index)}
-      />
-    )
-  );
+  const rows = items.map((data: any, index) => (
+    <TRow
+      config={config}
+      key={index}
+      data={data}
+      deleteItem={() => deleteItem(index)}
+      startEditItem={() => setEditedItem(index)}
+      isFormOpen={editedItem === index}
+      onChange={editItem(index)}
+    />
+  ));
 
   return (
     <Paper>
