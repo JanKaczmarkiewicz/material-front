@@ -7,8 +7,8 @@ import { Switch, Route } from "react-router-dom";
 import UnloggedRoute from "./UnloggedRoute";
 import PrivateRoute from "./PrivateRoute";
 
-// import Streets from "../routes/data/Streets";
-// import Priests from "../routes/data/Priests";
+import Streets from "../routes/data/Streets";
+import Priests from "../routes/data/Priests";
 import Acolytes from "../routes/data/Acolytes";
 import Houses from "../routes/data/Houses";
 
@@ -19,35 +19,35 @@ const Router: React.FC = () => {
         Main
       </Route>
 
-      <UnloggedRoute path="/login" exact>
+      <UnloggedRoute path="/login/" exact>
         <Login />
       </UnloggedRoute>
 
-      <PrivateRoute path="/dashboard" exact>
+      <PrivateRoute path="/dashboard/" exact>
         <Dashboard />
       </PrivateRoute>
 
-      <PrivateRoute path="/users" exact>
+      <PrivateRoute path="/users/" exact>
         <Users />
       </PrivateRoute>
 
-      <PrivateRoute path="/data" exact>
+      <PrivateRoute path="/data/" exact>
         <Data />
       </PrivateRoute>
-      {/* 
-      <PrivateRoute path={`/data/street`} exact>
+
+      <PrivateRoute path={`/data/street/`} exact>
         <Streets />
       </PrivateRoute>
 
-      <PrivateRoute path={`/data/priest`} exact>
+      <PrivateRoute path={`/data/priest/`} exact>
         <Priests />
-      </PrivateRoute> */}
+      </PrivateRoute>
 
-      <PrivateRoute path={`/data/acolyte`} exact>
+      <PrivateRoute path={`/data/acolyte/`} exact>
         <Acolytes />
       </PrivateRoute>
 
-      <PrivateRoute path={`/data/house`} exact>
+      <PrivateRoute path={`/data/house/`} exact>
         <Houses />
       </PrivateRoute>
     </Switch>
