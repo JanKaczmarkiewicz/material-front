@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
     )
       .then(({ data: { priests } }) => setAllPriests(priests))
       .catch(console.log);
-  });
+  }, []);
 
   const [time, setTime] = React.useState(getCurrentTime());
 

@@ -31,6 +31,8 @@ function TRow({
   // <props transformation>
   const displayValues = Object.keys(data).reduce((values, key) => {
     const currentConfig = config[key];
+    console.log(currentConfig);
+    console.log(key);
     return {
       ...values,
       [key]: isRelationalField(currentConfig)

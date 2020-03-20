@@ -29,7 +29,6 @@ const AutocompleteInput: React.FC<Props> = ({
   return (
     <Autocomplete
       options={options}
-      renderOption={({ name }: any) => <div>{name}</div>}
       inputValue={input}
       disableClearable
       getOptionLabel={({ name }) => name}
