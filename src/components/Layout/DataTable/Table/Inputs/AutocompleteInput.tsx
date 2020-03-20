@@ -4,6 +4,7 @@ import { TextField } from "@material-ui/core";
 import { InputProps } from "./InputFactory";
 interface Props extends InputProps {
   options: any[];
+  label?: string;
 }
 
 const filterOptions = createFilterOptions({
@@ -13,6 +14,7 @@ const filterOptions = createFilterOptions({
 
 const AutocompleteInput: React.FC<Props> = ({
   options,
+  label,
   onChange,
   value,
   name
@@ -33,18 +35,17 @@ const AutocompleteInput: React.FC<Props> = ({
       getOptionLabel={({ name }) => name}
       filterOptions={filterOptions}
       onChange={handleChange}
-      renderInput={params => {
-        return (
-          <TextField
-            {...params}
-            variant="outlined"
-            fullWidth
-            onChange={e => {
-              setInput(e.target.value);
-            }}
-          />
-        );
-      }}
+      renderInput={params => (
+        <TextField
+          {...params}
+          {...(label ? { label } : null)}
+          variant="outlined"
+          fullWidth
+          onChange={e => {
+            setInput(e.target.value);
+          }}
+        />
+      )}
     />
   );
 };
