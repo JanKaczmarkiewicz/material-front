@@ -11,6 +11,7 @@ import Streets from "../routes/data/Streets";
 import Priests from "../routes/data/Priests";
 import Acolytes from "../routes/data/Acolytes";
 import Houses from "../routes/data/Houses";
+import History from "../routes/History";
 
 const Router: React.FC = () => {
   return (
@@ -29,6 +30,10 @@ const Router: React.FC = () => {
 
       <PrivateRoute path="/users/" exact>
         <Users />
+      </PrivateRoute>
+
+      <PrivateRoute path={`/history/`} exact>
+        <History />
       </PrivateRoute>
 
       <PrivateRoute path="/data/" exact>

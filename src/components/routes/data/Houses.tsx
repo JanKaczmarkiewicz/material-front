@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import DataTemplate, { UpdateHandler } from "../../Layout/DataTable/DataTable";
+import DataTemplate, {
+  UpdateHandler
+} from "../../Layout/DataTable/EditableDataTable";
 import request from "../../../utils/request";
 
 interface House {

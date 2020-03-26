@@ -1,7 +1,7 @@
 import React from "react";
 import TextInput from "./TextInput";
 import AutocompleteInput from "./AutocompleteInput";
-import { PassUpdate } from "../../DataTable";
+import { PassUpdate } from "../../EditableDataTable";
 
 export interface InputProps {
   onChange: PassUpdate;

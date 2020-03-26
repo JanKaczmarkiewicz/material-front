@@ -1,7 +1,7 @@
 import React from "react";
 import { TableCell } from "@material-ui/core";
 import { Done } from "@material-ui/icons";
-import { PassUpdate } from "../DataTable";
+import { PassUpdate } from "../EditableDataTable";
 import RowOptions from "./RowOptions";
 import InputFactory, { InputConfig } from "./Inputs/InputFactory";
 

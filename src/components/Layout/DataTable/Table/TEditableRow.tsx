@@ -1,9 +1,12 @@
 import React from "react";
-import { TableConfig, RelationField, TextField } from "./types";
-import { PassUpdate } from "../DataTable";
+import { TableConfig } from "./types";
+import { PassUpdate } from "../EditableDataTable";
 import TRowForm from "./TRowForm";
 import TDisplayRow from "./TDisplayRow";
 import flattenObject from "../../../../utils/flattenObject";
+import { getDisplayNames } from "../util";
+import RowOptions from "./RowOptions";
+import { Delete, Edit } from "@material-ui/icons";
 
 interface Props {
   data: any;
@@ -15,10 +18,6 @@ interface Props {
   onChange: PassUpdate;
 }
 
-const isRelationalField = (
-  config: RelationField | TextField
-): config is RelationField => (config as RelationField).getName !== undefined;
-
 function TRow({
   data,
   startEditItem,
@@ -29,17 +28,7 @@ function TRow({
   onFormClose
 }: Props) {
   // <props transformation>
-  const displayValues = Object.keys(data).reduce((values, key) => {
-    const currentConfig = config[key];
-    console.log(currentConfig);
-    console.log(key);
-    return {
-      ...values,
-      [key]: isRelationalField(currentConfig)
-        ? currentConfig.getName(data[key])
-        : data[key]
-    };
-  }, {});
+  const displayValues = getDisplayNames(data, config);
   const formConfig = flattenObject("form", config);
   // </props transformation>
 
@@ -53,8 +42,22 @@ function TRow({
   ) : (
     <TDisplayRow
       data={displayValues}
-      deleteItem={deleteItem}
-      startEditItem={startEditItem}
+      renderOptions={() => (
+        <RowOptions
+          delete={{
+            renderIcon: () => <Delete />,
+            handler: () => {
+              deleteItem();
+            }
+          }}
+          edit={{
+            renderIcon: () => <Edit />,
+            handler: () => {
+              startEditItem();
+            }
+          }}
+        />
+      )}
     />
   );
 }
