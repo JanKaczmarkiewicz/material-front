@@ -8,12 +8,12 @@ interface Props {
 
 function TDisplayRow({ data, renderOptions }: Props) {
   return (
-    <TableRow>
+    <>
       {Object.keys(data).map(key => (
         <TableCell>{data[key]}</TableCell>
       ))}
       {renderOptions && renderOptions()}
-    </TableRow>
+    </>
   );
 }
 

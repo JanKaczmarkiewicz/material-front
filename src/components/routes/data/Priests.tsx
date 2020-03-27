@@ -49,7 +49,7 @@ export const Acolites: React.FC<Props> = props => {
         name: {
           label: "Nazwa:",
           index: 0,
-          form: { type: "TEXT" }
+          type: "TEXT"
         }
       }}
       deleteItem={handleDelete}

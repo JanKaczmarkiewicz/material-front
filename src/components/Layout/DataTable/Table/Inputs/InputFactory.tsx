@@ -2,6 +2,7 @@ import React from "react";
 import TextInput from "./TextInput";
 import AutocompleteInput from "./AutocompleteInput";
 import { PassUpdate } from "../../EditableDataTable";
+import { DataConfig } from "../../EditableDataTable";
 
 export interface InputProps {
   onChange: PassUpdate;
@@ -9,12 +10,7 @@ export interface InputProps {
   name: string;
 }
 
-export type TextInputConfig = { type: "TEXT" };
-export type AutocompleteConfig = { type: "AUTOCOMPLETE"; options: any[] };
-
-export type InputConfig = TextInputConfig | AutocompleteConfig;
-
-const InputFactory = (config: InputConfig, genericProps: InputProps) => {
+const InputFactory = (config: DataConfig, genericProps: InputProps) => {
   switch (config.type) {
     case "TEXT":
       return <TextInput {...genericProps} />;

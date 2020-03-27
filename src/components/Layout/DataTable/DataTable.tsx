@@ -6,15 +6,20 @@ import Title from "../../Title";
 import THead from "./Table/THead";
 import Table from "./Table/Table";
 
-import { TableConfig } from "./Table/types";
+import { FieldConfig } from "./Table/types";
 import TDisplayRow from "./Table/TDisplayRow";
 
 import { getDisplayNames } from "./util";
 
+interface RelationField extends FieldConfig {
+  getName: (id: string) => string;
+}
+interface TextField extends FieldConfig {}
+
 export interface Props<T> {
   items: T[];
   title: string;
-  config: TableConfig;
+  config: Record<string, TextField | RelationField>;
 }
 
 function DataTable<T>(props: Props<T>) {

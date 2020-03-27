@@ -1,32 +1,28 @@
 import React from "react";
 import { TableCell } from "@material-ui/core";
-import { Done } from "@material-ui/icons";
-import { PassUpdate } from "../EditableDataTable";
-import RowOptions from "./RowOptions";
-import InputFactory, { InputConfig } from "./Inputs/InputFactory";
+import { PassUpdate, EditConfig } from "../EditableDataTable";
+import InputFactory from "./Inputs/InputFactory";
 
 export interface Props {
-  config: { [key: string]: InputConfig };
+  config: EditConfig;
   data: any;
   onChange: PassUpdate;
-  onFormClose: () => void;
+  renderOptions?: () => JSX.Element;
 }
 
-const TRowForm: React.FC<Props> = ({ config, data, onChange, onFormClose }) => (
+const TRowForm: React.FC<Props> = ({
+  config,
+  data,
+  onChange,
+  renderOptions
+}) => (
   <>
     {Object.keys(data).map(key => (
       <TableCell>
         {InputFactory(config[key], { onChange, value: data[key], name: key })}
       </TableCell>
     ))}
-    <RowOptions
-      closeForm={{
-        renderIcon: () => <Done />,
-        handler: () => {
-          onFormClose();
-        }
-      }}
-    />
+    {renderOptions && renderOptions()}
   </>
 );
 

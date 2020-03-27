@@ -10,12 +10,25 @@ import TRow from "./Table/TEditableRow";
 import Table from "./Table/Table";
 import validateProps from "./Table/validateProps";
 
-import { TableConfig } from "./Table/types";
+import { FieldConfig } from "./Table/types";
+
+interface RelationField extends FieldConfig {
+  type: "AUTOCOMPLETE";
+  getName: (id: string) => string;
+  options: any[];
+}
+
+interface TextField extends FieldConfig {
+  type: "TEXT";
+}
+
+export type EditConfig = Record<string, DataConfig>;
+export type DataConfig = TextField | RelationField;
 
 export interface Props<T> {
   items: T[];
   title: string;
-  config: TableConfig;
+  config: EditConfig;
   deleteItem: (index: number) => void;
   addItem: (data: T) => void;
   editItem: UpdateHandler;

@@ -75,15 +75,13 @@ const Houses: React.FC = () => {
         number: {
           label: "Numer domu:",
           index: 0,
-          form: { type: "TEXT" }
+          type: "TEXT"
         },
         street: {
           label: "Ulica:",
           index: 1,
-          form: {
-            type: "AUTOCOMPLETE",
-            options: data
-          },
+          type: "AUTOCOMPLETE",
+          options: data,
           getName: (id: string) => {
             const foundStreet = data.find(street => street.id === id);
             return foundStreet ? foundStreet.name : "Not Found";

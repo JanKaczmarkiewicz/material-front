@@ -31,12 +31,13 @@ const TFooter: React.FC<Props> = ({ onSubmit }) => {
           </IconButton>
         </TableCell>
 
-        {isOpen && null
-        //   <RowForm
-        //     onSubmit={onSubmit}
-        //     values={initialValue}
-        //     config={fieldsConfig}
-        //   />
+        {isOpen &&
+          null
+          // <TRowForm
+          //   onSubmit={onSubmit}
+          //   values={initialValue}
+          //   config={fieldsConfig}
+          // />
         }
       </TableRow>
     </TableFooter>

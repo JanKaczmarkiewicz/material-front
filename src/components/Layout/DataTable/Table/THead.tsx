@@ -1,12 +1,14 @@
 import React from "react";
 import { TableHead, TableRow, TableCell } from "@material-ui/core";
-import { TableConfig } from "./types";
+import { FieldConfig } from "./types";
 
-interface Props {
-  config: TableConfig;
+interface Props<T> {
+  config: Record<string, T>;
 }
 
-const THead: React.FC<Props> = ({ config }) => {
+const THead: <T extends FieldConfig>(
+  props: Props<T>
+) => React.ReactElement<Props<T>> = ({ config }) => {
   const labels = Object.keys(config)
     .map(key => config[key])
     .sort((curr, next) => curr.index - next.index)

@@ -1,9 +1,3 @@
-import { RelationField, TextField } from "./Table/types";
-
-const isRelationalField = (
-  config: RelationField | TextField
-): config is RelationField => (config as RelationField).getName !== undefined;
-
 const getDisplayNames = (
   data: Record<string, any>,
   config: Record<string, any>
@@ -12,7 +6,7 @@ const getDisplayNames = (
     const currentConfig = config[key];
     return {
       ...values,
-      [key]: isRelationalField(currentConfig)
+      [key]: currentConfig.getName
         ? currentConfig.getName(data[key])
         : data[key]
     };
