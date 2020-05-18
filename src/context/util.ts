@@ -9,3 +9,7 @@ export default function createContext<A>() {
   };
   return [useCtx, ctx.Provider] as const;
 }
+
+export function useContext<T>(value: T) {
+  return React.createContext<T>(value);
+}

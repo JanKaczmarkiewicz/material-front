@@ -1,37 +1,36 @@
 import * as React from "react";
 import DataTemplate, {
-  UpdateHandler
+  UpdateHandler,
 } from "../../Layout/DataTable/EditableDataTable";
-import request from "../../../utils/request";
 
 interface Props {}
 
-interface Acolyte {
+interface Priest {
   name: string;
 }
 
-export const Acolites: React.FC<Props> = props => {
-  const [items, setItems] = React.useState<Acolyte[]>([]);
+export const Acolites: React.FC<Props> = (props) => {
+  const [items, setItems] = React.useState<Priest[]>([]);
 
-  React.useEffect(() => {
-    request(
-      `query{
-      acolytes{
-        name
-      }
-    }`,
-      { useAuthorizationToken: true }
-    ).then(res => setItems(res.data.acolytes));
-  }, []);
+  // React.useEffect(() => {
+  //   request(
+  //     `query{
+  //     priests{
+  //       name
+  //     }
+  //   }`,
+  //     { useAuthorizationToken: true }
+  //   ).then(res => setItems(res.data.priests));
+  // }, []);
   const handleAddition = (data: any) => {
     setItems([...items, data]);
   };
 
-  const handleChange: UpdateHandler = index => update => {
+  const handleChange: UpdateHandler = (index) => (update) => {
     setItems([
       ...items.slice(0, index),
       { ...items[index], ...update },
-      ...items.slice(index + 1)
+      ...items.slice(index + 1),
     ]);
   };
 
@@ -42,15 +41,15 @@ export const Acolites: React.FC<Props> = props => {
   };
 
   return (
-    <DataTemplate<Acolyte>
+    <DataTemplate<Priest>
       items={items}
-      title={"Ministranci"}
+      title={"Księża"}
       config={{
         name: {
           label: "Nazwa:",
           index: 0,
-          type: "TEXT"
-        }
+          type: "TEXT",
+        },
       }}
       deleteItem={handleDelete}
       addItem={handleAddition}

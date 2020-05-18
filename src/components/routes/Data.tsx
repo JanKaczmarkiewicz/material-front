@@ -9,26 +9,20 @@ const seed: Seed = [
     title: "Ulice",
     url: "street",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRqKPB1d7wzKUOGEcwTe96-plAnzuWvBwYymiwRkuZYUJLqcVcW"
-  },
-  {
-    title: "Domy",
-    url: "house",
-    image:
-      "https://pracownia-projekty.dom.pl/images/444/32604_wizualizacje1_dl_jaskolka_2_z_garazem_ce.jpg"
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRqKPB1d7wzKUOGEcwTe96-plAnzuWvBwYymiwRkuZYUJLqcVcW",
   },
   {
     title: "Ministranci",
     url: "acolyte",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Messdienergruppe_-001-.jpg/299px-Messdienergruppe_-001-.jpg"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Messdienergruppe_-001-.jpg/299px-Messdienergruppe_-001-.jpg",
   },
   {
     title: "Księża",
     url: "priest",
     image:
-      "https://g1.gazetaprawna.pl/p/_wspolne/pliki/1407000/1407069-lemanskiksiadzhoser.jpg"
-  }
+      "https://g1.gazetaprawna.pl/p/_wspolne/pliki/1407000/1407069-lemanskiksiadzhoser.jpg",
+  },
 ];
 
 const Data: React.FC = () => {

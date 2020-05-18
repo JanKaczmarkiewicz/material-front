@@ -7,10 +7,10 @@ import { Switch, Route } from "react-router-dom";
 import UnloggedRoute from "./UnloggedRoute";
 import PrivateRoute from "./PrivateRoute";
 
-import Streets from "../routes/data/Streets";
-import Priests from "../routes/data/Priests";
-import Acolytes from "../routes/data/Acolytes";
-import Houses from "../routes/data/Houses";
+import Streets from "../routes/data/streets/Streets";
+// import Priests from "../routes/data/Priests";
+// import Acolytes from "../routes/data/Acolytes";
+// import Houses from "../routes/data/Houses";
 import History from "../routes/History";
 
 const Router: React.FC = () => {
@@ -44,17 +44,14 @@ const Router: React.FC = () => {
         <Streets />
       </PrivateRoute>
 
-      <PrivateRoute path={`/data/priest/`} exact>
+      {/* <PrivateRoute path={`/data/priest/`} exact>
         <Priests />
       </PrivateRoute>
 
       <PrivateRoute path={`/data/acolyte/`} exact>
         <Acolytes />
       </PrivateRoute>
-
-      <PrivateRoute path={`/data/house/`} exact>
-        <Houses />
-      </PrivateRoute>
+  */}
     </Switch>
   );
 };

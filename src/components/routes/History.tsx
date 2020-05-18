@@ -1,38 +1,75 @@
 import React from "react";
-import DataTable from "../Layout/DataTable/DataTable";
-import request from "../../utils/request";
+import DataTable from "../Layout/DataTable/EditableDataTable";
+import { gql } from "apollo-boost";
+import { useQuery } from "@apollo/react-hooks";
 
-interface Props {}
+const PastoralVisit = gql`
+  query {
+    pastoralVisits {
+      id
+      reeceTime
+      visitTime
+      priest {
+        username
+      }
+      acolytes {
+        username
+      }
+    }
+  }
+`;
 
-const History: React.FC<Props> = props => {
-  const [items, setItems] = React.useState([]);
+interface PastoralVisit {
+  id: string;
+  reeceTime: string;
+  visitTime: string;
+  priest: {
+    username: string;
+  };
+  acolytes: {
+    username: string;
+  }[];
+}
 
-  React.useEffect(() => {
-    request(
-      `query{
-          pastoralVisits {
-            time
-            priest{
-              username
-            }
-            acolytes{
-              username
-            }
-          }
-}`,
-      { useAuthorizationToken: true }
-    ).then(res => {
-      console.log(res);
-      return setItems(res.data.pastoralVisits);
-    });
-  }, []);
+const History: React.FC = (props) => {
+  const { loading, error, data } = useQuery(PastoralVisit);
+
+  if (error) return <div>error</div>;
+  if (loading) return <div>loading</div>;
 
   return (
     <>
-      <DataTable
+      <DataTable<PastoralVisit>
         title="Odbyte kolendy"
-        items={items}
-        config={{ time: { index: 1, label: "Czas" } }}
+        items={data.pastoralVisits}
+        sanitize={({ id, reeceTime, visitTime, priest, acolytes }) => ({
+          id,
+          reeceTime,
+          acolytes,
+          priest,
+          visitTime,
+        })}
+        config={{
+          reeceTime: {
+            index: 0,
+            label: "Czas zwiadu:",
+          },
+          visitTime: {
+            index: 1,
+            label: "Czas wizyty:",
+          },
+          priest: {
+            index: 2,
+            label: "Ksiądz:",
+            displayValue: (priest) => priest.username,
+          },
+          acolytes: {
+            index: 3,
+            label: "Ministrańci:",
+            displayValue: (acolytes) =>
+              acolytes.map((acolyte) => acolyte.username).join(", "),
+          },
+        }}
       />
     </>
   );

@@ -3,15 +3,15 @@ import {
   TableRow,
   TableFooter,
   TableCell,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 
 interface Props {
-  onSubmit: (data: any) => void;
+  // onSubmit: (data: any) => void;
 }
 
-const TFooter: React.FC<Props> = ({ onSubmit }) => {
+const TFooter: React.FC<Props> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleOpen = () => {
@@ -19,7 +19,7 @@ const TFooter: React.FC<Props> = ({ onSubmit }) => {
   };
 
   const handleClose = (data: any) => {
-    onSubmit(data);
+    // onSubmit(data);
     setIsOpen(false);
   };
   return (
@@ -31,8 +31,8 @@ const TFooter: React.FC<Props> = ({ onSubmit }) => {
           </IconButton>
         </TableCell>
 
-        {isOpen &&
-          null
+        {
+          isOpen && null
           // <TRowForm
           //   onSubmit={onSubmit}
           //   values={initialValue}

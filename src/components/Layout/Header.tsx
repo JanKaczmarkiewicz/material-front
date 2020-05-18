@@ -1,21 +1,22 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
+import { useQuery } from "@apollo/react-hooks";
 import {
   AppBar,
   Toolbar,
   Typography,
   IconButton,
   Badge,
-  Button
+  Button,
 } from "@material-ui/core";
 
 import {
   Notifications as NotificationsIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
 } from "@material-ui/icons";
-import useAuthContext from "../../context/auth/context";
 import { Link } from "react-router-dom";
+import { gql } from "apollo-boost";
 
 const drawerWidth = 240;
 
@@ -24,10 +25,22 @@ type Props = {
   handleOpen: () => void;
 };
 
+const ME_HEADER = gql`
+  query {
+    me {
+      username
+    }
+  }
+`;
 const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
   const classes = useStyles();
 
-  const { user } = useAuthContext();
+  const { loading, error, data } = useQuery(ME_HEADER);
+
+  if (loading) return <div>loading ...</div>;
+  if (error) return <div>Error</div>;
+
+  const user = data.me;
 
   return (
     <AppBar
@@ -81,32 +94,32 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
 };
 
 export default Header;
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   toolbar: {
-    paddingRight: 24 // keep right padding when drawer closed
+    paddingRight: 24, // keep right padding when drawer closed
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none"
+    display: "none",
   },
   title: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 }));

@@ -1,15 +1,3 @@
-const getDisplayNames = (
-  data: Record<string, any>,
-  config: Record<string, any>
-) =>
-  Object.keys(data).reduce((values, key) => {
-    const currentConfig = config[key];
-    return {
-      ...values,
-      [key]: currentConfig.getName
-        ? currentConfig.getName(data[key])
-        : data[key]
-    };
-  }, {});
-
-export { getDisplayNames };
+export const getKeys = <T extends {}>(o: T): Array<keyof T> =>
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  <Array<keyof T>>Object.keys(o);

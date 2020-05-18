@@ -5,29 +5,28 @@ import {
   FormControl,
   FormLabel,
   FormGroup,
-  Grid
+  Grid,
 } from "@material-ui/core";
 import getCurrentTime from "../../utils/getCurrentTime";
-import AutocompleteInput from "../Layout/DataTable/Table/Inputs/AutocompleteInput";
-import request from "../../utils/request";
+// import AutocompleteInput from "../Layout/DataTable/Table/Inputs/AutocompleteInput";
 
 const Dashboard: React.FC = () => {
   const classes = useStyles();
   const [allPriests, setAllPriests] = useState<any>([]);
 
-  useEffect(() => {
-    request(
-      `query{
-              priests{
-                id
-                name
-              }
-            }`,
-      { useAuthorizationToken: true }
-    )
-      .then(({ data: { priests } }) => setAllPriests(priests))
-      .catch(console.log);
-  }, []);
+  // useEffect(() => {
+  //   request(
+  //     `query{
+  //             priests{
+  //               id
+  //               name
+  //             }
+  //           }`,
+  //     { useAuthorizationToken: true }
+  //   )
+  //     .then(({ data: { priests } }) => setAllPriests(priests))
+  //     .catch(console.log);
+  // }, []);
 
   const [time, setTime] = React.useState(getCurrentTime());
 
@@ -45,13 +44,13 @@ const Dashboard: React.FC = () => {
         <FormGroup>
           <Grid container spacing={3} direction="column">
             <Grid item>
-              <AutocompleteInput
+              {/* <AutocompleteInput
                 options={allPriests}
                 label={"Ksiądz"}
-                onChange={update => setPriest(update["priest"])}
+                onChange={(update) => setPriest(update["priest"])}
                 value={getPriestName(priest)}
                 name={"priest"}
-              />
+              /> */}
             </Grid>
 
             <Grid item>
@@ -62,7 +61,7 @@ const Dashboard: React.FC = () => {
                 value={time}
                 label={"Data"}
                 className={classes.textField}
-                onChange={e => {
+                onChange={(e) => {
                   setTime(e.target.value);
                 }}
               />
@@ -96,13 +95,13 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
-    justifyContent: "space-around"
+    justifyContent: "space-around",
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 200
-  }
+    width: 200,
+  },
 }));

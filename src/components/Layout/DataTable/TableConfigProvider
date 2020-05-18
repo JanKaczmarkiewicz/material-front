@@ -1,0 +1,64 @@
+import React from "react";
+
+export interface Props<T, M = Omit<T, "id">> {
+  config: Config<M>;
+  children: React.ReactNode;
+  context: 
+}
+
+export interface FieldConfig<T, P> {
+  label: string;
+  index: number;
+  displayValue: (data: T) => string | React.ReactNode;
+  //   renderInput: (props: InputProps<T, P>) => React.ReactNode;
+}
+export function useConfigContext<T>() {
+  const context = React.createContext<{ config: Config<T> } | undefined>(
+    undefined
+  );
+  const useContext = () => {
+    const c = React.useContext(context);
+    if (!c) throw new Error("useCtx must be inside a Provider with a value");
+    return c;
+  };
+
+  return [context, useContext];
+}
+
+export type Config<T> = { [P in keyof T]: FieldConfig<T[P], P> };
+
+interface WithIdentyfier {
+  id: string;
+}
+
+
+export class Context<T extends WithIdentyfier,  M = Omit<T, "id">> {
+  context: React.Context<{config:Config<M>}> | undefined
+
+  setContext(config: Config<M>) {
+    this.context = React.createContext({config})
+  }
+
+  getProvider() {
+    if(!this.context) {
+      throw new Error("No context setup context ")
+    }
+    return this.context.Provider;
+  }
+
+  useContext() {
+    if(!this.context) {
+      throw new Error("No context setup context ")
+    }
+    return React.useContext(this.context);
+  }
+} 
+
+
+export default function ConfigProvider<T>({
+  config,
+  children,
+  context,
+}: Props<T>) {
+  return <context.Provider value={config}>{children}</context.Provider>;
+}
