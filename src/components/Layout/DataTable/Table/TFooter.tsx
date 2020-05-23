@@ -1,44 +1,13 @@
-import React, { useState } from "react";
-import {
-  TableRow,
-  TableFooter,
-  TableCell,
-  IconButton,
-} from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import React from "react";
+import { TableRow, TableFooter, TableCell } from "@material-ui/core";
 
-interface Props {
-  // onSubmit: (data: any) => void;
-}
+interface Props {}
 
 const TFooter: React.FC<Props> = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-
-  const handleClose = (data: any) => {
-    // onSubmit(data);
-    setIsOpen(false);
-  };
   return (
     <TableFooter>
       <TableRow>
-        <TableCell colSpan={10} align="center">
-          <IconButton onClick={handleOpen}>
-            <Add />
-          </IconButton>
-        </TableCell>
-
-        {
-          isOpen && null
-          // <TRowForm
-          //   onSubmit={onSubmit}
-          //   values={initialValue}
-          //   config={fieldsConfig}
-          // />
-        }
+        <TableCell colSpan={10} align="center" />
       </TableRow>
     </TableFooter>
   );

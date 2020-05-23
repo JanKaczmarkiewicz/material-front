@@ -29,6 +29,7 @@ export interface Props<T, M = Omit<T, "id">> {
   deleteItem?: Id<void>;
   updateItem?: Id<RowProps<M>["updateItem"]>;
   sanitize: (data: T) => T;
+  link?: string;
 }
 
 function DataTable<T extends WithIdentyfier>(props: Props<T>) {
@@ -36,14 +37,23 @@ function DataTable<T extends WithIdentyfier>(props: Props<T>) {
     null
   );
 
-  const { title, items, config, sanitize, deleteItem, updateItem } = props;
+  const {
+    title,
+    items,
+    config,
+    sanitize,
+    deleteItem,
+    updateItem,
+    link,
+  } = props;
 
   const rows = items.map((data) => {
     const { id, ...rest } = sanitize(data);
 
     return (
       <TRow
-        key={id}
+        key={`trow${id}`}
+        linkTo={link ? `${link}${id}` : undefined}
         config={config}
         data={rest}
         isFormOpen={editedItemId === id}

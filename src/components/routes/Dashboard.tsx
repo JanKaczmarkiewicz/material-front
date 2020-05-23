@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   TextField,
   makeStyles,
@@ -8,34 +8,11 @@ import {
   Grid,
 } from "@material-ui/core";
 import getCurrentTime from "../../utils/getCurrentTime";
-// import AutocompleteInput from "../Layout/DataTable/Table/Inputs/AutocompleteInput";
 
 const Dashboard: React.FC = () => {
   const classes = useStyles();
-  const [allPriests, setAllPriests] = useState<any>([]);
-
-  // useEffect(() => {
-  //   request(
-  //     `query{
-  //             priests{
-  //               id
-  //               name
-  //             }
-  //           }`,
-  //     { useAuthorizationToken: true }
-  //   )
-  //     .then(({ data: { priests } }) => setAllPriests(priests))
-  //     .catch(console.log);
-  // }, []);
 
   const [time, setTime] = React.useState(getCurrentTime());
-
-  const [priest, setPriest] = React.useState("");
-
-  const getPriestName = (id: string): string => {
-    const foundPriest = allPriests.find((priest: any) => priest.id === id);
-    return foundPriest ? foundPriest.name : null;
-  };
 
   return (
     <>
@@ -43,15 +20,7 @@ const Dashboard: React.FC = () => {
         <FormLabel component="legend">Dodaj kolędę</FormLabel>
         <FormGroup>
           <Grid container spacing={3} direction="column">
-            <Grid item>
-              {/* <AutocompleteInput
-                options={allPriests}
-                label={"Ksiądz"}
-                onChange={(update) => setPriest(update["priest"])}
-                value={getPriestName(priest)}
-                name={"priest"}
-              /> */}
-            </Grid>
+            <Grid item></Grid>
 
             <Grid item>
               <TextField
@@ -69,26 +38,6 @@ const Dashboard: React.FC = () => {
           </Grid>
         </FormGroup>
       </FormControl>
-
-      {/* <Title>Dodaj kolędę:</Title>
-      <TextField
-        id="visit-time"
-        label="Czas"
-        style={{ display: "block" }}
-        type="datetime-local"
-        value={time}
-        className={classes.textField}
-        onChange={e => {
-          setTime(e.target.value);
-        }}
-      />
-      <AutocompleteInput
-        label={"Ksiądz"}
-        options={allPriests}
-        onChange={update => setPriest(update["priest"])}
-        value={getPriestName(priest)}
-        name={"priest"}
-      /> */}
     </>
   );
 };

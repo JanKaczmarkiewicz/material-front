@@ -31,7 +31,7 @@ interface PastoralVisit {
   }[];
 }
 
-const History: React.FC = (props) => {
+const History: React.FC = () => {
   const { loading, error, data } = useQuery(PastoralVisit);
 
   if (error) return <div>error</div>;
@@ -42,6 +42,7 @@ const History: React.FC = (props) => {
       <DataTable<PastoralVisit>
         title="Odbyte kolendy"
         items={data.pastoralVisits}
+        link={"/data/history/"}
         sanitize={({ id, reeceTime, visitTime, priest, acolytes }) => ({
           id,
           reeceTime,

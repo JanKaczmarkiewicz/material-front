@@ -23,6 +23,11 @@ const seed: Seed = [
     image:
       "https://g1.gazetaprawna.pl/p/_wspolne/pliki/1407000/1407069-lemanskiksiadzhoser.jpg",
   },
+  {
+    title: "Minione kolendy",
+    url: "history",
+    image: "https://miasto-info.pl/upload/2014-01/f1200x650/8598-7856-06-2.jpg",
+  },
 ];
 
 const Data: React.FC = () => {

@@ -4,6 +4,7 @@ import { Delete, Edit, Done } from "@material-ui/icons";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Config } from "../EditableDataTable";
 import { getKeys } from "../util";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
 export interface Props<T> {
   data: T;
@@ -13,6 +14,7 @@ export interface Props<T> {
   onFormClose: () => void;
   deleteItem?: DeleteHandler;
   updateItem?: UpdateHandler<T>;
+  linkTo?: string;
 }
 
 function TRow<T>({
@@ -23,7 +25,10 @@ function TRow<T>({
   deleteItem,
   data,
   config,
+  linkTo,
 }: Props<T>) {
+  const history = useHistory();
+
   const cellsContent = getKeys(data)
     .sort((prevKey, nextKey) => config[prevKey].index - config[nextKey].index)
     .map((key) => {
@@ -68,8 +73,10 @@ function TRow<T>({
 
   const cells = cellsContent.map(renderCell);
 
+  const tableRowProps = linkTo ? { onClick: () => history.push(linkTo) } : {};
+
   return (
-    <TableRow>
+    <TableRow {...tableRowProps}>
       {cells}
       {rowOptions}
     </TableRow>

@@ -18,6 +18,7 @@ const AUTH_CHECK = gql`
 const UnloggedRoute: React.FC<Props> = ({ children, ...restProps }) => {
   const { loading, error, data } = useQuery(AUTH_CHECK);
 
+  if (error) return <div>error</div>;
   if (loading) return <div>loading ...</div>;
 
   const user = data?.me;

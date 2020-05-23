@@ -32,16 +32,16 @@ const Router: React.FC = () => {
         <Users />
       </PrivateRoute>
 
-      <PrivateRoute path={`/history/`} exact>
-        <History />
-      </PrivateRoute>
-
       <PrivateRoute path="/data/" exact>
         <Data />
       </PrivateRoute>
 
       <PrivateRoute path={`/data/street/`} exact>
         <Streets />
+      </PrivateRoute>
+
+      <PrivateRoute path={`/data/history/`} exact>
+        <History />
       </PrivateRoute>
 
       {/* <PrivateRoute path={`/data/priest/`} exact>
