@@ -4,7 +4,7 @@ import { Delete, Edit, Done } from "@material-ui/icons";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Config } from "../EditableDataTable";
 import { getKeys } from "../util";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 export interface Props<T> {
   data: T;

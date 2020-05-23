@@ -17,6 +17,7 @@ import {
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { gql } from "apollo-boost";
+import { MeHeader } from "../../generated/MeHeader";
 
 const drawerWidth = 240;
 
@@ -26,7 +27,7 @@ type Props = {
 };
 
 const ME_HEADER = gql`
-  query {
+  query MeHeader {
     me {
       username
     }
@@ -35,7 +36,7 @@ const ME_HEADER = gql`
 const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery(ME_HEADER);
+  const { loading, error, data } = useQuery<MeHeader>(ME_HEADER);
 
   if (loading) return <div>loading ...</div>;
   if (error) return <div>Error</div>;

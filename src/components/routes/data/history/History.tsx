@@ -1,10 +1,11 @@
 import React from "react";
-import DataTable from "../Layout/DataTable/EditableDataTable";
+import DataTable from "../../../Layout/DataTable/EditableDataTable";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
+import { PastoralVisits as IPastoralVisits } from "../../../../generated/PastoralVisits";
 
-const PastoralVisit = gql`
-  query {
+const PastoralVisits = gql`
+  query PastoralVisits {
     pastoralVisits {
       id
       reeceTime
@@ -19,27 +20,15 @@ const PastoralVisit = gql`
   }
 `;
 
-interface PastoralVisit {
-  id: string;
-  reeceTime: string;
-  visitTime: string;
-  priest: {
-    username: string;
-  };
-  acolytes: {
-    username: string;
-  }[];
-}
-
 const History: React.FC = () => {
-  const { loading, error, data } = useQuery(PastoralVisit);
+  const { loading, error, data } = useQuery<IPastoralVisits>(PastoralVisits);
 
   if (error) return <div>error</div>;
-  if (loading) return <div>loading</div>;
+  if (loading || !data) return <div>loading</div>;
 
   return (
     <>
-      <DataTable<PastoralVisit>
+      <DataTable
         title="Odbyte kolendy"
         items={data.pastoralVisits}
         link={"/data/history/"}
@@ -62,7 +51,7 @@ const History: React.FC = () => {
           priest: {
             index: 2,
             label: "Ksiądz:",
-            displayValue: (priest) => priest.username,
+            displayValue: (priest) => priest?.username || "",
           },
           acolytes: {
             index: 3,

@@ -8,7 +8,7 @@ export const StreetFragment = gql`
 `;
 
 export const STREETS = gql`
-  query {
+  query Streets {
     streets {
       ...StreetFragment
     }
@@ -17,7 +17,7 @@ export const STREETS = gql`
 `;
 
 export const UPDATE_STREET = gql`
-  mutation updateStreet($input: UpdateStreetInput!) {
+  mutation UpdateStreet($input: UpdateStreetInput!) {
     updateStreet(input: $input) {
       ...StreetFragment
     }

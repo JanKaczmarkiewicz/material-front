@@ -1,26 +1,15 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { AUTH as AUTH_CHECK } from "./queries";
+import { Auth } from "../../generated/Auth";
 
-interface Props extends RouteProps {
-  children: React.ReactNode;
-}
-
-const AUTH_CHECK = gql`
-  query {
-    me {
-      confirmed
-    }
-  }
-`;
-
-const PrivateRoute: React.FC<Props> = ({ children, ...restProps }) => {
-  const { loading, error, data } = useQuery(AUTH_CHECK);
+const PrivateRoute: React.FC<RouteProps> = ({ children, ...restProps }) => {
+  const { loading, error, data } = useQuery<Auth>(AUTH_CHECK);
 
   if (error) return <div>error</div>;
 
-  if (loading) return <div>loading</div>;
+  if (loading || !data) return <div>loading</div>;
 
   return (
     <Route {...restProps}>
