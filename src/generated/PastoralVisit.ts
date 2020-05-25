@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { FindOneInput } from "./globalTypes";
+import { FindOneInput, RecordState } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: PastoralVisit
@@ -19,6 +19,19 @@ export interface PastoralVisit_pastoralVisit_acolytes {
   username: string;
 }
 
+export interface PastoralVisit_pastoralVisit_entrances_house {
+  id: string;
+  number: string;
+}
+
+export interface PastoralVisit_pastoralVisit_entrances {
+  id: string;
+  house: PastoralVisit_pastoralVisit_entrances_house | null;
+  visitState: RecordState;
+  reeceState: RecordState;
+  comment: string | null;
+}
+
 export interface PastoralVisit_pastoralVisit_season {
   id: string;
   year: number;
@@ -29,6 +42,7 @@ export interface PastoralVisit_pastoralVisit {
   priest: PastoralVisit_pastoralVisit_priest | null;
   acolytes: PastoralVisit_pastoralVisit_acolytes[];
   visitTime: any;
+  entrances: PastoralVisit_pastoralVisit_entrances[];
   reeceTime: any;
   season: PastoralVisit_pastoralVisit_season;
 }

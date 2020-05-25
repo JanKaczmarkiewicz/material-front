@@ -38,8 +38,8 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
 
   const { loading, error, data } = useQuery<MeHeader>(ME_HEADER);
 
-  if (loading) return <div>loading ...</div>;
-  if (error) return <div>Error</div>;
+  if (loading || !data) return <div>loading...</div>;
+  if (error) return <div>error</div>;
 
   const user = data.me;
 

@@ -23,8 +23,8 @@ const PastoralVisits = gql`
 const History: React.FC = () => {
   const { loading, error, data } = useQuery<IPastoralVisits>(PastoralVisits);
 
-  if (error) return <div>error</div>;
   if (loading || !data) return <div>loading</div>;
+  if (error) return <div>error</div>;
 
   return (
     <>

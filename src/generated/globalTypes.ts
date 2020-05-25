@@ -7,6 +7,13 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum RecordState {
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+  UNCERTAIN = "UNCERTAIN",
+  UNKNOWN = "UNKNOWN",
+}
+
 export interface FindOneInput {
   id: string;
 }

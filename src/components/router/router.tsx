@@ -12,6 +12,8 @@ import Streets from "../routes/data/streets/Streets";
 // import Acolytes from "../routes/data/Acolytes";
 // import Houses from "../routes/data/Houses";
 import History from "../routes/data/history/History";
+
+// import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
 
 const Router: React.FC = () => {
@@ -47,6 +49,18 @@ const Router: React.FC = () => {
 
       <PrivateRoute
         path={`/data/history/:id`}
+        exact
+        component={PastoralVisit}
+      />
+
+      <PrivateRoute
+        path={`/data/history/:id/visit`}
+        exact
+        component={PastoralVisit}
+      />
+
+      <PrivateRoute
+        path={`/data/history/:id/reece`}
         exact
         component={PastoralVisit}
       />
