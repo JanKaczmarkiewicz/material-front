@@ -13,7 +13,7 @@ import Streets from "../routes/data/streets/Streets";
 // import Houses from "../routes/data/Houses";
 import History from "../routes/data/history/History";
 
-// import PastoralVisitList from "../routes/data/history/List";
+import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
 
 const Router: React.FC = () => {
@@ -53,16 +53,16 @@ const Router: React.FC = () => {
         component={PastoralVisit}
       />
 
-      <PrivateRoute
+      <Route
         path={`/data/history/:id/visit`}
         exact
-        component={PastoralVisit}
+        render={(props) => <PastoralVisitList {...props} variant="visit" />}
       />
 
       <PrivateRoute
         path={`/data/history/:id/reece`}
         exact
-        component={PastoralVisit}
+        render={(props) => <PastoralVisitList {...props} variant="reece" />}
       />
 
       {/* <PrivateRoute path={`/data/priest/`} exact>

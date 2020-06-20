@@ -44,7 +44,7 @@ export interface PastoralVisit_pastoralVisit {
   visitTime: any;
   entrances: PastoralVisit_pastoralVisit_entrances[];
   reeceTime: any;
-  season: PastoralVisit_pastoralVisit_season;
+  season: PastoralVisit_pastoralVisit_season | null;
 }
 
 export interface PastoralVisit {
