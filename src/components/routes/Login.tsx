@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import {
   Avatar,
   Button,
@@ -11,45 +13,12 @@ import {
   Container,
 } from "@material-ui/core";
 
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { makeStyles } from "@material-ui/core/styles";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
-
-const LOGIN = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input)
-  }
-`;
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+import { useAuthContext } from "../../context/Auth/AuthContext";
 
 export default function SignIn() {
   const classes = useStyles();
 
-  const [login] = useMutation(LOGIN, {
-    onCompleted({ login }) {
-      localStorage.setItem("token", login);
-    },
-  });
+  const { login } = useAuthContext();
 
   const [input, setInput] = useState({ email: "", password: "" });
 
@@ -60,7 +29,7 @@ export default function SignIn() {
 
   const handleSignIn = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    login({ variables: { input } });
+    login(input);
   };
 
   return (
@@ -129,3 +98,23 @@ export default function SignIn() {
     </Container>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%",
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));

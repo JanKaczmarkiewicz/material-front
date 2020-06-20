@@ -16,9 +16,7 @@ import {
   Menu as MenuIcon,
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import { gql } from "apollo-boost";
-import { MeHeader } from "../../generated/MeHeader";
-
+import { useAuthContext } from "../../context/Auth/AuthContext";
 const drawerWidth = 240;
 
 type Props = {
@@ -26,22 +24,10 @@ type Props = {
   handleOpen: () => void;
 };
 
-const ME_HEADER = gql`
-  query MeHeader {
-    me {
-      username
-    }
-  }
-`;
 const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery<MeHeader>(ME_HEADER);
-
-  if (loading || !data) return <div>loading...</div>;
-  if (error) return <div>error</div>;
-
-  const user = data.me;
+  const { me } = useAuthContext();
 
   return (
     <AppBar
@@ -70,7 +56,16 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
         >
           Dashboard
         </Typography>
-        {!user ? (
+        {me ? (
+          <>
+            {`Witamy, ${me.username}!`}
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          </>
+        ) : (
           <Button
             variant="contained"
             color="secondary"
@@ -79,15 +74,6 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
           >
             login
           </Button>
-        ) : (
-          <>
-            {`Witamy, ${user.username}!`}
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </>
         )}
       </Toolbar>
     </AppBar>

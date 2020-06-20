@@ -4,16 +4,9 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemAvatar,
-  Avatar,
   ListItemText,
-  makeStyles,
-  ListItemSecondaryAction,
-  IconButton,
   Card,
   CardContent,
-  CardActions,
-  Button,
   CardHeader,
 } from "@material-ui/core";
 import { RouteComponentProps } from "react-router-dom";
@@ -23,9 +16,6 @@ import {
   PastoralVisit as IPastoralVisit,
   PastoralVisitVariables,
 } from "../../../../generated/PastoralVisit";
-import StateIcon from "../../../assetsComponents/StatusIcon/StateIcon";
-import { Edit, Close } from "@material-ui/icons";
-import { grey } from "@material-ui/core/colors";
 import PathCard from "./PathCard";
 
 const PASTORAL_VISIT = gql`
@@ -65,9 +55,6 @@ type Props = RouteComponentProps<{
 }>;
 
 const PastoralVisit: React.FC<Props> = ({ match }) => {
-  // const classes = useStyles();
-  const [edit, setEdit] = React.useState<string | null>(null);
-
   const { loading, error, data } = useQuery<
     IPastoralVisit,
     PastoralVisitVariables
@@ -139,86 +126,5 @@ const PastoralVisit: React.FC<Props> = ({ match }) => {
       </Grid>
     </>
   );
-
-  // return (
-  //   <Grid item xs={12} md={6}>
-  //     <Typography variant="h6" className={classes.title}>
-  //       Lista wejść
-  //     </Typography>
-  //     <div className={classes.demo}>
-  //       <List>
-  //         {entrances.map(({ id, reeceState, visitState, comment, house }) => {
-  //           if (!house) return null;
-
-  //           if (id === edit) {
-  //             return (
-  //               <ListItem
-  //                 style={{
-  //                   backgroundColor: grey[300],
-  //                 }}
-  //               >
-  //                 <ListItemAvatar>
-  //                   <StateIcon state={visitState} />
-  //                 </ListItemAvatar>
-
-  //                 <ListItemText
-  //                   primary={house.number}
-  //                   secondary={comment ? comment : null}
-  //                 />
-
-  //                 <ListItemSecondaryAction>
-  //                   <IconButton
-  //                     edge="end"
-  //                     aria-label="editend"
-  //                     onClick={() => setEdit(null)}
-  //                   >
-  //                     <Close />
-  //                   </IconButton>
-  //                 </ListItemSecondaryAction>
-  //               </ListItem>
-  //             );
-  //           }
-
-  //           return (
-  //             <ListItem>
-  //               <ListItemAvatar>
-  //                 <StateIcon state={visitState} />
-  //               </ListItemAvatar>
-
-  //               <ListItemText
-  //                 primary={house.number}
-  //                 secondary={comment ? comment : null}
-  //               />
-
-  //               <ListItemSecondaryAction>
-  //                 <IconButton
-  //                   edge="end"
-  //                   aria-label="edit"
-  //                   onClick={() => setEdit(id)}
-  //                 >
-  //                   <Edit />
-  //                 </IconButton>
-  //               </ListItemSecondaryAction>
-  //             </ListItem>
-  //           );
-  //         })}
-  //       </List>
-  //     </div>
-  //   </Grid>
-  // );
 };
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//     maxWidth: 752,
-//   },
-//   demo: {
-//     backgroundColor: theme.palette.background.paper,
-//   },
-//   title: {
-//     margin: theme.spacing(4, 0, 2),
-//   },
-// }));
-
 export default PastoralVisit;

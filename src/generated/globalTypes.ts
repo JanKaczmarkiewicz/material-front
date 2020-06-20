@@ -14,6 +14,13 @@ export enum RecordState {
   UNKNOWN = "UNKNOWN",
 }
 
+export enum Role {
+  ACOLYTE = "ACOLYTE",
+  ADMIN = "ADMIN",
+  PRIEST = "PRIEST",
+  USER = "USER",
+}
+
 export interface FindOneInput {
   id: string;
 }
