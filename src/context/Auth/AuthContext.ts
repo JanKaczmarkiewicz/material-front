@@ -1,13 +1,13 @@
 import { createContext } from "../util";
-import { Me_me } from "../../generated/Me";
+import { State } from "./AuthReducer";
 
 type LoginCredensials = { email: string; password: string };
 
 export type AuthAPI = {
   login: (loginCredensials: LoginCredensials) => void;
-  me: Me_me | null;
   logout: () => void;
-};
+  getMe: () => void;
+} & State;
 
 const { useContext: useAuthContext, Provider } = createContext<AuthAPI>();
 

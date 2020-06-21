@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useReducer, useEffect } from "react";
 import { AuthAPI, Provider } from "./AuthContext";
 import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useMutation, useLazyQuery } from "@apollo/react-hooks";
 import { Me } from "../../generated/Me";
 import { Login } from "../../generated/Login";
-
+import { authReducer, ActionType } from "./AuthReducer";
 interface Props {
   children: React.ReactNode;
 }
@@ -28,20 +28,41 @@ const LOGIN = gql`
 `;
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
-  const { loading, error, data } = useQuery<Me>(ME);
+  const [state, dispath] = useReducer(authReducer, {
+    isAuthenticated: !!localStorage.getItem("token"),
+    me: null,
+  });
 
-  const [login] = useMutation<Login>(LOGIN, {
-    onCompleted({ login }) {
-      localStorage.setItem("token", login);
+  useEffect(() => {
+    state.isAuthenticated && !state.me && getMe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.isAuthenticated, state.me]);
+
+  const [getMe] = useLazyQuery<Me>(ME, {
+    onCompleted({ me }) {
+      dispath({ type: ActionType.ME_SUCCESS, payload: me });
+    },
+    onError() {
+      dispath({ type: ActionType.ME_FAILED });
     },
   });
 
-  if (loading) return <div>loading...</div>;
+  const [login] = useMutation<Login>(LOGIN, {
+    onCompleted({ login: token }) {
+      dispath({ type: ActionType.LOGIN_SUCCESS, payload: token });
+    },
+    onError() {
+      dispath({ type: ActionType.LOGIN_FAILED });
+    },
+  });
 
   const api: AuthAPI = {
-    login: (data) => login({ variables: data }),
-    logout: () => {},
-    me: data?.me || null,
+    login: (data) => login({ variables: { input: data } }),
+    getMe,
+    logout: () => {
+      dispath({ type: ActionType.LOGOUT });
+    },
+    ...state,
   };
 
   return <Provider value={api}>{children}</Provider>;

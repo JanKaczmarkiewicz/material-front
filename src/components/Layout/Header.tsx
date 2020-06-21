@@ -1,7 +1,6 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import { useQuery } from "@apollo/react-hooks";
 import {
   AppBar,
   Toolbar,
