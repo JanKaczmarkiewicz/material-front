@@ -40,7 +40,7 @@ export default (state: RecordState) => {
     default:
       return {
         ...styles.lightGrey,
-        icon: null,
+        icon: <></>,
       };
   }
 };

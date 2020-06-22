@@ -58,7 +58,6 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
   const api: AuthAPI = {
     login: (data) => login({ variables: { input: data } }),
-    getMe,
     logout: () => {
       dispath({ type: ActionType.LOGOUT });
     },

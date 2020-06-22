@@ -1,7 +1,8 @@
 import React from "react";
 import RowOptions, { Props as RowOptionsProps } from "./RowOptions";
 import { Delete, Edit, Done } from "@material-ui/icons";
-import { TableRow, TableCell } from "@material-ui/core";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
 import { Config } from "../EditableDataTable";
 import { getKeys } from "../util";
 import { useHistory } from "react-router-dom";
@@ -71,7 +72,9 @@ function TRow<T>({
 
   const rowOptions = <RowOptions {...rowOptionsProps} />;
 
-  const cells = cellsContent.map(renderCell);
+  const cells = cellsContent.map((el) => (
+    <TableCell key={`tc-${el}`}>{el}</TableCell>
+  ));
 
   const tableRowProps = linkTo ? { onClick: () => history.push(linkTo) } : {};
 
@@ -83,8 +86,6 @@ function TRow<T>({
   );
 }
 export default TRow;
-
-const renderCell = (el: React.ReactNode) => <TableCell>{el}</TableCell>;
 
 export interface FieldConfig<T, P> {
   label: string;

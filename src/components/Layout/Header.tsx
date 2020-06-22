@@ -6,14 +6,10 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  Badge,
   Button,
 } from "@material-ui/core";
 
-import {
-  Notifications as NotificationsIcon,
-  Menu as MenuIcon,
-} from "@material-ui/icons";
+import { Menu as MenuIcon } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../context/Auth/AuthContext";
 const drawerWidth = 240;
@@ -56,14 +52,7 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
           Dashboard
         </Typography>
         {me ? (
-          <>
-            {`Witamy, ${me.username}!`}
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </>
+          `Witamy, ${me.username}!`
         ) : (
           <Button
             variant="contained"

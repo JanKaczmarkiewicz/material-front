@@ -52,7 +52,7 @@ function DataTable<T extends WithIdentyfier>(props: Props<T>) {
 
     return (
       <TRow
-        key={`trow${id}`}
+        key={`trow-${id}`}
         linkTo={link ? `${link}${id}` : undefined}
         config={config}
         data={rest}
