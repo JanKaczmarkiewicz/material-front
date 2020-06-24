@@ -15,6 +15,7 @@ import History from "../routes/data/history/History";
 
 import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
+import Street from "../routes/data/streets/Street";
 
 const Router: React.FC = () => {
   return (
@@ -52,6 +53,8 @@ const Router: React.FC = () => {
         exact
         component={PastoralVisit}
       />
+
+      <Route path={`/data/streets/:id`} exact component={Street} />
 
       <Route
         path={`/data/history/:id/visit`}

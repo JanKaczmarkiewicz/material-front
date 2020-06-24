@@ -1,27 +1,13 @@
 import React from "react";
-import {
-  makeStyles,
-  TableContainer,
-  Table as MuiTable
-} from "@material-ui/core";
+import { TableContainer, Table as MuiTable } from "@material-ui/core";
 
 interface Props {
   children: React.ReactNode;
 }
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650
-  }
-});
-
-const Table: React.FC<Props> = ({ children }) => {
-  const classes = useStyles();
-  return (
-    <TableContainer>
-      <MuiTable className={classes.table}>{children}</MuiTable>
-    </TableContainer>
-  );
-};
-
+const Table: React.FC<Props> = ({ children }) => (
+  <TableContainer>
+    <MuiTable>{children}</MuiTable>
+  </TableContainer>
+);
 export default Table;

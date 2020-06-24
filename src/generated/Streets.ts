@@ -4,14 +4,14 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Auth
+// GraphQL query operation: Streets
 // ====================================================
 
-export interface Auth_me {
-  __typename: "User";
-  username: string;
+export interface Streets_streets {
+  id: string;
+  name: string;
 }
 
-export interface Auth {
-  me: Auth_me;
+export interface Streets {
+  streets: Streets_streets[];
 }

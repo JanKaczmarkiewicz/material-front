@@ -1,20 +1,20 @@
 import * as React from "react";
-import DataTemplate from "../../../Layout/DataTable/EditableDataTable"; // UpdateHandler,
+import DataTemplate from "../../../Layout/DataTable/EditableDataTable";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import { TextField } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 import { UPDATE_STREET, STREETS } from "./actions";
-interface Street {
-  id: string;
-  name: string;
-}
+import {
+  Streets as IStreets,
+  Streets_streets,
+} from "../../../../generated/Streets";
 
-const sanitize = ({ id, name }: Street) => ({
+const sanitize = ({ id, name }: Streets_streets) => ({
   id,
   name,
 });
 
-export const Acolites: React.FC = (props) => {
-  const { loading, error, data } = useQuery(STREETS);
+export const Streets: React.FC = (props) => {
+  const { loading, error, data } = useQuery<IStreets>(STREETS);
   const [updateStreet] = useMutation(UPDATE_STREET, {
     update(cache, { data: { updateStreet } }) {
       console.log(updateStreet);
@@ -27,13 +27,14 @@ export const Acolites: React.FC = (props) => {
     },
   });
 
+  if (loading || !data) return <div>loading</div>;
   if (error) return <div>error</div>;
-  if (loading) return <div>loading</div>;
 
   return (
-    <DataTemplate<Street>
+    <DataTemplate
       items={data.streets}
-      title={"Ulice"}
+      title="Ulice"
+      link="/data/streets/"
       config={{
         name: {
           label: "Nazwa:",
@@ -59,4 +60,4 @@ export const Acolites: React.FC = (props) => {
   );
 };
 
-export default Acolites;
+export default Streets;

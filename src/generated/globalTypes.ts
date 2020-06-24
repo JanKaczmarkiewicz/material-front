@@ -30,6 +30,11 @@ export interface LoginInput {
   password: string;
 }
 
+export interface UpdateStreetInput {
+  id: string;
+  name?: string | null;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
