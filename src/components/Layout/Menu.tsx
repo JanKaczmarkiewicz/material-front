@@ -5,10 +5,6 @@ import clsx from "clsx";
 import { IconButton, Divider, List } from "@material-ui/core";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import PeopleIcon from "@material-ui/icons/People";
-import AddIcon from "@material-ui/icons/Add";
 import Navbar from "../Navbar";
 
 const drawerWidth = 240;
@@ -18,33 +14,33 @@ interface Props {
   handleClose: () => void;
 }
 
-type seed = Array<{
+type Seed = Array<{
   icon: JSX.Element;
   text: string;
   link: string;
 }>;
 
-const navbarSeed: seed = [
-  {
-    icon: <DashboardIcon />,
-    text: "Podsumowanie",
-    link: "dashboard"
-  },
-  {
-    icon: <PeopleIcon />,
-    text: "Członkowie",
-    link: "users"
-  },
-  {
-    icon: <AddIcon />,
-    text: "Dodaj",
-    link: "add"
-  },
-  {
-    icon: <FormatListBulletedIcon />,
-    text: "Dane",
-    link: "data"
-  }
+const navbarSeed: Seed = [
+  // {
+  //   icon: <DashboardIcon />,
+  //   text: "Podsumowanie",
+  //   link: "dashboard"
+  // },
+  // {
+  //   icon: <PeopleIcon />,
+  //   text: "Członkowie",
+  //   link: "users"
+  // },
+  // {
+  //   icon: <AddIcon />,
+  //   text: "Dodaj",
+  //   link: "add"
+  // },
+  // {
+  //   icon: <FormatListBulletedIcon />,
+  //   text: "Dane",
+  //   link: "data"
+  // }
 ];
 
 const DrawerMenu: React.FC<Props> = ({ isOpen, handleClose }) => {
@@ -53,7 +49,7 @@ const DrawerMenu: React.FC<Props> = ({ isOpen, handleClose }) => {
     <Drawer
       variant="permanent"
       classes={{
-        paper: clsx(classes.drawerPaper, !isOpen && classes.drawerPaperClose)
+        paper: clsx(classes.drawerPaper, !isOpen && classes.drawerPaperClose),
       }}
       open={isOpen}
     >
@@ -76,13 +72,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none"
+    display: "none",
   },
   drawerPaper: {
     position: "relative",
@@ -90,19 +86,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerPaperClose: {
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9)
-    }
+      width: theme.spacing(9),
+    },
   },
   appBarSpacer: theme.mixins.toolbar,
 
@@ -110,7 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
-    flexDirection: "column"
-  }
+    flexDirection: "column",
+  },
 }));
 export default DrawerMenu;

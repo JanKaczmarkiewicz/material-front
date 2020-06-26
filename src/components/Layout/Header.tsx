@@ -49,7 +49,7 @@ const Header: React.FC<Props> = ({ isOpen, handleOpen }) => {
           noWrap
           className={classes.title}
         >
-          Dashboard
+          Kolęda
         </Typography>
         {me ? (
           `Witamy, ${me.username}!`

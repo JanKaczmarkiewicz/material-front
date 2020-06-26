@@ -1,7 +1,7 @@
 import React from "react";
 import { getContrastRatio } from "@material-ui/core";
 import { green, grey, red } from "@material-ui/core/colors";
-import { Cancel, Done } from "@material-ui/icons";
+import { Clear, Done } from "@material-ui/icons";
 import { RecordState } from "../../../../generated/globalTypes";
 import { ReactComponent as QuestionMark } from "./questionMarkIcon.svg";
 
@@ -29,7 +29,7 @@ export default (state: RecordState) => {
     case RecordState.REJECTED:
       return {
         ...styles.red,
-        icon: <Cancel />,
+        icon: <Clear />,
       };
 
     case RecordState.UNKNOWN:

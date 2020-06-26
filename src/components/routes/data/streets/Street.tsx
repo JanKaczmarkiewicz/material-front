@@ -45,11 +45,11 @@ const Street: React.FC<Props> = ({ match }) => {
             {name}
           </Typography>
         </Grid>
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={8}>
           <Paper>(TODO: MAPA GOOGLE)</Paper>
         </Grid>
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={4}>
           <DataTable
             items={houses}
             title="Domy"

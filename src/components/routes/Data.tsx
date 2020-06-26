@@ -1,6 +1,20 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  makeStyles,
+  Theme,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Avatar,
+  Button,
+} from "@material-ui/core";
 import Card, { Props as CardProps } from "../Layout/CallToAction/Card";
+import PageTitle from "../Layout/Typography/PageTitle";
+import { RecordState } from "../../generated/globalTypes";
+import StateStyles from "./data/history/StateStyles";
 
 type Seed = Array<CardProps>;
 
@@ -30,9 +44,52 @@ const seed: Seed = [
   },
 ];
 
-const Data: React.FC = () => {
+interface InfoItemProps {
+  text: string;
+  state: RecordState;
+}
+
+const InfoItem = ({ text, state }: InfoItemProps) => {
+  const { icon, backgroundColor } = StateStyles(state);
   return (
-    <Grid container spacing={3}>
+    <ListItem>
+      <ListItemIcon>
+        <Avatar style={{ backgroundColor }}>{icon}</Avatar>
+      </ListItemIcon>
+      <ListItemText primary={text} />
+    </ListItem>
+  );
+};
+
+const Data: React.FC = () => {
+  const classes = useStyles();
+  return (
+    <Grid container spacing={4}>
+      <Grid item xs={8}>
+        <Paper className={classes.paper}>
+          <PageTitle text="Aktualny sezon: 2020" />
+
+          <List>
+            <InfoItem
+              state={RecordState.ACCEPTED}
+              text={`Ilość przyjętych domostw ${100}`}
+            />
+            <InfoItem
+              state={RecordState.REJECTED}
+              text={`Ilość odrzuconych domostw ${20}`}
+            />
+            <InfoItem
+              state={RecordState.UNKNOWN}
+              text={`Ilość niewiadomych domostw ${50}`}
+            />
+          </List>
+        </Paper>
+      </Grid>
+      <Grid item xs={4}>
+        <Button variant="contained" color="primary" size="large">
+          Zaplanuj kolejny dzień -{">"}
+        </Button>
+      </Grid>
       {seed.map((props, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card {...props} />
@@ -41,5 +98,11 @@ const Data: React.FC = () => {
     </Grid>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) => ({
+  paper: {
+    padding: theme.spacing(2),
+  },
+}));
 
 export default Data;
