@@ -15,6 +15,7 @@ import Card, { Props as CardProps } from "../Layout/CallToAction/Card";
 import PageTitle from "../Layout/Typography/PageTitle";
 import { RecordState } from "../../generated/globalTypes";
 import StateStyles from "./data/history/StateStyles";
+import { Link } from "react-router-dom";
 
 type Seed = Array<CardProps>;
 
@@ -65,7 +66,7 @@ const Data: React.FC = () => {
   const classes = useStyles();
   return (
     <Grid container spacing={4}>
-      <Grid item xs={8}>
+      <Grid item md={8} xs={12}>
         <Paper className={classes.paper}>
           <PageTitle text="Aktualny sezon: 2020" />
 
@@ -85,8 +86,14 @@ const Data: React.FC = () => {
           </List>
         </Paper>
       </Grid>
-      <Grid item xs={4}>
-        <Button variant="contained" color="primary" size="large">
+      <Grid item md={4} xs={12}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          component={Link}
+          to={"/calendar"}
+        >
           Zaplanuj kolejny dzień -{">"}
         </Button>
       </Grid>

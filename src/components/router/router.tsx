@@ -13,6 +13,7 @@ import History from "../routes/data/history/History";
 import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
 import Street from "../routes/data/streets/Street";
+import Calendar from "../Calendar";
 
 const Router: React.FC = () => {
   return (
@@ -20,6 +21,11 @@ const Router: React.FC = () => {
       <PrivateRoute path="/" exact>
         <Data />
       </PrivateRoute>
+
+      <PrivateRoute path="/calendar" exact>
+        <Calendar />
+      </PrivateRoute>
+
       <UnloggedRoute path="/login/" exact>
         <Login />
       </UnloggedRoute>
