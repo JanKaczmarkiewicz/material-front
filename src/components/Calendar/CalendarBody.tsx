@@ -6,7 +6,9 @@ import {
   CardContent,
   Divider,
   makeStyles,
+  CardActionArea,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 interface Props {
   mouth: number;
@@ -38,13 +40,18 @@ const CalendarBody: React.FC<Props> = ({ mouth }) => {
         .map((day) => (
           <Grid item xs={6} md={4} lg={2} key={`${mouth}-${day}`}>
             <Card variant="outlined">
-              <CardHeader title={day} />
+              <CardActionArea
+                to={`/calendar/${season}-${mouth}-${day}`}
+                component={Link}
+              >
+                <CardHeader title={day} />
 
-              <CardContent>
-                Zwiady 0
-                <Divider />
-                Kolendy 5
-              </CardContent>
+                <CardContent>
+                  Zwiady 0
+                  <Divider />
+                  Kolendy 5
+                </CardContent>
+              </CardActionArea>
             </Card>
           </Grid>
         ))}
