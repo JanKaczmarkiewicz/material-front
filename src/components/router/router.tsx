@@ -14,6 +14,8 @@ import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
 import Street from "../routes/data/streets/Street";
 import Calendar from "../Calendar";
+import NotFound from "../NotFound";
+import DayManager from "../Calendar/DayManager";
 
 const Router: React.FC = () => {
   return (
@@ -25,6 +27,8 @@ const Router: React.FC = () => {
       <PrivateRoute path="/calendar" exact>
         <Calendar />
       </PrivateRoute>
+
+      <PrivateRoute path="/calendar/:date" exact component={DayManager} />
 
       <UnloggedRoute path="/login/" exact>
         <Login />
@@ -57,6 +61,16 @@ const Router: React.FC = () => {
         exact
         render={(props) => <PastoralVisitList {...props} variant="reece" />}
       />
+
+      <Route
+        path={`/data/history/:id/visit`}
+        exact
+        render={(props) => <PastoralVisitList {...props} variant="visit" />}
+      />
+
+      {/* <Route path="*">
+        <NotFound />
+      </Route> */}
 
       {/* <PrivateRoute path={`/data/priest/`} exact>
         <Priests />

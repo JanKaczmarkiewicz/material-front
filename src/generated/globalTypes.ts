@@ -30,6 +30,10 @@ export interface LoginInput {
   password: string;
 }
 
+export interface PastoralVisitsInput {
+  date?: string | null;
+}
+
 export interface UpdateStreetInput {
   id: string;
   name?: string | null;
