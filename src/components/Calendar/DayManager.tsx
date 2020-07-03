@@ -8,7 +8,16 @@ import {
   DaySchedule_pastoralVisits,
 } from "../../generated/DaySchedule";
 import PageTitle from "../Layout/Typography/PageTitle";
-import { Grid, List, ListItemText, ListItemIcon } from "@material-ui/core";
+import {
+  Grid,
+  List,
+  ListItemText,
+  ListItem,
+  Typography,
+  Paper,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
 
 type Props = RouteComponentProps<{
   date: string;
@@ -34,6 +43,7 @@ const DAY = gql`
 `;
 
 const DayManager: React.FC<Props> = ({ match }) => {
+  const classes = useStyles();
   const { date } = match.params;
   const { loading, error, data } = useQuery<DaySchedule, DayScheduleVariables>(
     DAY,
@@ -48,7 +58,9 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const isEmpty = !dayActivities.length;
 
-  const headerText = isEmpty ? "Zaplanuj dzień" : "Zarządzaj dniem";
+  const headerText = `${
+    isEmpty ? "Zaplanuj dzień" : "Zarządzaj dniem"
+  }: ${currDate.toLocaleDateString()}r.`;
 
   const { reeces, visits } = dayActivities.reduce(
     (obj, pastoralVisit) => {
@@ -72,19 +84,33 @@ const DayManager: React.FC<Props> = ({ match }) => {
       <Grid item xs={12}>
         <PageTitle text={headerText} />
       </Grid>
-      {[reeces, visits].map((items, i) => (
-        <Grid item xs={6}>
-          <List key={`dm-${i}`}>
-            {items.map(({ priest, id }) => (
-              <ListItemIcon key={`dm-i-${id}`}>
-                <ListItemText primary={priest?.username} />
-              </ListItemIcon>
-            ))}
-          </List>
+      {[
+        { items: visits, title: "Kolędy:" },
+        { items: reeces, title: "Zwiady:" },
+      ].map(({ items, title }, i) => (
+        <Grid item xs={12} md={6} key={`dm-${i}`}>
+          <Paper className={classes.paper}>
+            <Typography variant="h5">{title}</Typography>
+            <List>
+              {items.length
+                ? items.map(({ priest, id }) => (
+                    <ListItem button key={`dm-i-${id}`}>
+                      <ListItemText primary={`ks. ${priest?.username}`} />
+                    </ListItem>
+                  ))
+                : "Nie zaplanowane"}
+            </List>
+          </Paper>
         </Grid>
       ))}
     </Grid>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) => ({
+  paper: {
+    padding: theme.spacing(2),
+  },
+}));
 
 export default DayManager;
