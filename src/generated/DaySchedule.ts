@@ -14,11 +14,17 @@ export interface DaySchedule_pastoralVisits_priest {
   username: string;
 }
 
+export interface DaySchedule_pastoralVisits_entrances {
+  id: string;
+  comment: string | null;
+}
+
 export interface DaySchedule_pastoralVisits {
   id: string;
   priest: DaySchedule_pastoralVisits_priest | null;
   reeceTime: any;
   visitTime: any;
+  entrances: DaySchedule_pastoralVisits_entrances[];
 }
 
 export interface DaySchedule {

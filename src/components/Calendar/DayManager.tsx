@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
@@ -17,7 +17,12 @@ import {
   Paper,
   makeStyles,
   Theme,
+  Button,
+  Modal,
 } from "@material-ui/core";
+import AddPastoralVisitForm from "./AddPastoralVisitForm";
+import Column from "./DND/Column";
+import { DragDropContext } from "react-beautiful-dnd";
 
 type Props = RouteComponentProps<{
   date: string;
@@ -38,12 +43,15 @@ const DAY = gql`
       }
       reeceTime
       visitTime
+      entrances {
+        id
+        comment
+      }
     }
   }
 `;
 
 const DayManager: React.FC<Props> = ({ match }) => {
-  const classes = useStyles();
   const { date } = match.params;
   const { loading, error, data } = useQuery<DaySchedule, DayScheduleVariables>(
     DAY,
@@ -62,55 +70,30 @@ const DayManager: React.FC<Props> = ({ match }) => {
     isEmpty ? "Zaplanuj dzień" : "Zarządzaj dniem"
   }: ${currDate.toLocaleDateString()}r.`;
 
-  const { reeces, visits } = dayActivities.reduce(
-    (obj, pastoralVisit) => {
-      const pastoralVisitDate = new Date(pastoralVisit.visitTime);
-      if (isSameDay(pastoralVisitDate, currDate))
-        return { ...obj, visits: [...obj.visits, pastoralVisit] };
-
-      const reeceVisitDate = new Date(pastoralVisit.reeceTime);
-      if (isSameDay(reeceVisitDate, currDate))
-        return { ...obj, reeces: [...obj.reeces, pastoralVisit] };
-      return obj;
-    },
-    {
-      reeces: [],
-      visits: [],
-    } as { [key: string]: DaySchedule_pastoralVisits[] }
-  );
+  const visits = dayActivities.reduce((obj, pastoralVisit) => {
+    const pastoralVisitDate = new Date(pastoralVisit.visitTime);
+    return isSameDay(pastoralVisitDate, currDate)
+      ? [...obj, pastoralVisit]
+      : obj;
+  }, [] as DaySchedule_pastoralVisits[]);
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <PageTitle text={headerText} />
       </Grid>
-      {[
-        { items: visits, title: "Kolędy:" },
-        { items: reeces, title: "Zwiady:" },
-      ].map(({ items, title }, i) => (
-        <Grid item xs={12} md={6} key={`dm-${i}`}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5">{title}</Typography>
-            <List>
-              {items.length
-                ? items.map(({ priest, id }) => (
-                    <ListItem button key={`dm-i-${id}`}>
-                      <ListItemText primary={`ks. ${priest?.username}`} />
-                    </ListItem>
-                  ))
-                : "Nie zaplanowane"}
-            </List>
-          </Paper>
-        </Grid>
-      ))}
+      <DragDropContext onDragEnd={() => console.log("drop")}>
+        {visits.map(({ id, priest, entrances }) => (
+          <Grid item xs={2} key={id}>
+            <Column
+              title={priest?.username ?? "Brak kapłana"}
+              items={entrances}
+            />
+          </Grid>
+        ))}
+      </DragDropContext>
     </Grid>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    padding: theme.spacing(2),
-  },
-}));
 
 export default DayManager;
