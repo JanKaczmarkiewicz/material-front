@@ -6,7 +6,7 @@ import { PastoralVisits as IPastoralVisits } from "../../../../generated/Pastora
 
 const PastoralVisits = gql`
   query PastoralVisits {
-    pastoralVisits {
+    pastoralVisits(input: {}) {
       id
       reeceTime
       visitTime

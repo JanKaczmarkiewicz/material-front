@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
@@ -8,19 +8,7 @@ import {
   DaySchedule_pastoralVisits,
 } from "../../generated/DaySchedule";
 import PageTitle from "../Layout/Typography/PageTitle";
-import {
-  Grid,
-  List,
-  ListItemText,
-  ListItem,
-  Typography,
-  Paper,
-  makeStyles,
-  Theme,
-  Button,
-  Modal,
-} from "@material-ui/core";
-import AddPastoralVisitForm from "./AddPastoralVisitForm";
+import { Grid } from "@material-ui/core";
 import Column from "./DND/Column";
 import { DragDropContext } from "react-beautiful-dnd";
 
@@ -46,6 +34,14 @@ const DAY = gql`
       entrances {
         id
         comment
+        house {
+          id
+          number
+          street {
+            id
+            name
+          }
+        }
       }
     }
   }
@@ -82,16 +78,22 @@ const DayManager: React.FC<Props> = ({ match }) => {
       <Grid item xs={12}>
         <PageTitle text={headerText} />
       </Grid>
-      <DragDropContext onDragEnd={() => console.log("drop")}>
-        {visits.map(({ id, priest, entrances }) => (
-          <Grid item xs={2} key={id}>
-            <Column
-              title={priest?.username ?? "Brak kapłana"}
-              items={entrances}
-            />
-          </Grid>
-        ))}
-      </DragDropContext>
+      <Grid item container xs={12} spacing={2}>
+        <DragDropContext onDragEnd={() => console.log("drop")}>
+          {visits.map(({ id, priest, entrances }) => (
+            <Grid item xs={2} key={id}>
+              <Column
+                title={
+                  priest?.username
+                    ? `ks. ${(priest?.username).split(" ")[1]}`
+                    : "Brak kapłana"
+                }
+                items={entrances}
+              />
+            </Grid>
+          ))}
+        </DragDropContext>
+      </Grid>
     </Grid>
   );
 };

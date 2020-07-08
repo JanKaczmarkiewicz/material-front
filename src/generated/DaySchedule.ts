@@ -14,9 +14,21 @@ export interface DaySchedule_pastoralVisits_priest {
   username: string;
 }
 
+export interface DaySchedule_pastoralVisits_entrances_house_street {
+  id: string;
+  name: string;
+}
+
+export interface DaySchedule_pastoralVisits_entrances_house {
+  id: string;
+  number: string;
+  street: DaySchedule_pastoralVisits_entrances_house_street | null;
+}
+
 export interface DaySchedule_pastoralVisits_entrances {
   id: string;
   comment: string | null;
+  house: DaySchedule_pastoralVisits_entrances_house | null;
 }
 
 export interface DaySchedule_pastoralVisits {
