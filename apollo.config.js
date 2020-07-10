@@ -1,7 +1,7 @@
 module.exports = {
   client: {
     service: {
-      name: "kolenda",
+      name: "koleda",
       url: "http://localhost:3001/",
     },
   },

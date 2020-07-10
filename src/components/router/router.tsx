@@ -14,7 +14,6 @@ import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
 import Street from "../routes/data/streets/Street";
 import Calendar from "../Calendar";
-import NotFound from "../NotFound";
 import DayManager from "../Calendar/DayManager";
 
 const Router: React.FC = () => {

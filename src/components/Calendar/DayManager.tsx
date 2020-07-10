@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import {
   DaySchedule,
   DayScheduleVariables,
@@ -10,16 +10,47 @@ import {
 import PageTitle from "../Layout/Typography/PageTitle";
 import { Grid } from "@material-ui/core";
 import Column from "./DND/Column";
-import { DragDropContext } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  DropResult,
+  ResponderProvided,
+} from "react-beautiful-dnd";
+import {
+  RelocateEntrance,
+  RelocateEntranceVariables,
+} from "../../generated/RelocateEntrance";
+import { isSameDay } from "date-fns";
+import { client } from "../../context/client/ApolloClient";
 
 type Props = RouteComponentProps<{
   date: string;
 }>;
 
-const isSameDay = (d1: Date, d2: Date) =>
-  d1.getFullYear() === d2.getFullYear() &&
-  d1.getMonth() === d2.getMonth() &&
-  d1.getDate() === d2.getDate();
+const EntrenceFragment = gql`
+  fragment EntrenceFragment on Entrance {
+    id
+    comment
+    house {
+      id
+      number
+      street {
+        id
+        name
+      }
+    }
+  }
+`;
+const RELOCATE_ENTRANCE = gql`
+  mutation RelocateEntrance($id: String!, $to: String!) {
+    updateEntrance(input: { id: $id, pastoralVisit: $to }) {
+      ...EntrenceFragment
+      pastoralVisit {
+        id
+      }
+    }
+  }
+  ${EntrenceFragment}
+`;
 
 const DAY = gql`
   query DaySchedule($input: PastoralVisitsInput!) {
@@ -32,30 +63,28 @@ const DAY = gql`
       reeceTime
       visitTime
       entrances {
-        id
-        comment
-        house {
-          id
-          number
-          street {
-            id
-            name
-          }
-        }
+        ...EntrenceFragment
       }
     }
   }
+  ${EntrenceFragment}
 `;
 
 const DayManager: React.FC<Props> = ({ match }) => {
   const { date } = match.params;
+  const [relocateEntrance] = useMutation<
+    RelocateEntrance,
+    RelocateEntranceVariables
+  >(RELOCATE_ENTRANCE);
+
   const { loading, error, data } = useQuery<DaySchedule, DayScheduleVariables>(
     DAY,
     { variables: { input: { date } } }
   );
+  if (!Date.parse(date)) return <>"404"</>;
+
   if (loading || !data) return <div>loading...</div>;
   if (error) return <div>error</div>;
-  if (!Date.parse(date)) return <>"404"</>;
 
   const currDate = new Date(date);
   const dayActivities = data.pastoralVisits;
@@ -73,29 +102,109 @@ const DayManager: React.FC<Props> = ({ match }) => {
       : obj;
   }, [] as DaySchedule_pastoralVisits[]);
 
+  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    console.log(result, provided);
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+
+    if (destination.droppableId === source.droppableId) {
+      return;
+    }
+
+    const queryOptions = {
+      query: DAY,
+      variables: { input: { date } },
+    };
+
+    const query = client.cache.readQuery<DaySchedule, DayScheduleVariables>(
+      queryOptions
+    )!;
+
+    const indexes = findEntranceInPastoralVisits(
+      draggableId,
+      query.pastoralVisits
+    );
+
+    if (!indexes) return;
+
+    const newData = [...query.pastoralVisits];
+
+    const destinationPastoralVisitIndex = newData.findIndex(
+      ({ id }) => id === destination.droppableId
+    );
+
+    if (destinationPastoralVisitIndex < 0) return;
+
+    const {
+      entranceIndex,
+      pastoralVisitIndex: sourcePastoralVisitIndex,
+    } = indexes;
+
+    //delete entrance from cache copy
+    const sourceEntrances = [...newData[sourcePastoralVisitIndex].entrances];
+    const movedEntrance = sourceEntrances.splice(entranceIndex, 1)[0];
+    newData[sourcePastoralVisitIndex].entrances = sourceEntrances;
+
+    //add updated entrance to cache copy
+    newData[destinationPastoralVisitIndex].entrances = [
+      ...newData[destinationPastoralVisitIndex].entrances,
+      movedEntrance,
+    ];
+
+    client.cache.writeQuery<DaySchedule, DayScheduleVariables>({
+      ...queryOptions,
+      data: { pastoralVisits: newData },
+    });
+
+    relocateEntrance({
+      variables: { id: draggableId, to: destination.droppableId },
+    });
+  };
+
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <PageTitle text={headerText} />
-      </Grid>
-      <Grid item container xs={12} spacing={2}>
-        <DragDropContext onDragEnd={() => console.log("drop")}>
+    <>
+      <PageTitle text={headerText} />
+
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <DragDropContext onDragEnd={onDragEnd}>
           {visits.map(({ id, priest, entrances }) => (
-            <Grid item xs={2} key={id}>
-              <Column
-                title={
-                  priest?.username
-                    ? `ks. ${(priest?.username).split(" ")[1]}`
-                    : "Brak kapłana"
-                }
-                items={entrances}
-              />
-            </Grid>
+            <Column
+              key={id}
+              droppableId={id}
+              title={
+                priest?.username
+                  ? `ks. ${(priest?.username).split(" ")[1]}`
+                  : "Brak kapłana"
+              }
+              items={entrances}
+            />
           ))}
         </DragDropContext>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
+};
+
+const findEntranceInPastoralVisits = (
+  id: string,
+  pastoralVisits: DaySchedule_pastoralVisits[]
+) => {
+  let pastoralVisitIndex = null;
+  let entranceIndex = null;
+  for (let i = 0; i < pastoralVisits.length; i++) {
+    for (let j = 0; j < pastoralVisits[i].entrances.length; j++) {
+      const entrance = pastoralVisits[i].entrances[j];
+      if (entrance.id === id) {
+        pastoralVisitIndex = i;
+        entranceIndex = j;
+      }
+    }
+  }
+  if (pastoralVisitIndex === null || entranceIndex === null) return null;
+
+  return { pastoralVisitIndex, entranceIndex };
 };
 
 export default DayManager;
