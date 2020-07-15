@@ -1,109 +1,74 @@
 import React from "react";
+
+//types
 import { RouteComponentProps } from "react-router-dom";
-import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "@apollo/react-hooks";
 import {
   DaySchedule,
   DayScheduleVariables,
   DaySchedule_pastoralVisits,
 } from "../../generated/DaySchedule";
+import {
+  RelocateEntrance,
+  RelocateEntranceVariables,
+} from "../../generated/RelocateEntrance";
+
+//ui
 import PageTitle from "../Layout/Typography/PageTitle";
-import { Grid } from "@material-ui/core";
+import {
+  Container,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  makeStyles,
+} from "@material-ui/core";
 import Column from "./DND/Column";
 import {
   DragDropContext,
   DropResult,
   ResponderProvided,
 } from "react-beautiful-dnd";
-import {
-  RelocateEntrance,
-  RelocateEntranceVariables,
-} from "../../generated/RelocateEntrance";
-import { isSameDay } from "date-fns";
+
+//data
 import { client } from "../../context/client/ApolloClient";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import { RELOCATE_ENTRANCE, DAY } from "./actions";
 
 type Props = RouteComponentProps<{
   date: string;
 }>;
 
-const EntrenceFragment = gql`
-  fragment EntrenceFragment on Entrance {
-    id
-    comment
-    house {
-      id
-      number
-      street {
-        id
-        name
-      }
-    }
-  }
-`;
-const RELOCATE_ENTRANCE = gql`
-  mutation RelocateEntrance($id: String!, $to: String!) {
-    updateEntrance(input: { id: $id, pastoralVisit: $to }) {
-      ...EntrenceFragment
-      pastoralVisit {
-        id
-      }
-    }
-  }
-  ${EntrenceFragment}
-`;
-
-const DAY = gql`
-  query DaySchedule($input: PastoralVisitsInput!) {
-    pastoralVisits(input: $input) {
-      id
-      priest {
-        id
-        username
-      }
-      reeceTime
-      visitTime
-      entrances {
-        ...EntrenceFragment
-      }
-    }
-  }
-  ${EntrenceFragment}
-`;
-
 const DayManager: React.FC<Props> = ({ match }) => {
   const { date } = match.params;
+
   const [relocateEntrance] = useMutation<
     RelocateEntrance,
     RelocateEntranceVariables
   >(RELOCATE_ENTRANCE);
 
-  const { loading, error, data } = useQuery<DaySchedule, DayScheduleVariables>(
-    DAY,
-    { variables: { input: { date } } }
-  );
-  if (!Date.parse(date)) return <>"404"</>;
+  const day = useQuery<DaySchedule, DayScheduleVariables>(DAY, {
+    variables: { input: { date } },
+  });
 
-  if (loading || !data) return <div>loading...</div>;
-  if (error) return <div>error</div>;
+  if (day.loading) return <div>loading...</div>;
+
+  if (day.error || !day.data) return <div>error</div>;
 
   const currDate = new Date(date);
-  const dayActivities = data.pastoralVisits;
+  const visits = day.data.pastoralVisits;
 
-  const isEmpty = !dayActivities.length;
+  // const visits = dayActivities.reduce((obj, pastoralVisit) => {
+  //   const pastoralVisitDate = new Date(pastoralVisit.visitTime);
+  //   return isSameDay(pastoralVisitDate, currDate)
+  //     ? [...obj, pastoralVisit]
+  //     : obj;
+  // }, [] as DaySchedule_pastoralVisits[]);
 
-  const headerText = `${
-    isEmpty ? "Zaplanuj dzień" : "Zarządzaj dniem"
-  }: ${currDate.toLocaleDateString()}r.`;
+  const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
-  const visits = dayActivities.reduce((obj, pastoralVisit) => {
-    const pastoralVisitDate = new Date(pastoralVisit.visitTime);
-    return isSameDay(pastoralVisitDate, currDate)
-      ? [...obj, pastoralVisit]
-      : obj;
-  }, [] as DaySchedule_pastoralVisits[]);
-
-  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    console.log(result, provided);
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) {
       return;
@@ -115,7 +80,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
     const queryOptions = {
       query: DAY,
-      variables: { input: { date } },
+      variables: { input: { id: dayId } },
     };
 
     const query = client.cache.readQuery<DaySchedule, DayScheduleVariables>(
@@ -165,24 +130,53 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   return (
     <>
-      <PageTitle text={headerText} />
-
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <DragDropContext onDragEnd={onDragEnd}>
-          {visits.map(({ id, priest, entrances }) => (
-            <Column
-              key={id}
-              droppableId={id}
-              title={
-                priest?.username
-                  ? `ks. ${(priest?.username).split(" ")[1]}`
-                  : "Brak kapłana"
-              }
-              items={entrances}
-            />
-          ))}
-        </DragDropContext>
-      </div>
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        {/* <Toolbar /> */}
+        <div className={classes.drawerContainer}>
+          <List>
+            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>{index % 2 === 0 ? "K" : "L"}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {["All mail", "Trash", "Spam"].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>{index % 2 === 0 ? "K" : "L"}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      </Drawer>
+      <Container maxWidth={"lg"}>
+        <PageTitle text={headerText} />
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <DragDropContext onDragEnd={onDragEnd}>
+            {visits.map(({ id, priest, entrances }) => (
+              <Column
+                key={id}
+                droppableId={id}
+                title={
+                  priest?.username
+                    ? `ks. ${(priest?.username).split(" ")[1]}`
+                    : "Brak kapłana"
+                }
+                items={entrances}
+              />
+            ))}
+          </DragDropContext>
+        </div>
+      </Container>
     </>
   );
 };
@@ -208,3 +202,26 @@ const findEntranceInPastoralVisits = (
 };
 
 export default DayManager;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  drawer: {
+    width: 240,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: 240,
+  },
+  drawerContainer: {
+    overflow: "auto",
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+}));

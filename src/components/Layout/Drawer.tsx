@@ -3,34 +3,37 @@ import {
   Hidden,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   Drawer,
   makeStyles,
   Theme,
 } from "@material-ui/core";
-import { Inbox } from "@material-ui/icons";
+import { seed } from "../routes/Data";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
 interface Props {
   isOpen: boolean;
-  handleOpen: () => void;
+  handleToggle: () => void;
 }
 
-const AppDrawer: React.FC<Props> = ({ isOpen, handleOpen }) => {
+const MobileDrower: React.FC<Props> = ({ isOpen, handleToggle }) => {
   const classes = useStyles();
 
   const drawer = (
     <>
       <div className={classes.toolbar} />
       <List>
-        {[].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              <Inbox />
-            </ListItemIcon>
-            <ListItemText primary={text} />
+        {seed.map(({ title, url }) => (
+          <ListItem
+            button
+            key={`mdr-${title}`}
+            component={Link}
+            to={url}
+            onClick={handleToggle}
+          >
+            <ListItemText primary={title} />
           </ListItem>
         ))}
       </List>
@@ -38,30 +41,19 @@ const AppDrawer: React.FC<Props> = ({ isOpen, handleOpen }) => {
   );
 
   return (
-    <nav className={classes.drawer} aria-label="mailbox folders">
+    <nav className={classes.drawer}>
       <Hidden smUp implementation="css">
         <Drawer
           variant="temporary"
           anchor={"left"}
           open={isOpen}
-          onClose={handleOpen}
+          onClose={handleToggle}
           classes={{
             paper: classes.drawerPaper,
           }}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
-        >
-          {drawer}
-        </Drawer>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Drawer
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          variant="permanent"
-          open
         >
           {drawer}
         </Drawer>
@@ -73,7 +65,6 @@ const AppDrawer: React.FC<Props> = ({ isOpen, handleOpen }) => {
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
     [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
       flexShrink: 0,
     },
   },
@@ -84,4 +75,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default AppDrawer;
+export default MobileDrower;

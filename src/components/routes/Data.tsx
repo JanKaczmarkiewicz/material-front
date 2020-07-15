@@ -16,10 +16,11 @@ import PageTitle from "../Layout/Typography/PageTitle";
 import { RecordState } from "../../generated/globalTypes";
 import StateStyles from "./data/history/StateStyles";
 import { Link } from "react-router-dom";
+import MainContainer from "../MainContainer";
 
-type Seed = Array<CardProps>;
+type Seed = CardProps[];
 
-const seed: Seed = [
+export const seed: Seed = [
   {
     title: "Ulice",
     url: "street",
@@ -65,44 +66,46 @@ const InfoItem = ({ text, state }: InfoItemProps) => {
 const Data: React.FC = () => {
   const classes = useStyles();
   return (
-    <Grid container spacing={4}>
-      <Grid item md={8} xs={12}>
-        <Paper className={classes.paper}>
-          <PageTitle text="Aktualny sezon: 2020" />
+    <MainContainer>
+      <Grid container spacing={4}>
+        <Grid item md={8} xs={12}>
+          <Paper className={classes.paper}>
+            <PageTitle text="Aktualny sezon: 2020" />
 
-          <List>
-            <InfoItem
-              state={RecordState.ACCEPTED}
-              text={`Ilość przyjętych domostw ${100}`}
-            />
-            <InfoItem
-              state={RecordState.REJECTED}
-              text={`Ilość odrzuconych domostw ${20}`}
-            />
-            <InfoItem
-              state={RecordState.UNKNOWN}
-              text={`Ilość niewiadomych domostw ${50}`}
-            />
-          </List>
-        </Paper>
-      </Grid>
-      <Grid item md={4} xs={12}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          component={Link}
-          to={"/calendar"}
-        >
-          Zaplanuj kolejny dzień -{">"}
-        </Button>
-      </Grid>
-      {seed.map((props, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
-          <Card {...props} />
+            <List>
+              <InfoItem
+                state={RecordState.ACCEPTED}
+                text={`Ilość przyjętych domostw ${100}`}
+              />
+              <InfoItem
+                state={RecordState.REJECTED}
+                text={`Ilość odrzuconych domostw ${20}`}
+              />
+              <InfoItem
+                state={RecordState.UNKNOWN}
+                text={`Ilość niewiadomych domostw ${50}`}
+              />
+            </List>
+          </Paper>
         </Grid>
-      ))}
-    </Grid>
+        <Grid item md={4} xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            component={Link}
+            to={"/calendar"}
+          >
+            Zaplanuj kolejny dzień -{">"}
+          </Button>
+        </Grid>
+        {seed.map((props, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Card {...props} />
+          </Grid>
+        ))}
+      </Grid>
+    </MainContainer>
   );
 };
 

@@ -118,7 +118,7 @@ const PastoralVisit: React.FC<Props> = ({ match }) => {
         </Grid>
         <Grid item lg={6} xs={12}>
           <PathCard
-            title="Kolenda"
+            title="Kolęda"
             secondary={visitTimeDiplayDate}
             image="https://lh3.googleusercontent.com/proxy/nsyLNW9zvSkI_A88HPB07nVqX7yIn4dKjDcsA9GaVyONieQj6jY3XFJTigOiD1fViNhfQ8nIM4vf5-X9Xm7TiJXJBcIC-AYyRClgQy2v8SpPTwNITVkwpXWwCdMWwUYad9WJuzmxDOd39qEBmczptuDXKt-poF7tDHLa542PIVH6i8wSeni_yH1je83VD5yQ_GPUqGN48SWkuSQNSw_uDp4yCGY0g2tK56MO8S54oJGnD7gm1RxI5bgbh_INvTntJveefenY26mCHfxTH6sc"
           />

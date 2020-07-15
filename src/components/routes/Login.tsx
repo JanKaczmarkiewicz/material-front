@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 
 import { useAuthContext } from "../../context/Auth/AuthContext";
+import MainContainer from "../MainContainer";
 
 export default function SignIn() {
   const classes = useStyles();
@@ -33,7 +34,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <MainContainer>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -95,7 +96,7 @@ export default function SignIn() {
           </Grid>
         </form>
       </div>
-    </Container>
+    </MainContainer>
   );
 }
 

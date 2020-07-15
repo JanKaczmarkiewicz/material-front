@@ -1,6 +1,5 @@
 import React from "react";
-import { makeStyles, Theme, Container } from "@material-ui/core";
-import Router from "./router/router";
+import { Theme, makeStyles, Container } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -9,12 +8,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const AppMain = () => {
+type Props = {
+  children: React.ReactElement | JSX.Element[];
+};
+
+const MainContainer: React.FC<Props> = ({ children }) => {
   const classes = useStyles();
   return (
     <Container maxWidth="lg" className={classes.container}>
-      <Router />
+      {children}
     </Container>
   );
 };
-export default AppMain;
+
+export default MainContainer;
