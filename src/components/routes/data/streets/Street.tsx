@@ -10,6 +10,7 @@ import {
 } from "../../../../generated/Street";
 
 import DataTable from "../../../Layout/DataTable/EditableDataTable";
+import MainContainer from "../../../MainContainer";
 
 type Props = RouteComponentProps<{
   id: string;
@@ -38,7 +39,7 @@ const Street: React.FC<Props> = ({ match }) => {
 
   const { name, houses, id } = data.street;
   return (
-    <>
+    <MainContainer>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h3" component="h1" color="primary">
@@ -60,7 +61,7 @@ const Street: React.FC<Props> = ({ match }) => {
           />
         </Grid>
       </Grid>
-    </>
+    </MainContainer>
   );
 };
 

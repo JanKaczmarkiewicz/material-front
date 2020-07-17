@@ -23,7 +23,6 @@ const MobileDrower: React.FC<Props> = ({ isOpen, handleToggle }) => {
 
   const drawer = (
     <>
-      <div className={classes.toolbar} />
       <List>
         {seed.map(({ title, url }) => (
           <ListItem
@@ -68,8 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexShrink: 0,
     },
   },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
+
   drawerPaper: {
     width: drawerWidth,
   },

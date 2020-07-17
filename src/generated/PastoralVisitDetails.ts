@@ -13,6 +13,11 @@ export interface PastoralVisitDetails_pastoralVisit_priest {
   username: string;
 }
 
+export interface PastoralVisitDetails_pastoralVisit_day {
+  reeceDate: any;
+  visitDate: any;
+}
+
 export interface PastoralVisitDetails_pastoralVisit_entrances_house {
   number: string;
 }
@@ -27,8 +32,8 @@ export interface PastoralVisitDetails_pastoralVisit_entrances {
 
 export interface PastoralVisitDetails_pastoralVisit {
   priest: PastoralVisitDetails_pastoralVisit_priest | null;
-  reeceTime: any;
-  visitTime: any;
+  day: PastoralVisitDetails_pastoralVisit_day | null;
+  hour: number;
   entrances: PastoralVisitDetails_pastoralVisit_entrances[];
 }
 

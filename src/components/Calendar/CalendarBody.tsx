@@ -3,15 +3,15 @@ import {
   Grid,
   Card,
   CardHeader,
-  CardContent,
-  Divider,
   makeStyles,
   CardActionArea,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { SeasonDays_season_days as Day } from "../../generated/SeasonDays";
 
 interface Props {
   mouth: number;
+  plannedDays: Day[];
 }
 
 const season = 2020; //TODO
@@ -29,34 +29,49 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CalendarBody: React.FC<Props> = ({ mouth }) => {
+const CalendarBody: React.FC<Props> = ({ mouth, plannedDays }) => {
   const classnames = useStyles();
   const days = getMonthDays(mouth);
   return (
     <Grid container spacing={2} className={classnames.root}>
       {new Array(days)
-        .fill(undefined)
+        .fill(null)
         .map((_, i) => i + 1)
-        .map((day) => (
-          <Grid item xs={6} md={4} lg={2} key={`${mouth + 1}-${day}`}>
-            <Card variant="outlined">
-              <CardActionArea
-                to={`/calendar/${season}-${mouth + 1}-${day}`}
-                component={Link}
-              >
-                <CardHeader title={day} />
+        .map((day) => {
+          const plannedDay = plannedDays.find(
+            ({ visitDate }) => new Date(visitDate).getDate() === day
+          );
 
-                <CardContent>
-                  Zwiady 0
-                  <Divider />
-                  Kolendy 5
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
+          const card = (
+            <Grid item xs={6} md={4} lg={2} key={`${mouth + 1}-${day}`}>
+              {plannedDay ? (
+                <ActiveDayCard day={plannedDay} />
+              ) : (
+                <Card variant="outlined">
+                  <CardActionArea to={`/calendar/new`} component={Link}>
+                    <CardHeader title={day} />
+                  </CardActionArea>
+                </Card>
+              )}
+            </Grid>
+          );
+
+          return card;
+        })}
     </Grid>
   );
 };
+
+type ActiveDayCardProps = {
+  day: Day;
+};
+
+const ActiveDayCard: React.FC<ActiveDayCardProps> = ({ day }) => (
+  <Card variant="outlined">
+    <CardActionArea to={`/calendar/${day.id}`} component={Link}>
+      <CardHeader title={new Date(day.visitDate).getDate()} />
+    </CardActionArea>
+  </Card>
+);
 
 export default CalendarBody;

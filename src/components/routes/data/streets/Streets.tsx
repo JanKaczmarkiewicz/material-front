@@ -7,6 +7,7 @@ import {
   Streets as IStreets,
   Streets_streets,
 } from "../../../../generated/Streets";
+import MainContainer from "../../../MainContainer";
 
 const sanitize = ({ id, name }: Streets_streets) => ({
   id,
@@ -31,32 +32,34 @@ export const Streets: React.FC = (props) => {
   if (error) return <div>error</div>;
 
   return (
-    <DataTemplate
-      items={data.streets}
-      title="Ulice"
-      link="/data/streets/"
-      config={{
-        name: {
-          label: "Nazwa:",
-          index: 0,
-          displayValue: (item) => item,
-          renderInput: ({ name, value, onChange }) => (
-            <TextField
-              name={name}
-              value={value}
-              onChange={(e) => onChange({ [name]: e.target.value })}
-              label="Combo box"
-              variant="outlined"
-            />
-          ),
-        },
-      }}
-      deleteItem={(id) => {}}
-      sanitize={sanitize}
-      updateItem={(id) => (update) => {
-        updateStreet({ variables: { input: { id, ...update } } });
-      }}
-    />
+    <MainContainer>
+      <DataTemplate
+        items={data.streets}
+        title="Ulice"
+        link="/data/streets/"
+        config={{
+          name: {
+            label: "Nazwa:",
+            index: 0,
+            displayValue: (item) => item,
+            renderInput: ({ name, value, onChange }) => (
+              <TextField
+                name={name}
+                value={value}
+                onChange={(e) => onChange({ [name]: e.target.value })}
+                label="Combo box"
+                variant="outlined"
+              />
+            ),
+          },
+        }}
+        deleteItem={(id) => {}}
+        sanitize={sanitize}
+        updateItem={(id) => (update) => {
+          updateStreet({ variables: { input: { id, ...update } } });
+        }}
+      />
+    </MainContainer>
   );
 };
 

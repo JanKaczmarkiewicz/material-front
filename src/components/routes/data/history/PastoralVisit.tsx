@@ -30,7 +30,10 @@ const PASTORAL_VISIT = gql`
         id
         username
       }
-      visitTime
+      day {
+        reeceDate
+        visitDate
+      }
       entrances {
         id
         house {
@@ -40,11 +43,6 @@ const PASTORAL_VISIT = gql`
         visitState
         reeceState
         comment
-      }
-      reeceTime
-      season {
-        id
-        year
       }
     }
   }
@@ -63,12 +61,17 @@ const PastoralVisit: React.FC<Props> = ({ match }) => {
   });
 
   if (loading || !data) return <div>loading...</div>;
-  if (error || data.pastoralVisit === null) return <div>error</div>;
+  if (error || !data.pastoralVisit || !data.pastoralVisit.day)
+    return <div>error</div>;
 
-  const { priest, reeceTime, visitTime, acolytes } = data.pastoralVisit;
+  const {
+    priest,
+    day: { reeceDate, visitDate },
+    acolytes,
+  } = data.pastoralVisit;
 
-  const reeceTimeDiplayDate = new Date(reeceTime).toLocaleString();
-  const visitTimeDiplayDate = new Date(visitTime).toLocaleString();
+  const reeceStringDate = new Date(reeceDate).toLocaleString();
+  const visitStringDate = new Date(visitDate).toLocaleString();
 
   return (
     <>
@@ -78,7 +81,7 @@ const PastoralVisit: React.FC<Props> = ({ match }) => {
             <CardHeader
               titleTypographyProps={{ variant: "h4" }}
               title={`Wyzyta duszpasterska`}
-              subheader={`Na dzień: ${visitTimeDiplayDate}r.`}
+              subheader={`Na dzień: ${visitStringDate}r.`}
             />
 
             <CardContent>
@@ -112,14 +115,14 @@ const PastoralVisit: React.FC<Props> = ({ match }) => {
         <Grid item lg={6} xs={12}>
           <PathCard
             title="Zwiad"
-            secondary={reeceTimeDiplayDate}
+            secondary={reeceStringDate}
             image="https://ministranci-swantoni.weebly.com/uploads/8/1/3/5/81354392/published/modakoledowa-4.jpg?1483221006"
           />
         </Grid>
         <Grid item lg={6} xs={12}>
           <PathCard
             title="Kolęda"
-            secondary={visitTimeDiplayDate}
+            secondary={visitStringDate}
             image="https://lh3.googleusercontent.com/proxy/nsyLNW9zvSkI_A88HPB07nVqX7yIn4dKjDcsA9GaVyONieQj6jY3XFJTigOiD1fViNhfQ8nIM4vf5-X9Xm7TiJXJBcIC-AYyRClgQy2v8SpPTwNITVkwpXWwCdMWwUYad9WJuzmxDOd39qEBmczptuDXKt-poF7tDHLa542PIVH6i8wSeni_yH1je83VD5yQ_GPUqGN48SWkuSQNSw_uDp4yCGY0g2tK56MO8S54oJGnD7gm1RxI5bgbh_INvTntJveefenY26mCHfxTH6sc"
           />
         </Grid>

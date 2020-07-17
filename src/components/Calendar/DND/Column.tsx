@@ -1,7 +1,7 @@
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { List, Paper, ListSubheader } from "@material-ui/core";
-import { DaySchedule_pastoralVisits_entrances } from "../../../generated/DaySchedule";
+import { Day_day_pastoralVisits_entrances as Entrance } from "../../../generated/Day";
 import { getKeys } from "../../Layout/DataTable/util";
 import { splitByLabel } from "../../../utils/splitByLabel";
 import Group from "./Group";
@@ -11,8 +11,6 @@ interface Props {
   items: Entrance[];
   droppableId: string;
 }
-
-type Entrance = DaySchedule_pastoralVisits_entrances;
 
 const InnerList = React.memo<{ items: Entrance[] }>(({ items: entrances }) => {
   const spitedEntrances = splitByLabel(

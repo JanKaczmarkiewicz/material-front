@@ -30,8 +30,11 @@ const PASTORAL_VISIT_DETAILS = gql`
       priest {
         username
       }
-      reeceTime
-      visitTime
+      day {
+        reeceDate
+        visitDate
+      }
+      hour
       entrances {
         id
         reeceState

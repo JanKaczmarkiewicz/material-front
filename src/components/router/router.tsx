@@ -8,7 +8,6 @@ import PrivateRoute from "./PrivateRoute";
 import Streets from "../routes/data/streets/Streets";
 // import Priests from "../routes/data/Priests";
 // import Acolytes from "../routes/data/Acolytes";
-import History from "../routes/data/history/History";
 
 import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
@@ -27,7 +26,7 @@ const Router: React.FC = () => {
         <Calendar />
       </PrivateRoute>
 
-      <PrivateRoute path="/calendar/:date" exact component={DayManager} />
+      <PrivateRoute path="/calendar/:dayId" exact component={DayManager} />
 
       <UnloggedRoute path="/login/" exact>
         <Login />
@@ -35,10 +34,6 @@ const Router: React.FC = () => {
 
       <PrivateRoute path={`/data/street/`} exact>
         <Streets />
-      </PrivateRoute>
-
-      <PrivateRoute path={`/data/history/`} exact>
-        <History />
       </PrivateRoute>
 
       <Route path={`/data/streets/:id`} exact component={Street} />

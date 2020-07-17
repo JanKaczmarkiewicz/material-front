@@ -18,6 +18,7 @@ export enum Role {
   ACOLYTE = "ACOLYTE",
   ADMIN = "ADMIN",
   PRIEST = "PRIEST",
+  USER = "USER",
 }
 
 export interface FindOneInput {
@@ -27,10 +28,6 @@ export interface FindOneInput {
 export interface LoginInput {
   email: string;
   password: string;
-}
-
-export interface PastoralVisitsInput {
-  date?: string | null;
 }
 
 export interface UpdateStreetInput {

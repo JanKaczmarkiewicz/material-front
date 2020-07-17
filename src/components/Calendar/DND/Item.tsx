@@ -6,10 +6,10 @@ import {
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 import { ListItem, ListItemText } from "@material-ui/core";
-import { DaySchedule_pastoralVisits_entrances } from "../../../generated/DaySchedule";
+import { Day_day_pastoralVisits_entrances as Entrance } from "../../../generated/Day";
 
 interface Props {
-  entrance: DaySchedule_pastoralVisits_entrances;
+  entrance: Entrance;
   index: number;
 }
 
@@ -34,7 +34,7 @@ const Item: React.FC<Props> = ({ entrance, index }) => {
 };
 
 //to prevent default rbd element animation
-function getStyle(
+export function getStyle(
   style: DraggingStyle | NotDraggingStyle | undefined,
   snapshot: DraggableStateSnapshot
 ) {

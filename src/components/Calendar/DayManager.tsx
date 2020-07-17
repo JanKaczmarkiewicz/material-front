@@ -2,11 +2,7 @@ import React from "react";
 
 //types
 import { RouteComponentProps } from "react-router-dom";
-import {
-  DaySchedule,
-  DayScheduleVariables,
-  DaySchedule_pastoralVisits,
-} from "../../generated/DaySchedule";
+
 import {
   RelocateEntrance,
   RelocateEntranceVariables,
@@ -17,54 +13,57 @@ import PageTitle from "../Layout/Typography/PageTitle";
 import {
   Container,
   Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
   makeStyles,
+  List,
+  ListSubheader,
+  Paper,
+  ListItem,
+  ListItemText,
 } from "@material-ui/core";
 import Column from "./DND/Column";
 import {
   DragDropContext,
   DropResult,
-  ResponderProvided,
+  Droppable,
+  Draggable,
 } from "react-beautiful-dnd";
 
 //data
 import { client } from "../../context/client/ApolloClient";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { RELOCATE_ENTRANCE, DAY } from "./actions";
+import { Day, DayVariables, Day_day_pastoralVisits } from "../../generated/Day";
+import { splitByLabel } from "../../utils/splitByLabel";
+import { getKeys } from "../Layout/DataTable/util";
+import { sortByHouseNumber } from "../../utils/sortByHouseNumber";
+import { getStyle } from "./DND/Item";
+
+const drawerWidth = 240;
 
 type Props = RouteComponentProps<{
-  date: string;
+  dayId: string;
 }>;
 
 const DayManager: React.FC<Props> = ({ match }) => {
-  const { date } = match.params;
+  const classes = useStyles();
+  const { dayId } = match.params;
 
   const [relocateEntrance] = useMutation<
     RelocateEntrance,
     RelocateEntranceVariables
   >(RELOCATE_ENTRANCE);
 
-  const day = useQuery<DaySchedule, DayScheduleVariables>(DAY, {
-    variables: { input: { date } },
+  const { loading, error, data } = useQuery<Day, DayVariables>(DAY, {
+    variables: { input: { id: dayId } },
   });
 
-  if (day.loading) return <div>loading...</div>;
+  if (loading) return <div>loading...</div>;
 
-  if (day.error || !day.data) return <div>error</div>;
+  if (error || !data || !data.day) return <div>error</div>;
 
-  const currDate = new Date(date);
-  const visits = day.data.pastoralVisits;
+  const { pastoralVisits, visitDate, unusedHouses } = data.day;
 
-  // const visits = dayActivities.reduce((obj, pastoralVisit) => {
-  //   const pastoralVisitDate = new Date(pastoralVisit.visitTime);
-  //   return isSameDay(pastoralVisitDate, currDate)
-  //     ? [...obj, pastoralVisit]
-  //     : obj;
-  // }, [] as DaySchedule_pastoralVisits[]);
+  const currDate = new Date(visitDate);
 
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
@@ -83,18 +82,17 @@ const DayManager: React.FC<Props> = ({ match }) => {
       variables: { input: { id: dayId } },
     };
 
-    const query = client.cache.readQuery<DaySchedule, DayScheduleVariables>(
-      queryOptions
-    )!;
+    const query = client.cache.readQuery<Day, DayVariables>(queryOptions)!;
 
-    const indexes = findEntranceInPastoralVisits(
-      draggableId,
-      query.pastoralVisits
-    );
+    const pastoralVisits = query.day?.pastoralVisits;
+
+    if (!query.day || !pastoralVisits) return;
+
+    const indexes = findEntranceInPastoralVisits(draggableId, pastoralVisits);
 
     if (!indexes) return;
 
-    const newData = [...query.pastoralVisits];
+    const newData = [...pastoralVisits];
 
     const destinationPastoralVisitIndex = newData.findIndex(
       ({ id }) => id === destination.droppableId
@@ -118,9 +116,9 @@ const DayManager: React.FC<Props> = ({ match }) => {
       movedEntrance,
     ];
 
-    client.cache.writeQuery<DaySchedule, DayScheduleVariables>({
+    client.cache.writeQuery<Day, DayVariables>({
       ...queryOptions,
-      data: { pastoralVisits: newData },
+      data: { day: { ...query.day, pastoralVisits: newData } },
     });
 
     relocateEntrance({
@@ -128,62 +126,78 @@ const DayManager: React.FC<Props> = ({ match }) => {
     });
   };
 
+  const splitedUnusedHouses = splitByLabel(
+    unusedHouses,
+    (house) => house.street?.name
+  );
+
   return (
-    <>
+    <DragDropContext onDragEnd={onDragEnd}>
       <Drawer
         className={classes.drawer}
         variant="permanent"
         classes={{
           paper: classes.drawerPaper,
         }}
+        anchor="left"
       >
-        {/* <Toolbar /> */}
         <div className={classes.drawerContainer}>
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? "K" : "L"}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? "K" : "L"}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+          <Droppable droppableId={"unusedHouses"}>
+            {(provided) => (
+              <Paper innerRef={provided.innerRef} {...provided.droppableProps}>
+                {getKeys(splitedUnusedHouses).map((key) => (
+                  <List subheader={<ListSubheader>{key}</ListSubheader>}>
+                    {sortByHouseNumber(
+                      splitedUnusedHouses[key],
+                      (house) => house.number
+                    ).map(({ id, number, index }) => (
+                      <Draggable draggableId={id} index={index}>
+                        {(provided, snapshot) => (
+                          <ListItem
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            innerRef={provided.innerRef}
+                            style={getStyle(
+                              provided.draggableProps?.style,
+                              snapshot
+                            )}
+                          >
+                            <ListItemText primary={number} />
+                          </ListItem>
+                        )}
+                      </Draggable>
+                    ))}
+                  </List>
+                ))}
+              </Paper>
+            )}
+          </Droppable>
         </div>
       </Drawer>
       <Container maxWidth={"lg"}>
         <PageTitle text={headerText} />
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <DragDropContext onDragEnd={onDragEnd}>
-            {visits.map(({ id, priest, entrances }) => (
-              <Column
-                key={id}
-                droppableId={id}
-                title={
-                  priest?.username
-                    ? `ks. ${(priest?.username).split(" ")[1]}`
-                    : "Brak kapłana"
-                }
-                items={entrances}
-              />
-            ))}
-          </DragDropContext>
+          {pastoralVisits.map(({ id, priest, entrances }) => (
+            <Column
+              key={id}
+              droppableId={id}
+              title={
+                priest?.username
+                  ? `ks. ${(priest?.username).split(" ")[1]}`
+                  : "Brak kapłana"
+              }
+              items={entrances}
+            />
+          ))}
         </div>
       </Container>
-    </>
+    </DragDropContext>
   );
 };
 
 const findEntranceInPastoralVisits = (
   id: string,
-  pastoralVisits: DaySchedule_pastoralVisits[]
+  pastoralVisits: Day_day_pastoralVisits[]
 ) => {
   let pastoralVisitIndex = null;
   let entranceIndex = null;
@@ -211,11 +225,11 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
   },
   drawer: {
-    width: 240,
+    width: drawerWidth,
     flexShrink: 0,
   },
   drawerPaper: {
-    width: 240,
+    width: drawerWidth,
   },
   drawerContainer: {
     overflow: "auto",

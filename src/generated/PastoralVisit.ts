@@ -19,6 +19,11 @@ export interface PastoralVisit_pastoralVisit_acolytes {
   username: string;
 }
 
+export interface PastoralVisit_pastoralVisit_day {
+  reeceDate: any;
+  visitDate: any;
+}
+
 export interface PastoralVisit_pastoralVisit_entrances_house {
   id: string;
   number: string;
@@ -32,19 +37,12 @@ export interface PastoralVisit_pastoralVisit_entrances {
   comment: string | null;
 }
 
-export interface PastoralVisit_pastoralVisit_season {
-  id: string;
-  year: number;
-}
-
 export interface PastoralVisit_pastoralVisit {
   id: string;
   priest: PastoralVisit_pastoralVisit_priest | null;
   acolytes: PastoralVisit_pastoralVisit_acolytes[];
-  visitTime: any;
+  day: PastoralVisit_pastoralVisit_day | null;
   entrances: PastoralVisit_pastoralVisit_entrances[];
-  reeceTime: any;
-  season: PastoralVisit_pastoralVisit_season | null;
 }
 
 export interface PastoralVisit {

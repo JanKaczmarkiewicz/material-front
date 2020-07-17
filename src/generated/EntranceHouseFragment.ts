@@ -4,18 +4,16 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: RelocateEntrance
+// GraphQL fragment: EntranceHouseFragment
 // ====================================================
 
-export interface RelocateEntrance_updateEntrance {
+export interface EntranceHouseFragment_street {
   id: string;
+  name: string;
 }
 
-export interface RelocateEntrance {
-  updateEntrance: RelocateEntrance_updateEntrance | null;
-}
-
-export interface RelocateEntranceVariables {
+export interface EntranceHouseFragment {
   id: string;
-  to: string;
+  number: string;
+  street: EntranceHouseFragment_street | null;
 }
