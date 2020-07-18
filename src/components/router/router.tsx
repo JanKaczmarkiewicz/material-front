@@ -1,6 +1,6 @@
 import React from "react";
-import Data from "../routes/Data";
-import Login from "../routes/Login";
+import Data from "../routes";
+import Login from "../routes/login/Login";
 import { Switch, Route } from "react-router-dom";
 import UnloggedRoute from "./UnloggedRoute";
 import PrivateRoute from "./PrivateRoute";
@@ -12,8 +12,8 @@ import Streets from "../routes/data/streets/Streets";
 import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
 import Street from "../routes/data/streets/Street";
-import Calendar from "../Calendar";
-import DayManager from "../Calendar/DayManager";
+import Calendar from "../routes/calendar";
+import DayManager from "../routes/calendar/day/Day";
 
 const Router: React.FC = () => {
   return (

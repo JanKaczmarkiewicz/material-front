@@ -12,11 +12,11 @@ import {
   Button,
 } from "@material-ui/core";
 import Card, { Props as CardProps } from "../Layout/CallToAction/Card";
-import PageTitle from "../Layout/Typography/PageTitle";
+import PageTitle from "../Layout/typography/PageTitle";
 import { RecordState } from "../../generated/globalTypes";
 import StateStyles from "./data/history/StateStyles";
 import { Link } from "react-router-dom";
-import MainContainer from "../MainContainer";
+import MainContainer from "../Layout/container/MainContainer";
 
 type Seed = CardProps[];
 

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import CalendarHeader, { mouths } from "./CalendarHeader";
 import CalendarBody from "./CalendarBody";
-import MainContainer from "../MainContainer";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
-import { SeasonDays, SeasonDaysVariables } from "../../generated/SeasonDays";
-import { useSeasonContext } from "../../context/Season/SeasonContext";
+import MainContainer from "../../Layout/container/MainContainer";
+import { useSeasonContext } from "../../../context/Season/SeasonContext";
+import { SeasonDays, SeasonDaysVariables } from "../../../generated/SeasonDays";
 
 const SEASON = gql`
   query SeasonDays($input: FindOneInput!) {

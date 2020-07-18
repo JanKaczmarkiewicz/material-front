@@ -6,7 +6,7 @@ import {
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 import { ListItem, ListItemText } from "@material-ui/core";
-import { Day_day_pastoralVisits_entrances as Entrance } from "../../../generated/Day";
+import { Day_day_pastoralVisits_entrances as Entrance } from "../../../../generated/Day";
 
 interface Props {
   entrance: Entrance;

@@ -7,7 +7,7 @@ import {
   Streets as IStreets,
   Streets_streets,
 } from "../../../../generated/Streets";
-import MainContainer from "../../../MainContainer";
+import MainContainer from "../../../Layout/container/MainContainer";
 
 const sanitize = ({ id, name }: Streets_streets) => ({
   id,

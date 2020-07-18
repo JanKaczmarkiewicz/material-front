@@ -7,7 +7,7 @@ import {
   CardActionArea,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { SeasonDays_season_days as Day } from "../../generated/SeasonDays";
+import { SeasonDays_season_days as Day } from "../../../generated/SeasonDays";
 
 interface Props {
   mouth: number;

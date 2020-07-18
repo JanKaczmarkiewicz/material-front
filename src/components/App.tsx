@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "./Layout/Header/Header";
-import { Toolbar, Theme, makeStyles } from "@material-ui/core";
-import MobileDrower from "./Layout/Drawer";
+import Header from "./structure/Header/Header";
+import { Theme, makeStyles } from "@material-ui/core";
+import MobileDrower from "./structure/Drawer";
 import Router from "./router/router";
 
 const App: React.FC = () => {

@@ -1,10 +1,10 @@
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { List, Paper, ListSubheader } from "@material-ui/core";
-import { Day_day_pastoralVisits_entrances as Entrance } from "../../../generated/Day";
-import { getKeys } from "../../Layout/DataTable/util";
-import { splitByLabel } from "../../../utils/splitByLabel";
 import Group from "./Group";
+import { Day_day_pastoralVisits_entrances as Entrance } from "../../../../generated/Day";
+import { splitByLabel } from "../../../../utils/splitByLabel";
+import { getKeys } from "../../../Layout/DataTable/util";
 
 interface Props {
   title: string;

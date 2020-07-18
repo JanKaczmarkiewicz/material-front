@@ -10,7 +10,7 @@ import {
 } from "../../../../generated/Street";
 
 import DataTable from "../../../Layout/DataTable/EditableDataTable";
-import MainContainer from "../../../MainContainer";
+import MainContainer from "../../../Layout/container/MainContainer";
 
 type Props = RouteComponentProps<{
   id: string;

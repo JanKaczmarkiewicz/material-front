@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { TableBody, Paper, Toolbar } from "@material-ui/core";
 
-import Title from "../../Title";
+import Title from "../typography/Title";
 import THead from "./Table/THead";
 import TFooter from "./Table/TFooter";
 import TRow, {

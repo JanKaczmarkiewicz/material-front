@@ -1,6 +1,6 @@
 import React from "react";
 import { Me_me } from "../../../generated/Me";
-import { seed } from "../../routes/Data";
+import { seed } from "../../routes";
 import {
   Button,
   makeStyles,

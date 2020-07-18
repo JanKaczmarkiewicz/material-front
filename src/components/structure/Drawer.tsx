@@ -8,7 +8,7 @@ import {
   makeStyles,
   Theme,
 } from "@material-ui/core";
-import { seed } from "../routes/Data";
+import { seed } from "../routes";
 import { Link } from "react-router-dom";
 
 const drawerWidth = 240;

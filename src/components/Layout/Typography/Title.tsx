@@ -1,10 +1,9 @@
 import React, { ReactChildren } from "react";
-import PropTypes from "prop-types";
 
 import Typography from "@material-ui/core/Typography";
 
 export default function Title({
-  children
+  children,
 }: {
   children: string | ReactChildren;
 }) {
@@ -20,7 +19,3 @@ export default function Title({
     </Typography>
   );
 }
-
-Title.propTypes = {
-  children: PropTypes.node
-};

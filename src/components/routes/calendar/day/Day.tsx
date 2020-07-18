@@ -2,14 +2,17 @@ import React from "react";
 
 //types
 import { RouteComponentProps } from "react-router-dom";
-
 import {
   RelocateEntrance,
   RelocateEntranceVariables,
-} from "../../generated/RelocateEntrance";
+} from "../../../../generated/RelocateEntrance";
+import {
+  Day,
+  DayVariables,
+  Day_day_pastoralVisits,
+} from "../../../../generated/Day";
 
 //ui
-import PageTitle from "../Layout/Typography/PageTitle";
 import {
   Container,
   Drawer,
@@ -20,7 +23,7 @@ import {
   ListItem,
   ListItemText,
 } from "@material-ui/core";
-import Column from "./DND/Column";
+import Column from "../DND/Column";
 import {
   DragDropContext,
   DropResult,
@@ -29,14 +32,14 @@ import {
 } from "react-beautiful-dnd";
 
 //data
-import { client } from "../../context/client/ApolloClient";
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import { RELOCATE_ENTRANCE, DAY } from "./actions";
-import { Day, DayVariables, Day_day_pastoralVisits } from "../../generated/Day";
-import { splitByLabel } from "../../utils/splitByLabel";
-import { getKeys } from "../Layout/DataTable/util";
-import { sortByHouseNumber } from "../../utils/sortByHouseNumber";
-import { getStyle } from "./DND/Item";
+import { RELOCATE_ENTRANCE, DAY } from "../actions";
+import { client } from "../../../../context/client/ApolloClient";
+import { splitByLabel } from "../../../../utils/splitByLabel";
+import { getKeys } from "../../../Layout/DataTable/util";
+import { sortByHouseNumber } from "../../../../utils/sortByHouseNumber";
+import { getStyle } from "../DND/Item";
+import PageTitle from "../../../Layout/typography/PageTitle";
 
 const drawerWidth = 240;
 

@@ -13,8 +13,8 @@ import {
   Container,
 } from "@material-ui/core";
 
-import { useAuthContext } from "../../context/Auth/AuthContext";
-import MainContainer from "../MainContainer";
+import { useAuthContext } from "../../../context/Auth/AuthContext";
+import MainContainer from "../../Layout/container/MainContainer";
 
 export default function SignIn() {
   const classes = useStyles();
