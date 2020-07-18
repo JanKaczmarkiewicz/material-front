@@ -13,7 +13,7 @@ interface Props {
 const Navbar: React.FC<Props> = ({ seed }) => (
   <nav>
     {seed.map(({ icon: Icon, text, link }) => (
-      <ListItem button component={Link} to={link}>
+      <ListItem button component={Link} to={link} key={`navitem-${text}`}>
         <ListItemIcon>{Icon}</ListItemIcon>
         <ListItemText primary={text} />
       </ListItem>

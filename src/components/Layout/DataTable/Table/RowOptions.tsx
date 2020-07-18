@@ -1,18 +1,19 @@
 import React from "react";
 import { TableCell, IconButton } from "@material-ui/core";
+import { getKeys } from "../util";
 
-interface Props {
+export interface Props {
   [key: string]: {
-    renderIcon: () => JSX.Element;
+    renderIcon: () => React.ReactNode;
     handler: () => void;
   };
 }
 
-const RowOptions: React.FC<Props> = props => {
+const RowOptions: React.FC<Props> = (props) => {
   return (
     <TableCell align="right">
-      {Object.keys(props).map(key => (
-        <IconButton onClick={props[key].handler}>
+      {getKeys(props).map((key) => (
+        <IconButton key={`to-${key}`} onClick={props[key].handler}>
           {props[key].renderIcon()}
         </IconButton>
       ))}
