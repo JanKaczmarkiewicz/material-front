@@ -1,60 +1,79 @@
 import React from "react";
-import Dashboard from "../routes/Dashboard";
 import Data from "../routes/Data";
-import Users from "../routes/Users";
 import Login from "../routes/Login";
 import { Switch, Route } from "react-router-dom";
 import UnloggedRoute from "./UnloggedRoute";
 import PrivateRoute from "./PrivateRoute";
 
-import Streets from "../routes/data/Streets";
-import Priests from "../routes/data/Priests";
-import Acolytes from "../routes/data/Acolytes";
-import Houses from "../routes/data/Houses";
-import History from "../routes/History";
+import Streets from "../routes/data/streets/Streets";
+// import Priests from "../routes/data/Priests";
+// import Acolytes from "../routes/data/Acolytes";
+
+import PastoralVisitList from "../routes/data/history/List";
+import PastoralVisit from "../routes/data/history/PastoralVisit";
+import Street from "../routes/data/streets/Street";
+import Calendar from "../Calendar";
+import DayManager from "../Calendar/DayManager";
 
 const Router: React.FC = () => {
   return (
     <Switch>
-      <Route path="/" exact>
-        Main
-      </Route>
+      <PrivateRoute path="/" exact>
+        <Data />
+      </PrivateRoute>
+
+      <PrivateRoute path="/calendar" exact>
+        <Calendar />
+      </PrivateRoute>
+
+      <PrivateRoute path="/calendar/:dayId" exact component={DayManager} />
 
       <UnloggedRoute path="/login/" exact>
         <Login />
       </UnloggedRoute>
 
-      <PrivateRoute path="/dashboard/" exact>
-        <Dashboard />
-      </PrivateRoute>
-
-      <PrivateRoute path="/users/" exact>
-        <Users />
-      </PrivateRoute>
-
-      <PrivateRoute path={`/history/`} exact>
-        <History />
-      </PrivateRoute>
-
-      <PrivateRoute path="/data/" exact>
-        <Data />
-      </PrivateRoute>
-
       <PrivateRoute path={`/data/street/`} exact>
         <Streets />
       </PrivateRoute>
 
-      <PrivateRoute path={`/data/priest/`} exact>
+      <Route path={`/data/streets/:id`} exact component={Street} />
+
+      <PrivateRoute
+        path={`/data/history/:id`}
+        exact
+        component={PastoralVisit}
+      />
+
+      <Route
+        path={`/data/history/:id/visit`}
+        exact
+        render={(props) => <PastoralVisitList {...props} variant="visit" />}
+      />
+
+      <PrivateRoute
+        path={`/data/history/:id/reece`}
+        exact
+        render={(props) => <PastoralVisitList {...props} variant="reece" />}
+      />
+
+      <Route
+        path={`/data/history/:id/visit`}
+        exact
+        render={(props) => <PastoralVisitList {...props} variant="visit" />}
+      />
+
+      {/* <Route path="*">
+        <NotFound />
+      </Route> */}
+
+      {/* <PrivateRoute path={`/data/priest/`} exact>
         <Priests />
       </PrivateRoute>
 
       <PrivateRoute path={`/data/acolyte/`} exact>
         <Acolytes />
       </PrivateRoute>
-
-      <PrivateRoute path={`/data/house/`} exact>
-        <Houses />
-      </PrivateRoute>
+  */}
     </Switch>
   );
 };

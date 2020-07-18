@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import {
   Avatar,
   Button,
@@ -8,39 +10,18 @@ import {
   Link,
   Grid,
   Typography,
-  Container
+  Container,
 } from "@material-ui/core";
 
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { makeStyles } from "@material-ui/core/styles";
-
-import useAuthContext from "../../context/auth/context";
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
-}));
+import { useAuthContext } from "../../context/Auth/AuthContext";
+import MainContainer from "../MainContainer";
 
 export default function SignIn() {
   const classes = useStyles();
 
   const { login } = useAuthContext();
-  const [input, setInput] = useState({ phone: "", password: "" });
+
+  const [input, setInput] = useState({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -49,11 +30,11 @@ export default function SignIn() {
 
   const handleSignIn = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    login(input.phone, input.password);
+    login(input);
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <MainContainer>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -67,13 +48,13 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="phone"
-            label="Phone number"
-            name="phone"
-            autoComplete="phone"
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
             autoFocus
             onChange={handleChange}
-            value={input.phone}
+            value={input.email}
           />
           <TextField
             variant="outlined"
@@ -115,6 +96,26 @@ export default function SignIn() {
           </Grid>
         </form>
       </div>
-    </Container>
+    </MainContainer>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%",
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));

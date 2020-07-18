@@ -1,49 +1,38 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-
-import DrawerMenu from "./Layout/Menu";
-import Header from "./Layout/Header";
-
+import Header from "./Layout/Header/Header";
+import { Toolbar, Theme, makeStyles } from "@material-ui/core";
+import MobileDrower from "./Layout/Drawer";
 import Router from "./router/router";
 
-const App = () => {
+const App: React.FC = () => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   return (
-    <div className={classes.root}>
-      <Header isOpen={open} handleOpen={handleDrawerOpen} />
-      <DrawerMenu isOpen={open} handleClose={handleDrawerClose} />
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Router />
-        </Container>
+    <div>
+      <Header handleToggle={handleDrawerToggle} />
+
+      <main className={classes.root}>
+        <MobileDrower isOpen={mobileOpen} handleToggle={handleDrawerToggle} />
+        <Router />
       </main>
     </div>
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
-  appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
-  }
 }));
+
 export default App;

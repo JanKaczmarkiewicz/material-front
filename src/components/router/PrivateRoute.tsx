@@ -1,22 +1,18 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import useAuthContext from "../../context/auth/context";
+import { useAuthContext } from "../../context/Auth/AuthContext";
 
-interface Props extends RouteProps {
-  children: React.ReactNode;
-}
-
-const PrivateRoute: React.FC<Props> = ({ children, ...restProps }) => {
-  const { isAuthenticated } = useAuthContext();
+const PrivateRoute: React.FC<RouteProps> = ({ children, ...restProps }) => {
+  const { me } = useAuthContext();
 
   return (
     <Route {...restProps}>
-      {isAuthenticated ? (
+      {me ? (
         children
       ) : (
         <Redirect
           to={{
-            pathname: "/"
+            pathname: "/",
           }}
         />
       )}

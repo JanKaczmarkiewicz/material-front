@@ -1,65 +1,69 @@
 import React, { useState } from "react";
-import check from "../../../utils/check";
 
 import { TableBody, Paper, Toolbar } from "@material-ui/core";
 
 import Title from "../../Title";
 import THead from "./Table/THead";
 import TFooter from "./Table/TFooter";
-import TRow from "./Table/TEditableRow";
+import TRow, {
+  FieldConfig,
+  InputProps,
+  Props as RowProps,
+} from "./Table/TEditableRow";
 import Table from "./Table/Table";
-import validateProps from "./Table/validateProps";
 
-import { FieldConfig } from "./Table/types";
-
-interface RelationField extends FieldConfig {
-  type: "AUTOCOMPLETE";
-  getName: (id: string) => string;
-  options: any[];
-}
-
-interface TextField extends FieldConfig {
-  type: "TEXT";
-}
-
-export type EditConfig = Record<string, DataConfig>;
-export type DataConfig = TextField | RelationField;
-
-export interface Props<T> {
-  items: T[];
-  title: string;
-  config: EditConfig;
-  deleteItem: (index: number) => void;
-  addItem: (data: T) => void;
-  editItem: UpdateHandler;
-}
-
-type Update = {
-  [key: string]: string;
+export type Config<T> = {
+  [N in keyof T]: FieldConfig<T[N], InputProps<T[N], T, N>>;
 };
 
-export type PassUpdate = (update: Update) => void;
-export type UpdateHandler = (index: number) => PassUpdate;
+interface WithIdentyfier {
+  id: string;
+}
 
-function DataTable<T>(props: Props<T>) {
-  check(validateProps<T>(props), "Table props are invalid!");
+type Id<T> = (id: string) => T;
 
-  const [editedItem, setEditedItem] = useState<number | null>(null);
+export interface Props<T, M = Omit<T, "id">> {
+  items: T[];
+  title: string;
+  config: Config<M>;
+  deleteItem?: Id<void>;
+  updateItem?: Id<RowProps<M>["updateItem"]>;
+  sanitize: (data: T) => T;
+  link?: string;
+}
 
-  const { title, items, deleteItem, addItem, config, editItem } = props;
+function DataTable<T extends WithIdentyfier>(props: Props<T>) {
+  const [editedItemId, setEditedItemId] = useState<WithIdentyfier["id"] | null>(
+    null
+  );
 
-  const rows = items.map((data: any, index) => (
-    <TRow
-      config={config}
-      key={index}
-      data={data}
-      deleteItem={() => deleteItem(index)}
-      startEditItem={() => setEditedItem(index)}
-      isFormOpen={editedItem === index}
-      onChange={editItem(index)}
-      onFormClose={() => setEditedItem(null)}
-    />
-  ));
+  const {
+    title,
+    items,
+    config,
+    sanitize,
+    deleteItem,
+    updateItem,
+    link,
+  } = props;
+
+  const rows = items.map((data) => {
+    const { id, ...rest } = sanitize(data);
+
+    return (
+      <TRow
+        key={`trow-${id}`}
+        linkTo={link ? `${link}${id}` : undefined}
+        config={config}
+        data={rest}
+        isFormOpen={editedItemId === id}
+        onFormClose={() => setEditedItemId(null)}
+        startEditItem={() => setEditedItemId(id)}
+        {...(updateItem ? { updateItem: updateItem(id) } : {})}
+        {...(deleteItem ? { deleteItem: deleteItem.bind(null, id) } : {})}
+      />
+    );
+  });
 
   return (
     <Paper>
@@ -69,7 +73,7 @@ function DataTable<T>(props: Props<T>) {
       <Table>
         <THead config={config} />
         <TableBody>{rows}</TableBody>
-        <TFooter onSubmit={addItem} />
+        <TFooter />
       </Table>
     </Paper>
   );
