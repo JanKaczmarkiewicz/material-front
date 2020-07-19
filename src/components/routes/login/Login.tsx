@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import {
-  Avatar,
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
-  Typography,
-  Container,
-} from "@material-ui/core";
+import { Avatar, Button, TextField, Typography } from "@material-ui/core";
 
 import { useAuthContext } from "../../../context/Auth/AuthContext";
 import MainContainer from "../../Layout/container/MainContainer";
@@ -69,10 +59,7 @@ export default function SignIn() {
             onChange={handleChange}
             value={input.password}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+
           <Button
             type="submit"
             fullWidth
@@ -80,20 +67,8 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Zaloguj się
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                Don't have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
     </MainContainer>

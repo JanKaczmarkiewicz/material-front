@@ -1,6 +1,6 @@
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { List, Paper, ListSubheader } from "@material-ui/core";
+import { List, Paper, ListSubheader, Typography } from "@material-ui/core";
 import Group from "./Group";
 import { Day_day_pastoralVisits_entrances as Entrance } from "../../../../generated/Day";
 import { splitByLabel } from "../../../../utils/splitByLabel";
@@ -35,19 +35,12 @@ const Column: React.FC<Props> = ({ title, items, droppableId }) => {
   return (
     <Droppable droppableId={droppableId}>
       {(provided) => (
-        <List
-          innerRef={provided.innerRef}
-          {...provided.droppableProps}
-          subheader={
-            <ListSubheader>
-              <b>{title}</b>
-            </ListSubheader>
-          }
-        >
+        <div ref={provided.innerRef} {...provided.droppableProps}>
+          <Typography variant={"h6"}>{title}</Typography>
           <Paper>
             <InnerList items={items} />
           </Paper>
-        </List>
+        </div>
       )}
     </Droppable>
   );

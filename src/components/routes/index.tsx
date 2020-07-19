@@ -17,6 +17,7 @@ import { RecordState } from "../../generated/globalTypes";
 import StateStyles from "./data/history/StateStyles";
 import { Link } from "react-router-dom";
 import MainContainer from "../Layout/container/MainContainer";
+import { useSeasonContext } from "../../context/Season/SeasonContext";
 
 type Seed = CardProps[];
 
@@ -65,12 +66,13 @@ const InfoItem = ({ text, state }: InfoItemProps) => {
 
 const Data: React.FC = () => {
   const classes = useStyles();
+  const { currentSeason } = useSeasonContext();
   return (
     <MainContainer>
       <Grid container spacing={4}>
         <Grid item md={8} xs={12}>
           <Paper className={classes.paper}>
-            <PageTitle text="Aktualny sezon: 2020" />
+            <PageTitle text={`Aktualny sezon: ${currentSeason.year}`} />
 
             <List>
               <InfoItem

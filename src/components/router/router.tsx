@@ -1,9 +1,6 @@
 import React from "react";
 import Data from "../routes";
-import Login from "../routes/login/Login";
 import { Switch, Route } from "react-router-dom";
-import UnloggedRoute from "./UnloggedRoute";
-import PrivateRoute from "./PrivateRoute";
 
 import Streets from "../routes/data/streets/Streets";
 // import Priests from "../routes/data/Priests";
@@ -18,31 +15,23 @@ import DayManager from "../routes/calendar/day/Day";
 const Router: React.FC = () => {
   return (
     <Switch>
-      <PrivateRoute path="/" exact>
+      <Route path="/" exact>
         <Data />
-      </PrivateRoute>
+      </Route>
 
-      <PrivateRoute path="/calendar" exact>
+      <Route path="/calendar" exact>
         <Calendar />
-      </PrivateRoute>
+      </Route>
 
-      <PrivateRoute path="/calendar/:dayId" exact component={DayManager} />
+      <Route path="/calendar/:dayId" exact component={DayManager} />
 
-      <UnloggedRoute path="/login/" exact>
-        <Login />
-      </UnloggedRoute>
-
-      <PrivateRoute path={`/data/street/`} exact>
+      <Route path={`/data/street/`} exact>
         <Streets />
-      </PrivateRoute>
+      </Route>
 
       <Route path={`/data/streets/:id`} exact component={Street} />
 
-      <PrivateRoute
-        path={`/data/history/:id`}
-        exact
-        component={PastoralVisit}
-      />
+      <Route path={`/data/history/:id`} exact component={PastoralVisit} />
 
       <Route
         path={`/data/history/:id/visit`}
@@ -50,7 +39,7 @@ const Router: React.FC = () => {
         render={(props) => <PastoralVisitList {...props} variant="visit" />}
       />
 
-      <PrivateRoute
+      <Route
         path={`/data/history/:id/reece`}
         exact
         render={(props) => <PastoralVisitList {...props} variant="reece" />}
@@ -66,13 +55,13 @@ const Router: React.FC = () => {
         <NotFound />
       </Route> */}
 
-      {/* <PrivateRoute path={`/data/priest/`} exact>
+      {/* <Route path={`/data/priest/`} exact>
         <Priests />
-      </PrivateRoute>
+      </Route>
 
-      <PrivateRoute path={`/data/acolyte/`} exact>
+      <Route path={`/data/acolyte/`} exact>
         <Acolytes />
-      </PrivateRoute>
+      </Route>
   */}
     </Switch>
   );

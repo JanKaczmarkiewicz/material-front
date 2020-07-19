@@ -1,27 +1,35 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+  Button,
+} from "@material-ui/core";
 
 import { Menu as MenuIcon } from "@material-ui/icons";
 import { useAuthContext } from "../../../context/Auth/AuthContext";
-import AuthenticatedHeaderContent from "./AuthenticatedHeaderContent";
-import UnauthenticatedHeaderContent from "./UnauthenticatedHeaderContent";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 
+import { seed } from "../../routes";
 type Props = {
   handleToggle: () => void;
 };
 
 const Header: React.FC<Props> = ({ handleToggle }) => {
   const classes = useStyles();
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.up("md"));
   const { me } = useAuthContext();
-
+  const history = useHistory();
   return (
     <>
       <AppBar position="absolute" className={classes.appBar}>
-        <Toolbar>
+        <Toolbar className={classes.appBarContentContainer}>
           <IconButton
             edge="start"
             color="inherit"
@@ -31,15 +39,25 @@ const Header: React.FC<Props> = ({ handleToggle }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography to="/" component={RouterLink}>
+          <Typography variant="h6" onClick={() => history.push("/")}>
             Kolęda
           </Typography>
 
-          {me ? (
-            <AuthenticatedHeaderContent me={me} />
-          ) : (
-            <UnauthenticatedHeaderContent />
-          )}
+          <div className={classes.nav}>
+            {isMobile &&
+              seed.map(({ title, url }) => (
+                <Button
+                  key={`ab-${url}`}
+                  variant={"contained"}
+                  to={url}
+                  component={RouterLink}
+                >
+                  {title}
+                </Button>
+              ))}
+            {/* there will be always `me` becouse this app bar would not be rendered (see App component) */}
+            <Typography>Witamy, {me!.username}!</Typography>
+          </div>
         </Toolbar>
       </AppBar>
       <Toolbar />
@@ -52,10 +70,22 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
+  appBarContentContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up("sm")]: {
       display: "none",
+    },
+  },
+  nav: {
+    display: "flex",
+
+    "& *": {
+      alignItems: "center",
+      margin: theme.spacing(0, 1, 0, 1),
     },
   },
 }));
