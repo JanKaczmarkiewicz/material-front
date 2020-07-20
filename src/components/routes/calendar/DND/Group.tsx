@@ -10,7 +10,7 @@ type GroupProps = {
   entrances: WithIndex<Entrance>[];
 };
 const Group: React.FC<GroupProps> = React.memo(({ entrances, label }) => (
-  <List subheader={<ListSubheader>{label}</ListSubheader>}>
+  <List dense subheader={<ListSubheader>{label}</ListSubheader>}>
     {sortByHouseNumber(entrances, ({ house }) => house?.number).map(
       (entrance) => (
         <Item

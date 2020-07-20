@@ -10,6 +10,7 @@ import {
   Day,
   DayVariables,
   Day_day_pastoralVisits,
+  Day_day,
 } from "../../../../generated/Day";
 
 //ui
@@ -17,29 +18,18 @@ import {
   Container,
   Drawer,
   makeStyles,
-  List,
-  ListSubheader,
-  Paper,
-  ListItem,
-  ListItemText,
+  Toolbar,
+  Typography,
 } from "@material-ui/core";
 import Column from "../DND/Column";
-import {
-  DragDropContext,
-  DropResult,
-  Droppable,
-  Draggable,
-} from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 //data
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { RELOCATE_ENTRANCE, DAY } from "../actions";
 import { client } from "../../../../context/client/ApolloClient";
-import { splitByLabel } from "../../../../utils/splitByLabel";
-import { getKeys } from "../../../Layout/DataTable/util";
-import { sortByHouseNumber } from "../../../../utils/sortByHouseNumber";
-import { getStyle } from "../DND/Item";
-import PageTitle from "../../../Layout/typography/PageTitle";
+
+import UnusedHouses from "../DND/UnusedHouses";
 
 const drawerWidth = 240;
 
@@ -56,8 +46,10 @@ const DayManager: React.FC<Props> = ({ match }) => {
     RelocateEntranceVariables
   >(RELOCATE_ENTRANCE);
 
+  const dayQueryVariables = { input: { id: dayId } };
+
   const { loading, error, data } = useQuery<Day, DayVariables>(DAY, {
-    variables: { input: { id: dayId } },
+    variables: dayQueryVariables,
   });
 
   if (loading) return <div>loading...</div>;
@@ -70,8 +62,126 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
+  const queryOptions = {
+    query: DAY,
+    variables: dayQueryVariables,
+  };
+
+  const readDayQuery = () => client.readQuery<Day, DayVariables>(queryOptions)!;
+
+  const writeDayQuery = (data: Day_day) =>
+    client.writeQuery<Day, DayVariables>({
+      ...queryOptions,
+      data: { day: data },
+    });
+
+  const handleEntranceCreation = (
+    houseId: string,
+    destinationPastoralVisitIndex: number
+  ) => {
+    const query = readDayQuery();
+
+    if (!query.day) return;
+
+    const pastoralVisitsCopy = [...query.day.pastoralVisits];
+    const unusedHousesCopy = [...query.day.unusedHouses];
+
+    const houseIndex = unusedHousesCopy.findIndex(
+      (house) => house.id === houseId
+    );
+
+    if (houseIndex < 0) return;
+
+    const house = unusedHousesCopy.splice(houseIndex, 1)[0];
+
+    const newEntrance = {
+      id: Math.random().toString(),
+      __typename: "Entrance",
+      house: house,
+      comment: null,
+    };
+
+    const destinationPastoralVisitCopy = {
+      ...pastoralVisitsCopy[destinationPastoralVisitIndex],
+    };
+
+    destinationPastoralVisitCopy.entrances = [
+      ...destinationPastoralVisitCopy.entrances,
+      newEntrance,
+    ];
+
+    pastoralVisitsCopy[
+      destinationPastoralVisitIndex
+    ] = destinationPastoralVisitCopy;
+
+    writeDayQuery({
+      ...query.day,
+      unusedHouses: unusedHousesCopy,
+      pastoralVisits: pastoralVisitsCopy,
+    });
+  };
+
+  const handleEntranceRelocation = (
+    entranceId: string,
+    destinationPastoralVisitIndex: number
+  ) => {
+    const query = readDayQuery();
+
+    if (!query.day) return;
+
+    const pastoralVisitsCopy = [...query.day.pastoralVisits];
+
+    const indexes = findEntranceInPastoralVisits(
+      entranceId,
+      pastoralVisitsCopy
+    );
+
+    if (!indexes) return;
+
+    const {
+      entranceIndex,
+      pastoralVisitIndex: sourcePastoralVisitIndex,
+    } = indexes;
+
+    const sourceEntrances = [
+      ...pastoralVisitsCopy[sourcePastoralVisitIndex].entrances,
+    ];
+
+    //delete entrance from cache copy
+    const entrance = sourceEntrances.splice(entranceIndex, 1)[0];
+
+    pastoralVisitsCopy[sourcePastoralVisitIndex].entrances = sourceEntrances;
+
+    const destinationPastoralVisitCopy = {
+      ...pastoralVisitsCopy[destinationPastoralVisitIndex],
+    };
+
+    //add updated entrance to cache copy
+    destinationPastoralVisitCopy.entrances = [
+      ...destinationPastoralVisitCopy.entrances,
+      entrance,
+    ];
+
+    pastoralVisitsCopy[
+      destinationPastoralVisitIndex
+    ] = destinationPastoralVisitCopy;
+
+    writeDayQuery({
+      ...query.day,
+      pastoralVisits: pastoralVisitsCopy,
+    });
+
+    relocateEntrance({
+      variables: {
+        id: entranceId,
+        to: pastoralVisitsCopy[destinationPastoralVisitIndex].id,
+      },
+    });
+  };
+
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
+
     if (!destination) {
       return;
     }
@@ -80,60 +190,18 @@ const DayManager: React.FC<Props> = ({ match }) => {
       return;
     }
 
-    const queryOptions = {
-      query: DAY,
-      variables: { input: { id: dayId } },
-    };
-
-    const query = client.cache.readQuery<Day, DayVariables>(queryOptions)!;
-
-    const pastoralVisits = query.day?.pastoralVisits;
-
-    if (!query.day || !pastoralVisits) return;
-
-    const indexes = findEntranceInPastoralVisits(draggableId, pastoralVisits);
-
-    if (!indexes) return;
-
-    const newData = [...pastoralVisits];
-
-    const destinationPastoralVisitIndex = newData.findIndex(
+    const destinationPastoralVisitIndex = data.day!.pastoralVisits.findIndex(
       ({ id }) => id === destination.droppableId
     );
 
     if (destinationPastoralVisitIndex < 0) return;
 
-    const {
-      entranceIndex,
-      pastoralVisitIndex: sourcePastoralVisitIndex,
-    } = indexes;
-
-    //delete entrance from cache copy
-    const sourceEntrances = [...newData[sourcePastoralVisitIndex].entrances];
-    const movedEntrance = sourceEntrances.splice(entranceIndex, 1)[0];
-    newData[sourcePastoralVisitIndex].entrances = sourceEntrances;
-
-    //add updated entrance to cache copy
-    newData[destinationPastoralVisitIndex].entrances = [
-      ...newData[destinationPastoralVisitIndex].entrances,
-      movedEntrance,
-    ];
-
-    client.cache.writeQuery<Day, DayVariables>({
-      ...queryOptions,
-      data: { day: { ...query.day, pastoralVisits: newData } },
-    });
-
-    relocateEntrance({
-      variables: { id: draggableId, to: destination.droppableId },
-    });
+    source.droppableId !== "unusedHouses"
+      ? handleEntranceRelocation(draggableId, destinationPastoralVisitIndex)
+      : handleEntranceCreation(draggableId, destinationPastoralVisitIndex);
   };
 
-  const splitedUnusedHouses = splitByLabel(
-    unusedHouses,
-    (house) => house.street?.name
-  );
-
+  console.log("derender day");
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Drawer
@@ -145,40 +213,14 @@ const DayManager: React.FC<Props> = ({ match }) => {
         anchor="left"
       >
         <div className={classes.drawerContainer}>
-          <Droppable droppableId={"unusedHouses"}>
-            {(provided) => (
-              <Paper innerRef={provided.innerRef} {...provided.droppableProps}>
-                {getKeys(splitedUnusedHouses).map((key) => (
-                  <List subheader={<ListSubheader>{key}</ListSubheader>}>
-                    {sortByHouseNumber(
-                      splitedUnusedHouses[key],
-                      (house) => house.number
-                    ).map(({ id, number, index }) => (
-                      <Draggable draggableId={id} index={index}>
-                        {(provided, snapshot) => (
-                          <ListItem
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            innerRef={provided.innerRef}
-                            style={getStyle(
-                              provided.draggableProps?.style,
-                              snapshot
-                            )}
-                          >
-                            <ListItemText primary={number} />
-                          </ListItem>
-                        )}
-                      </Draggable>
-                    ))}
-                  </List>
-                ))}
-              </Paper>
-            )}
-          </Droppable>
+          <Toolbar />
+          <UnusedHouses houses={unusedHouses} />
         </div>
       </Drawer>
       <Container maxWidth={"lg"}>
-        <PageTitle text={headerText} />
+        <Typography variant={"h3"} className={classes.title}>
+          {headerText}
+        </Typography>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           {pastoralVisits.map(({ id, priest, entrances }) => (
             <Column
@@ -226,6 +268,9 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+  },
+  title: {
+    margin: theme.spacing(2, 0, 3, 0),
   },
   drawer: {
     width: drawerWidth,
