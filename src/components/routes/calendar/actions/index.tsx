@@ -11,12 +11,32 @@ export const EntranceHouseFragment = gql`
   }
 `;
 
+export const EntranceFragment = gql`
+  fragment EntranceFragment on Entrance {
+    id
+    comment
+    house {
+      ...EntranceHouseFragment
+    }
+  }
+  ${EntranceHouseFragment}
+`;
+
 export const RELOCATE_ENTRANCE = gql`
   mutation RelocateEntrance($id: String!, $to: String!) {
     updateEntrance(input: { id: $id, pastoralVisit: $to }) {
       id
     }
   }
+`;
+
+export const ADD_ENTRANCE = gql`
+  mutation AddEntrance($houseId: String!, $pastoralVisitId: String!) {
+    addEntrance(input: { house: $houseId, pastoralVisit: $pastoralVisitId }) {
+      ...EntranceFragment
+    }
+  }
+  ${EntranceFragment}
 `;
 
 export const DAY = gql`
@@ -35,14 +55,10 @@ export const DAY = gql`
           username
         }
         entrances {
-          id
-          comment
-          house {
-            ...EntranceHouseFragment
-          }
+          ...EntranceFragment
         }
       }
     }
   }
-  ${EntranceHouseFragment}
+  ${EntranceFragment}
 `;

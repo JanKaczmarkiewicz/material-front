@@ -20,16 +20,21 @@ import {
   makeStyles,
   Toolbar,
   Typography,
+  Grid,
 } from "@material-ui/core";
 import Column from "../DND/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 //data
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import { RELOCATE_ENTRANCE, DAY } from "../actions";
+import { RELOCATE_ENTRANCE, DAY, ADD_ENTRANCE } from "../actions";
 import { client } from "../../../../context/client/ApolloClient";
 
 import UnusedHouses from "../DND/UnusedHouses";
+import {
+  AddEntranceVariables,
+  AddEntrance,
+} from "../../../../generated/AddEntrance";
 
 const drawerWidth = 240;
 
@@ -45,6 +50,48 @@ const DayManager: React.FC<Props> = ({ match }) => {
     RelocateEntrance,
     RelocateEntranceVariables
   >(RELOCATE_ENTRANCE);
+
+  const [addEntrance] = useMutation<AddEntrance, AddEntranceVariables>(
+    ADD_ENTRANCE,
+    {
+      onCompleted: (data) => {
+        const query = readDayQuery();
+        if (!data.addEntrance) return;
+
+        if (!query.day) return;
+        const pastoralVisitsCopy = [...query.day.pastoralVisits];
+
+        const indexes = findEntranceInPastoralVisits(
+          data.addEntrance.house!.id,
+          pastoralVisitsCopy
+        );
+
+        if (!indexes) return;
+
+        const {
+          entranceIndex,
+          pastoralVisitIndex: destinationPastoralVisitIndex,
+        } = indexes;
+
+        const destinationPastoralVisit = {
+          ...pastoralVisitsCopy[destinationPastoralVisitIndex],
+        };
+
+        //replece dummy one with real one
+        const entrancesCopy = [...destinationPastoralVisit.entrances];
+
+        entrancesCopy.splice(entranceIndex, 1, data.addEntrance);
+
+        destinationPastoralVisit.entrances = entrancesCopy;
+
+        pastoralVisitsCopy[
+          destinationPastoralVisitIndex
+        ] = destinationPastoralVisit;
+
+        writeDayQuery({ ...query.day, pastoralVisits: pastoralVisitsCopy });
+      },
+    }
+  );
 
   const dayQueryVariables = { input: { id: dayId } };
 
@@ -95,7 +142,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
     const house = unusedHousesCopy.splice(houseIndex, 1)[0];
 
     const newEntrance = {
-      id: Math.random().toString(),
+      id: house.id, //temp
       __typename: "Entrance",
       house: house,
       comment: null,
@@ -118,6 +165,13 @@ const DayManager: React.FC<Props> = ({ match }) => {
       ...query.day,
       unusedHouses: unusedHousesCopy,
       pastoralVisits: pastoralVisitsCopy,
+    });
+
+    addEntrance({
+      variables: {
+        houseId,
+        pastoralVisitId: pastoralVisitsCopy[destinationPastoralVisitIndex].id,
+      },
     });
   };
 
@@ -201,7 +255,6 @@ const DayManager: React.FC<Props> = ({ match }) => {
       : handleEntranceCreation(draggableId, destinationPastoralVisitIndex);
   };
 
-  console.log("derender day");
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Drawer
@@ -221,20 +274,24 @@ const DayManager: React.FC<Props> = ({ match }) => {
         <Typography variant={"h3"} className={classes.title}>
           {headerText}
         </Typography>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {/* <div style={{ display: "flex", justifyContent: "space-between" }}> */}
+        <Grid container spacing={3}>
           {pastoralVisits.map(({ id, priest, entrances }) => (
-            <Column
-              key={id}
-              droppableId={id}
-              title={
-                priest?.username
-                  ? `ks. ${(priest?.username).split(" ")[1]}`
-                  : "Brak kapłana"
-              }
-              items={entrances}
-            />
+            <Grid item xs={6} md={2}>
+              <Column
+                key={id}
+                droppableId={id}
+                title={
+                  priest?.username
+                    ? `ks. ${(priest?.username).split(" ")[1]}`
+                    : "Brak kapłana"
+                }
+                items={entrances}
+              />
+            </Grid>
           ))}
-        </div>
+        </Grid>
+        {/* </div> */}
       </Container>
     </DragDropContext>
   );
