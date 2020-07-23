@@ -274,10 +274,9 @@ const DayManager: React.FC<Props> = ({ match }) => {
         <Typography variant={"h3"} className={classes.title}>
           {headerText}
         </Typography>
-        {/* <div style={{ display: "flex", justifyContent: "space-between" }}> */}
         <Grid container spacing={3}>
           {pastoralVisits.map(({ id, priest, entrances }) => (
-            <Grid item xs={6} md={2}>
+            <Grid item xs={12} md={2}>
               <Column
                 key={id}
                 droppableId={id}
@@ -291,7 +290,6 @@ const DayManager: React.FC<Props> = ({ match }) => {
             </Grid>
           ))}
         </Grid>
-        {/* </div> */}
       </Container>
     </DragDropContext>
   );

@@ -13,9 +13,9 @@ export function splitByLabel<T>(
     if (!splited[key]) {
       splited[key] = [];
     }
-    const objWithId = { ...item, index };
+    const objWithIndex = { ...item, index };
 
-    splited[key].push(objWithId);
+    splited[key].push(objWithIndex);
   }
   return splited;
 }
