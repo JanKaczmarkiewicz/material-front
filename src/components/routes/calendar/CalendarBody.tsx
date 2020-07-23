@@ -11,6 +11,7 @@ import { SeasonDays_season_days as Day } from "../../../generated/SeasonDays";
 
 interface Props {
   mouth: number;
+  onAddNewDay: (day: number) => void;
   plannedDays: Day[];
 }
 
@@ -29,7 +30,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CalendarBody: React.FC<Props> = ({ mouth, plannedDays }) => {
+const CalendarBody: React.FC<Props> = ({ mouth, plannedDays, onAddNewDay }) => {
   const classnames = useStyles();
   const days = getMonthDays(mouth);
   return (
@@ -47,8 +48,8 @@ const CalendarBody: React.FC<Props> = ({ mouth, plannedDays }) => {
               {plannedDay ? (
                 <ActiveDayCard day={plannedDay} />
               ) : (
-                <Card variant="outlined">
-                  <CardActionArea to={`/calendar/new`} component={Link}>
+                <Card variant="outlined" style={{ opacity: 0.5 }}>
+                  <CardActionArea onClick={() => onAddNewDay(day)}>
                     <CardHeader title={day} />
                   </CardActionArea>
                 </Card>

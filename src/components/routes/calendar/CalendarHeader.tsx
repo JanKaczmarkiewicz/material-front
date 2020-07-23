@@ -13,13 +13,18 @@ export const mouths = [
 
 const CalendarHeader: React.FC<Props> = ({ mouth, onMouthChange }) => {
   const classes = useStyles();
+
+  const sliderValue = mouths.findIndex(
+    ({ numberEquivalent }) => numberEquivalent === mouth
+  )!;
+
   return (
     <div className={classes.root}>
       <Slider
+        value={sliderValue}
         onChange={(_, value) => {
-          const { numberEquivalent } = mouths.find(
-            (mouth) => mouth.value === value
-          )!;
+          const { numberEquivalent } = mouths[value as number];
+
           onMouthChange(numberEquivalent);
         }}
         marks={mouths}

@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/react-hooks";
 import MainContainer from "../../Layout/container/MainContainer";
 import { useSeasonContext } from "../../../context/Season/SeasonContext";
 import { SeasonDays, SeasonDaysVariables } from "../../../generated/SeasonDays";
+import { Modal } from "@material-ui/core";
 
 const SEASON = gql`
   query SeasonDays($input: FindOneInput!) {
@@ -24,6 +25,12 @@ const initialMouth =
 const Calendar = () => {
   const [mouth, setMouth] = useState<number>(initialMouth);
   const { currentSeason } = useSeasonContext();
+  const [selectedDayToAdd, setSelectedDayToAdd] = useState<Date | null>(null);
+
+  const handleModalClose = () => setSelectedDayToAdd(null);
+  const handleModalOpen = (day: number) =>
+    setSelectedDayToAdd(new Date(currentSeason.year, mouth, day));
+
   const { loading, error, data } = useQuery<SeasonDays, SeasonDaysVariables>(
     SEASON,
     { variables: { input: { id: currentSeason.id } } }
@@ -41,7 +48,14 @@ const Calendar = () => {
   return (
     <MainContainer>
       <CalendarHeader mouth={mouth} onMouthChange={setMouth} />
-      <CalendarBody mouth={mouth} plannedDays={mounthPlannedDays} />
+      <CalendarBody
+        mouth={mouth}
+        plannedDays={mounthPlannedDays}
+        onAddNewDay={handleModalOpen}
+      />
+      <Modal open={!!selectedDayToAdd} onClose={handleModalClose}>
+        <div>XD</div>
+      </Modal>
     </MainContainer>
   );
 };
