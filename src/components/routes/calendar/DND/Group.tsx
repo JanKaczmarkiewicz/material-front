@@ -1,10 +1,8 @@
 import React from "react";
-import { ListSubheader, List } from "@material-ui/core";
 import Item from "./Item";
 import { WithIndex } from "../../../../utils/splitByLabel";
 import { Day_day_pastoralVisits_entrances as Entrance } from "../../../../generated/Day";
 import { sortByHouseNumber } from "../../../../utils/sortByHouseNumber";
-import { stringToColour } from "../../../../utils/stringToColor";
 import HousesSteetList from "./HousesSteetList";
 
 type GroupProps = {

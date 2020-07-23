@@ -267,6 +267,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
       >
         <div className={classes.drawerContainer}>
           <Toolbar />
+          <Typography variant={"h6"}>Nieurzywane domy.</Typography>
           <UnusedHouses houses={unusedHouses} />
         </div>
       </Drawer>
