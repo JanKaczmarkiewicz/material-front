@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 type Props = {
-  children: React.ReactElement | JSX.Element[];
+  children: React.ReactElement | (JSX.Element | null)[];
 };
 
 const MainContainer: React.FC<Props> = ({ children }) => {

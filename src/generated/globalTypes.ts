@@ -21,6 +21,13 @@ export enum Role {
   USER = "USER",
 }
 
+export interface AddDayInput {
+  season: string;
+  visitDate: string;
+  reeceDate: string;
+  assignedStreets?: (string | null)[] | null;
+}
+
 export interface FindOneInput {
   id: string;
 }
