@@ -13,6 +13,15 @@ import {
 import AddDayForm from "./AddDayForm";
 import { addDays } from "date-fns/esm";
 import { AddDay, AddDayVariables } from "../../../generated/AddDay";
+import { client } from "../../../context/client/ApolloClient";
+import { useHistory } from "react-router-dom";
+
+const DayFragment = gql`
+  fragment DayFragment on Day {
+    id
+    visitDate
+  }
+`;
 
 const CALENDAR = gql`
   query Calendar($input: FindOneInput!) {
@@ -22,25 +31,27 @@ const CALENDAR = gql`
     }
     season(input: $input) {
       days {
-        id
-        visitDate
+        ...DayFragment
       }
     }
   }
+  ${DayFragment}
 `;
 
 const ADD_DAY = gql`
   mutation AddDay($input: AddDayInput!) {
     addDay(input: $input) {
-      id
+      ...DayFragment
     }
   }
+  ${DayFragment}
 `;
 
 const initialMouth =
   new Date().getMonth() >= mouths.length ? 0 : new Date().getMonth();
 
 const Calendar = () => {
+  const history = useHistory();
   const [mouth, setMouth] = useState<number>(initialMouth);
   const { currentSeason } = useSeasonContext();
   const [selectedDayToAdd, setSelectedDayToAdd] = useState<Date | null>(null);
@@ -79,15 +90,38 @@ const Calendar = () => {
       },
     });
   };
+  const calendarVariables = { input: { id: currentSeason.id } };
 
   const { loading, error, data } = useQuery<ICalendar, ICalendarVariables>(
     CALENDAR,
     {
-      variables: { input: { id: currentSeason.id } },
+      variables: calendarVariables,
     }
   );
 
-  const [addDay, addDataQuery] = useMutation<AddDay, AddDayVariables>(ADD_DAY);
+  const [addDay, addDayQuery] = useMutation<AddDay, AddDayVariables>(ADD_DAY, {
+    onCompleted: (data) => {
+      if (!data) return;
+      const query = client.readQuery<ICalendar, ICalendarVariables>({
+        query: CALENDAR,
+        variables: calendarVariables,
+      });
+      if (!query || !query.season) return;
+
+      client.writeQuery<ICalendar, ICalendarVariables>({
+        query: CALENDAR,
+        variables: calendarVariables,
+        data: {
+          ...query,
+          season: {
+            ...query.season,
+            days: [...query.season.days, data.addDay],
+          },
+        },
+      });
+      history.push(`/calendar/${data.addDay.id}`);
+    },
+  });
 
   if (loading) return <div>loading...</div>;
   if (error || !data || !data.season) return <div>error</div>;
@@ -111,6 +145,7 @@ const Calendar = () => {
           removeStreet={handleStreetRemoval}
           day={selectedDayToAdd}
           selectedStreets={selectedStreets}
+          onFormSubmit={handleDayAddition}
         />
       )}
       <CalendarHeader mouth={mouth} onMouthChange={setMouth} />

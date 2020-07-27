@@ -15,6 +15,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { Delete as DeleteIcon } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 interface Props {
   streets: Calendar_streets[];
@@ -23,6 +24,7 @@ interface Props {
   onModalClose: () => void;
   addStreet: (addStreet: Calendar_streets) => void;
   removeStreet: (index: number) => void;
+  onFormSubmit: () => void;
 }
 
 const AddDayForm: React.FC<Props> = ({
@@ -32,8 +34,10 @@ const AddDayForm: React.FC<Props> = ({
   addStreet,
   removeStreet,
   selectedStreets,
+  onFormSubmit,
 }) => {
   const classes = useStyles();
+  const history = useHistory();
   const [streetInput, setStreetInput] = useState<string>("");
 
   const allowedStreets = streets.filter(
@@ -66,7 +70,12 @@ const AddDayForm: React.FC<Props> = ({
             <ListItem key={id}>
               <ListItemText primary={name} />
               <ListItemSecondaryAction>
-                <IconButton edge="end" onClick={() => removeStreet(i)}>
+                <IconButton
+                  edge="end"
+                  onClick={() => {
+                    removeStreet(i);
+                  }}
+                >
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -74,7 +83,12 @@ const AddDayForm: React.FC<Props> = ({
           ))}
         </List>
 
-        <Button color={"primary"} variant={"contained"} size={"large"}>
+        <Button
+          color={"primary"}
+          variant={"contained"}
+          size={"large"}
+          onClick={onFormSubmit}
+        >
           Zaplanuj ten dzień
         </Button>
       </Paper>
