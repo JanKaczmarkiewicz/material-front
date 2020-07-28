@@ -28,7 +28,7 @@ const Header: React.FC<Props> = ({ handleToggle }) => {
   const history = useHistory();
   return (
     <>
-      <AppBar position="absolute" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.appBarContentContainer}>
           <IconButton
             edge="start"

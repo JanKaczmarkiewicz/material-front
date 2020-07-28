@@ -88,10 +88,14 @@ const Calendar = () => {
   const [addDay] = useMutation<AddDay, AddDayVariables>(ADD_DAY, {
     onCompleted: (data) => {
       if (!data) return;
+
+      history.push(`/calendar/${data.addDay.id}`);
+
       const query = client.readQuery<ICalendar, ICalendarVariables>({
         query: CALENDAR,
         variables: calendarVariables,
       });
+
       if (!query || !query.season) return;
 
       client.writeQuery<ICalendar, ICalendarVariables>({
@@ -105,7 +109,6 @@ const Calendar = () => {
           },
         },
       });
-      history.push(`/calendar/${data.addDay.id}`);
     },
   });
 

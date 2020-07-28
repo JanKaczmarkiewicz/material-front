@@ -49,14 +49,13 @@ import {
 import { getKeys } from "../../../Layout/DataTable/util";
 import {
   assignDayStateAfterAssignedStreetsChanged,
-  replaceTemporaryEntranceWithRealOne,
   assignProperDeletedHousesToDay,
-  addTemporaryEntrance,
-  relocateEntranceInCache,
   removeAllHousesByStreetInDay,
   handleEntranceRemoval,
 } from "./cacheActions";
 import { difference } from "../../../../utils/diffrence";
+
+import { useDayReducer, ActionTypes } from "./singleDayReducer";
 
 const drawerWidth = 240;
 
@@ -65,9 +64,10 @@ type Props = RouteComponentProps<{
 }>;
 
 const DayManager: React.FC<Props> = ({ match }) => {
-  const classes = useStyles();
   const { dayId } = match.params;
-  const dayQueryVariables = { input: { id: dayId } };
+  const classes = useStyles();
+  const { current: dispath } = React.useRef(useDayReducer(dayId));
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const [relocateEntrance] = useMutation<
@@ -90,13 +90,16 @@ const DayManager: React.FC<Props> = ({ match }) => {
     {
       onCompleted: (data) => {
         if (!data.addEntrance) return;
-        replaceTemporaryEntranceWithRealOne(dayId, data.addEntrance);
+        dispath({
+          type: ActionTypes.CREATE_ENTRANCE,
+          payload: { entrance: data.addEntrance },
+        });
       },
     }
   );
 
   const { loading, error, data } = useQuery<Day, DayVariables>(DAY, {
-    variables: dayQueryVariables,
+    variables: { input: { id: dayId } },
     onCompleted({ day }) {
       if (!day) return;
       setTempAssignedStreets([...day.assignedStreets]);
@@ -120,7 +123,10 @@ const DayManager: React.FC<Props> = ({ match }) => {
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
   const handleEntranceCreation = (houseId: string, pastoralVisitId: string) => {
-    addTemporaryEntrance(dayId, houseId, pastoralVisitId);
+    dispath({
+      type: ActionTypes.CREATE_FAKE_ENTRANCE,
+      payload: { houseId, pastoralVisitId },
+    });
 
     addEntrance({
       variables: {
@@ -134,7 +140,10 @@ const DayManager: React.FC<Props> = ({ match }) => {
     entranceId: string,
     pastoralVisitId: string
   ) => {
-    relocateEntranceInCache(dayId, entranceId, pastoralVisitId);
+    dispath({
+      type: ActionTypes.RELOCATE_ENTRANCE,
+      payload: { pastoralVisitId, entranceId },
+    });
 
     relocateEntrance({
       variables: {
@@ -142,6 +151,10 @@ const DayManager: React.FC<Props> = ({ match }) => {
         to: pastoralVisitId,
       },
     });
+  };
+
+  const handleEntranceRemoval = (entranceId: string) => {
+    dispath({ type: ActionTypes.DELETE_ENTRANCE, payload: { entranceId } });
   };
 
   const onDragEnd = (result: DropResult) => {
