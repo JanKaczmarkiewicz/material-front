@@ -10,20 +10,18 @@ type GroupProps = {
   entrances: WithIndex<Entrance>[];
 };
 
-const Group: React.FC<GroupProps> = React.memo(({ entrances, label }) => {
-  return (
-    <HousesSteetList title={label}>
-      {sortByHouseNumber(entrances, ({ house }) => house?.number).map(
-        (entrance) => (
-          <Item
-            key={`g-${entrance.id}`}
-            entrance={entrance}
-            index={entrance.index}
-          />
-        )
-      )}
-    </HousesSteetList>
-  );
-});
+const Group: React.FC<GroupProps> = ({ entrances, label }) => (
+  <HousesSteetList title={label}>
+    {sortByHouseNumber(entrances, ({ house }) => house?.number).map(
+      (entrance) => (
+        <Item
+          key={`g-${entrance.id}`}
+          entrance={entrance}
+          index={entrance.index}
+        />
+      )
+    )}
+  </HousesSteetList>
+);
 
 export default Group;

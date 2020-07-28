@@ -32,6 +32,7 @@ import {
   DAY,
   ADD_ENTRANCE,
   CHANGE_ASSIGNED_STREETS,
+  DELETE_ENTRANCE,
 } from "../actions";
 import { client } from "../../../../context/client/ApolloClient";
 
@@ -51,11 +52,14 @@ import {
   assignDayStateAfterAssignedStreetsChanged,
   assignProperDeletedHousesToDay,
   removeAllHousesByStreetInDay,
-  handleEntranceRemoval,
 } from "./cacheActions";
 import { difference } from "../../../../utils/diffrence";
 
 import { useDayReducer, ActionTypes } from "./singleDayReducer";
+import {
+  DeleteEntrance,
+  DeleteEntranceVariables,
+} from "../../../../generated/DeleteEntrance";
 
 const drawerWidth = 240;
 
@@ -74,6 +78,10 @@ const DayManager: React.FC<Props> = ({ match }) => {
     RelocateEntrance,
     RelocateEntranceVariables
   >(RELOCATE_ENTRANCE);
+
+  const [deleteEntrance] = useMutation<DeleteEntrance, DeleteEntranceVariables>(
+    DELETE_ENTRANCE
+  );
 
   const [changeAssignedStreets] = useMutation<
     ChangeAssignedStreets,
@@ -155,10 +163,12 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const handleEntranceRemoval = (entranceId: string) => {
     dispath({ type: ActionTypes.DELETE_ENTRANCE, payload: { entranceId } });
+    deleteEntrance({ variables: { input: { id: entranceId } } });
   };
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
+
     if (!destination) {
       return;
     }

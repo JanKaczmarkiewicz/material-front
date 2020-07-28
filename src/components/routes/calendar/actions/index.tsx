@@ -43,6 +43,14 @@ export const PastoralVisitFragment = gql`
   ${EntranceFragment}
 `;
 
+export const DELETE_ENTRANCE = gql`
+  mutation DeleteEntrance($input: DeleteOneInput!) {
+    deleteEntrance(input: $input) {
+      id
+    }
+  }
+`;
+
 export const CHANGE_ASSIGNED_STREETS = gql`
   mutation ChangeAssignedStreets($id: String!, $streets: [String]!) {
     updateDay(input: { id: $id, assignedStreets: $streets }) {
