@@ -18,7 +18,17 @@ export enum Role {
   ACOLYTE = "ACOLYTE",
   ADMIN = "ADMIN",
   PRIEST = "PRIEST",
-  USER = "USER",
+}
+
+export interface AddDayInput {
+  season: string;
+  visitDate: string;
+  reeceDate: string;
+  assignedStreets?: (string | null)[] | null;
+}
+
+export interface DeleteOneInput {
+  id: string;
 }
 
 export interface FindOneInput {

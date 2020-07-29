@@ -20,6 +20,11 @@ export interface Day_day_unusedHouses {
   street: Day_day_unusedHouses_street | null;
 }
 
+export interface Day_day_assignedStreets {
+  id: string;
+  name: string;
+}
+
 export interface Day_day_pastoralVisits_priest {
   id: string;
   username: string;
@@ -53,6 +58,7 @@ export interface Day_day {
   unusedHouses: Day_day_unusedHouses[];
   reeceDate: any;
   visitDate: any;
+  assignedStreets: Day_day_assignedStreets[];
   pastoralVisits: Day_day_pastoralVisits[];
 }
 

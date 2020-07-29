@@ -17,7 +17,7 @@ const SEASONS = gql`
   }
 `;
 
-const SeasoProvider: React.FC<Props> = ({ children }) => {
+const SeasonProvider: React.FC<Props> = ({ children }) => {
   const { loading, error, data } = useQuery<Seasons>(SEASONS);
 
   if (loading) return <div>loading...</div>;
@@ -32,4 +32,4 @@ const SeasoProvider: React.FC<Props> = ({ children }) => {
   );
 };
 
-export default SeasoProvider;
+export default SeasonProvider;
