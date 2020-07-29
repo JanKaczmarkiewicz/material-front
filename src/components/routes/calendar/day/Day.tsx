@@ -42,11 +42,15 @@ import {
   AddEntrance,
 } from "../../../../generated/AddEntrance";
 import DayMenagerFormModal from "../DayMenagerFormModal";
-import { Alert } from "@material-ui/lab";
 import {
   ChangeAssignedStreets,
   ChangeAssignedStreetsVariables,
 } from "../../../../generated/ChangeAssignedStreets";
+import {
+  DeleteEntrance,
+  DeleteEntranceVariables,
+} from "../../../../generated/DeleteEntrance";
+import { Alert } from "@material-ui/lab";
 import { getKeys } from "../../../Layout/DataTable/util";
 import {
   assignDayStateAfterAssignedStreetsChanged,
@@ -56,10 +60,6 @@ import {
 import { difference } from "../../../../utils/diffrence";
 
 import { useDayReducer, ActionTypes } from "./singleDayReducer";
-import {
-  DeleteEntrance,
-  DeleteEntranceVariables,
-} from "../../../../generated/DeleteEntrance";
 
 const drawerWidth = 240;
 
