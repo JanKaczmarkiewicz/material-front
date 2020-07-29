@@ -99,7 +99,7 @@ const Calendar = () => {
     }
   );
 
-  const [addDay, addDayQuery] = useMutation<AddDay, AddDayVariables>(ADD_DAY, {
+  const [addDay] = useMutation<AddDay, AddDayVariables>(ADD_DAY, {
     onCompleted: (data) => {
       if (!data) return;
       const query = client.readQuery<ICalendar, ICalendarVariables>({
