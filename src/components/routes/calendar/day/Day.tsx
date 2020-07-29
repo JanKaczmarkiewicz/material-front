@@ -21,8 +21,9 @@ import {
   Typography,
   Grid,
   Button,
+  ListItemText,
 } from "@material-ui/core";
-import Column from "../DND/Column";
+import Column from "../DND copy/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 //data
@@ -36,7 +37,6 @@ import {
 } from "../actions";
 import { client } from "../../../../context/client/ApolloClient";
 
-import UnusedHouses from "../DND/UnusedHouses";
 import {
   AddEntranceVariables,
   AddEntrance,
@@ -70,7 +70,32 @@ type Props = RouteComponentProps<{
 const DayManager: React.FC<Props> = ({ match }) => {
   const { dayId } = match.params;
   const classes = useStyles();
-  const { current: dispath } = React.useRef(useDayReducer(dayId));
+
+  const dispath = React.useCallback(useDayReducer(dayId), []);
+  const [selectedEntrances, setSelectedEntrances] = useState<{
+    currentPastoralVisitId: string | null;
+    selectedEntrances: string[];
+  }>({
+    currentPastoralVisitId: null,
+    selectedEntrances: [],
+  });
+
+  const handleEntranceSelection = (pastoralVisitId: string) => (
+    entranceId: string
+  ) => {
+    if (pastoralVisitId === selectedEntrances.currentPastoralVisitId) {
+      setSelectedEntrances({
+        currentPastoralVisitId: pastoralVisitId,
+        selectedEntrances: [...selectedEntrances.selectedEntrances, entranceId],
+      });
+      return;
+    }
+
+    setSelectedEntrances({
+      currentPastoralVisitId: pastoralVisitId,
+      selectedEntrances: [entranceId],
+    });
+  };
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -258,8 +283,17 @@ const DayManager: React.FC<Props> = ({ match }) => {
         >
           <div className={classes.drawerContainer}>
             <Toolbar />
-            <Typography variant={"h6"}>Nieurzywane domy.</Typography>
-            <UnusedHouses houses={unusedHouses} />
+            <Column
+              items={unusedHouses}
+              droppableId={"unusedHouses"}
+              getElementCategory={(house) => house.street?.name}
+              getItemNumber={(house) => house.number}
+              renderListItemContent={(house) => (
+                <ListItemText>{house.number}</ListItemText>
+              )}
+              onItemSelected={(id) => {}}
+              title={"Nieurzywane domy"}
+            />
           </div>
         </Drawer>
         <Container maxWidth={"lg"}>
@@ -279,13 +313,20 @@ const DayManager: React.FC<Props> = ({ match }) => {
             {pastoralVisits.map(({ id, priest, entrances }) => (
               <Grid item xs={12} md={2} key={id}>
                 <Column
+                  key={id}
+                  items={entrances}
                   droppableId={id}
+                  getElementCategory={({ house }) => house?.street?.name}
+                  getItemNumber={({ house }) => house?.number}
+                  renderListItemContent={(entrance) => (
+                    <ListItemText>{entrance.house?.number}</ListItemText>
+                  )}
+                  onItemSelected={handleEntranceSelection(id)}
                   title={
                     priest?.username
                       ? `ks. ${(priest?.username).split(" ")[1]}`
                       : "Brak kapłana"
                   }
-                  items={entrances}
                 />
               </Grid>
             ))}
