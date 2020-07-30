@@ -9,11 +9,6 @@ import { FindOneInput } from "./globalTypes";
 // GraphQL query operation: Calendar
 // ====================================================
 
-export interface Calendar_streets {
-  id: string;
-  name: string;
-}
-
 export interface Calendar_season_days {
   id: string;
   visitDate: any;
@@ -24,7 +19,6 @@ export interface Calendar_season {
 }
 
 export interface Calendar {
-  streets: Calendar_streets[];
   season: Calendar_season | null;
 }
 

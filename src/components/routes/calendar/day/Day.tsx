@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 //types
 import { RouteComponentProps } from "react-router-dom";
@@ -11,6 +11,7 @@ import {
   DayVariables,
   Day_day_pastoralVisits,
   Day_day,
+  Day_day_assignedStreets,
 } from "../../../../generated/Day";
 
 //ui
@@ -21,6 +22,7 @@ import {
   Toolbar,
   Typography,
   Grid,
+  Button,
 } from "@material-ui/core";
 import Column from "../DND/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
@@ -35,6 +37,7 @@ import {
   AddEntranceVariables,
   AddEntrance,
 } from "../../../../generated/AddEntrance";
+import DayMenagerFormModal from "../DayMenagerFormModal";
 
 const drawerWidth = 240;
 
@@ -45,6 +48,8 @@ type Props = RouteComponentProps<{
 const DayManager: React.FC<Props> = ({ match }) => {
   const classes = useStyles();
   const { dayId } = match.params;
+  const dayQueryVariables = { input: { id: dayId } };
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const [relocateEntrance] = useMutation<
     RelocateEntrance,
@@ -93,15 +98,23 @@ const DayManager: React.FC<Props> = ({ match }) => {
     }
   );
 
-  const dayQueryVariables = { input: { id: dayId } };
-
   const { loading, error, data } = useQuery<Day, DayVariables>(DAY, {
     variables: dayQueryVariables,
+    onCompleted({ day }) {
+      if (!day) return;
+      setTempAssignedStreets([...day.assignedStreets]);
+    },
   });
 
-  if (loading) return <div>loading...</div>;
+  const [tempAssignedStreets, setTempAssignedStreets] = useState<
+    Day_day_assignedStreets[]
+  >([]);
 
+  if (loading) return <div>loading...</div>;
   if (error || !data || !data.day) return <div>error</div>;
+
+  const handleModalClose = () => setIsEditing(false);
+  const handleModalOpen = () => setIsEditing(true);
 
   const { pastoralVisits, visitDate, unusedHouses } = data.day;
 
@@ -256,43 +269,65 @@ const DayManager: React.FC<Props> = ({ match }) => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        anchor="left"
-      >
-        <div className={classes.drawerContainer}>
-          <Toolbar />
-          <Typography variant={"h6"}>Nieurzywane domy.</Typography>
-          <UnusedHouses houses={unusedHouses} />
-        </div>
-      </Drawer>
-      <Container maxWidth={"lg"}>
-        <Typography variant={"h3"} className={classes.title}>
-          {headerText}
-        </Typography>
-        <Grid container spacing={3}>
-          {pastoralVisits.map(({ id, priest, entrances }) => (
-            <Grid item xs={12} md={2}>
-              <Column
-                key={id}
-                droppableId={id}
-                title={
-                  priest?.username
-                    ? `ks. ${(priest?.username).split(" ")[1]}`
-                    : "Brak kapłana"
-                }
-                items={entrances}
-              />
+    <>
+      <DayMenagerFormModal
+        open={isEditing}
+        headerText={"Edytuj dzień"}
+        submitText={"Zatwierdz zmiany"}
+        selectedStreets={tempAssignedStreets}
+        day={currDate}
+        setSelectedStreets={setTempAssignedStreets}
+        onFormSubmit={() => {}}
+        onModalClose={handleModalClose}
+      />
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Drawer
+          className={classes.drawer}
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          anchor="left"
+        >
+          <div className={classes.drawerContainer}>
+            <Toolbar />
+            <Typography variant={"h6"}>Nieurzywane domy.</Typography>
+            <UnusedHouses houses={unusedHouses} />
+          </div>
+        </Drawer>
+        <Container maxWidth={"lg"}>
+          <Grid container justify="center" alignItems="center">
+            <Grid item xs={10}>
+              <Typography variant={"h3"} className={classes.title}>
+                {headerText}
+              </Typography>
             </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </DragDropContext>
+            <Grid item xs={2}>
+              <Button color={"primary"} onClick={handleModalOpen}>
+                Dostosuj
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3} justify="center">
+            {pastoralVisits.map(({ id, priest, entrances }) => (
+              <Grid item xs={12} md={2}>
+                <Column
+                  key={id}
+                  droppableId={id}
+                  title={
+                    priest?.username
+                      ? `ks. ${(priest?.username).split(" ")[1]}`
+                      : "Brak kapłana"
+                  }
+                  items={entrances}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </DragDropContext>
+    </>
   );
 };
 

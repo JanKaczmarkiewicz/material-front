@@ -48,6 +48,10 @@ export const DAY = gql`
       }
       reeceDate
       visitDate
+      assignedStreets {
+        id
+        name
+      }
       pastoralVisits {
         id
         priest {

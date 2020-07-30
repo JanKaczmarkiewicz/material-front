@@ -23,7 +23,7 @@ const UnusedHouses: React.FC<Props> = ({ houses }) => {
       {(provided) => (
         <Paper innerRef={provided.innerRef} {...provided.droppableProps}>
           {getKeys(splitedUnusedHouses).map((key) => (
-            <HousesSteetList title={key as string}>
+            <HousesSteetList title={key as string} key={key as string}>
               {sortByHouseNumber(
                 splitedUnusedHouses[key],
                 (house) => house.number

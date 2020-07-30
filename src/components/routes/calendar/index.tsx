@@ -8,13 +8,12 @@ import { useSeasonContext } from "../../../context/Season/SeasonContext";
 import {
   Calendar as ICalendar,
   CalendarVariables as ICalendarVariables,
-  Calendar_streets,
 } from "../../../generated/Calendar";
-import AddDayForm from "./AddDayForm";
-import { addDays } from "date-fns/esm";
 import { AddDay, AddDayVariables } from "../../../generated/AddDay";
 import { client } from "../../../context/client/ApolloClient";
 import { useHistory } from "react-router-dom";
+import DayMenagerFormModal from "./DayMenagerFormModal";
+import { AllStreets_streets } from "../../../generated/AllStreets";
 
 const DayFragment = gql`
   fragment DayFragment on Day {
@@ -25,10 +24,6 @@ const DayFragment = gql`
 
 const CALENDAR = gql`
   query Calendar($input: FindOneInput!) {
-    streets {
-      id
-      name
-    }
     season(input: $input) {
       days {
         ...DayFragment
@@ -55,22 +50,13 @@ const Calendar = () => {
   const [mouth, setMouth] = useState<number>(initialMouth);
   const { currentSeason } = useSeasonContext();
   const [selectedDayToAdd, setSelectedDayToAdd] = useState<Date | null>(null);
-  const [selectedStreets, setSelectedStreets] = useState<Calendar_streets[]>(
+  const [selectedStreets, setSelectedStreets] = useState<AllStreets_streets[]>(
     []
   );
 
   const handleModalClose = () => setSelectedDayToAdd(null);
   const handleModalOpen = (day: number) =>
     setSelectedDayToAdd(new Date(currentSeason.year, mouth, day));
-
-  const handleStreetAddition = (street: Calendar_streets) =>
-    setSelectedStreets([street, ...selectedStreets]);
-
-  const handleStreetRemoval = (index: number) =>
-    setSelectedStreets([
-      ...selectedStreets.slice(0, index),
-      ...selectedStreets.slice(index + 1),
-    ]);
 
   const handleDayAddition = () => {
     if (selectedStreets.length === 0 || !selectedDayToAdd) return;
@@ -128,7 +114,6 @@ const Calendar = () => {
 
   const {
     season: { days },
-    streets,
   } = data;
 
   const mounthPlannedDays = days.filter(
@@ -138,14 +123,15 @@ const Calendar = () => {
   return (
     <MainContainer>
       {selectedDayToAdd && (
-        <AddDayForm
-          onModalClose={handleModalClose}
-          streets={streets}
-          addStreet={handleStreetAddition}
-          removeStreet={handleStreetRemoval}
+        <DayMenagerFormModal
+          open
+          headerText={"Dodaj dzień"}
+          submitText={"Zaplanuj ten dzień"}
           day={selectedDayToAdd}
           selectedStreets={selectedStreets}
+          setSelectedStreets={setSelectedStreets}
           onFormSubmit={handleDayAddition}
+          onModalClose={handleModalClose}
         />
       )}
       <CalendarHeader mouth={mouth} onMouthChange={setMouth} />
