@@ -1,0 +1,397 @@
+{
+  "id": "5f1fd98118c4a42facc8072e",
+  "unusedHouses": [],
+  "reeceDate": "2020-12-31T23:00:00.000Z",
+  "visitDate": "2021-01-01T23:00:00.000Z",
+  "assignedStreets": [],
+  "pastoralVisits": [
+    {
+      "id": "5f1fd98118c4a42facc8072f",
+      "priest": {
+        "id": "5f1fd97f18c4a42facc7ff90",
+        "username": "Wiesław Kruczyński\r",
+        "__typename": "User"
+      },
+      "entrances": [
+        {
+          "id": "5f1fd98218c4a42facc8087e",
+          "comment": "po 18",
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fed1",
+            "number": "41a\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd92",
+              "name": "Miodowa",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80887",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee2",
+            "number": "15c\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80888",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee3",
+            "number": "15e\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8088a",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee6",
+            "number": "15d\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80893",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe89",
+            "number": "113\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f201e1e803d7b20ac472ed4",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe92",
+            "number": "83\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f23de2d2e21b8075cd8bcc3",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe9d",
+            "number": "106\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f24180a2e21b8075cd8bcc5",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe8a",
+            "number": "121b\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        }
+      ],
+      "__typename": "PastoralVisit"
+    },
+    {
+      "id": "5f1fd98118c4a42facc80730",
+      "priest": {
+        "id": "5f1fd97f18c4a42facc7ff92",
+        "username": "Marek Jaworski\r",
+        "__typename": "User"
+      },
+      "entrances": [],
+      "__typename": "PastoralVisit"
+    },
+    {
+      "id": "5f1fd98118c4a42facc80731",
+      "priest": {
+        "id": "5f1fd97f18c4a42facc7ff8f",
+        "username": "Andrzej Krzystek\r",
+        "__typename": "User"
+      },
+      "entrances": [
+        {
+          "id": "5f1fd98218c4a42facc80880",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fed4",
+            "number": "134\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd92",
+              "name": "Miodowa",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80891",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe86",
+            "number": "95\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80892",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe87",
+            "number": "133\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80894",
+          "comment": "po 18",
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe8b",
+            "number": "127\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80897",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe91",
+            "number": "131\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80898",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe94",
+            "number": "97\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80899",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe95",
+            "number": "154\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8089a",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe98",
+            "number": "130\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8089b",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe99",
+            "number": "110\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8089e",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe9c",
+            "number": "174\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8089f",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe9e",
+            "number": "134\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a2",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fea5",
+            "number": "156\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a3",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fea8",
+            "number": "164\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a4",
+          "comment": "po 19",
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fea9",
+            "number": "138\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a5",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7feaa",
+            "number": "172\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        }
+      ],
+      "__typename": "PastoralVisit"
+    },
+    {
+      "id": "5f1fd98118c4a42facc80732",
+      "priest": {
+        "id": "5f1fd97f18c4a42facc7ff93",
+        "username": "Marcin Kózka",
+        "__typename": "User"
+      },
+      "entrances": [],
+      "__typename": "PastoralVisit"
+    }
+  ],
+  "__typename": "Day"
+}
