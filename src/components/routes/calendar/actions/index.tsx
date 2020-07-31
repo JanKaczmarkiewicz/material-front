@@ -1,14 +1,21 @@
 import { gql } from "apollo-boost";
 
-export const EntranceHouseFragment = gql`
-  fragment EntranceHouseFragment on House {
+export const StreetsFragment = gql`
+  fragment StreetsFragment on Street {
+    id
+    name
+  }
+`;
+
+export const HouseFragment = gql`
+  fragment HouseFragment on House {
     id
     number
     street {
-      id
-      name
+      ...StreetsFragment
     }
   }
+  ${StreetsFragment}
 `;
 
 export const EntranceFragment = gql`
@@ -16,10 +23,43 @@ export const EntranceFragment = gql`
     id
     comment
     house {
-      ...EntranceHouseFragment
+      ...HouseFragment
     }
   }
-  ${EntranceHouseFragment}
+  ${HouseFragment}
+`;
+
+export const PastoralVisitFragment = gql`
+  fragment PastoralVisitFragment on PastoralVisit {
+    id
+    priest {
+      id
+      username
+    }
+    entrances {
+      ...EntranceFragment
+    }
+  }
+  ${EntranceFragment}
+`;
+
+export const CHANGE_ASSIGNED_STREETS = gql`
+  mutation ChangeAssignedStreets($id: String!, $streets: [String]!) {
+    updateDay(input: { id: $id, assignedStreets: $streets }) {
+      assignedStreets {
+        ...StreetsFragment
+      }
+      unusedHouses {
+        ...HouseFragment
+      }
+      pastoralVisits {
+        ...PastoralVisitFragment
+      }
+    }
+  }
+  ${PastoralVisitFragment}
+  ${StreetsFragment}
+  ${HouseFragment}
 `;
 
 export const RELOCATE_ENTRANCE = gql`
@@ -44,25 +84,19 @@ export const DAY = gql`
     day(input: $input) {
       id
       unusedHouses {
-        ...EntranceHouseFragment
+        ...HouseFragment
       }
       reeceDate
       visitDate
       assignedStreets {
-        id
-        name
+        ...StreetsFragment
       }
       pastoralVisits {
-        id
-        priest {
-          id
-          username
-        }
-        entrances {
-          ...EntranceFragment
-        }
+        ...PastoralVisitFragment
       }
     }
   }
+  ${PastoralVisitFragment}
+  ${StreetsFragment}
   ${EntranceFragment}
 `;

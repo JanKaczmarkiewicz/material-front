@@ -29,7 +29,12 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 //data
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import { RELOCATE_ENTRANCE, DAY, ADD_ENTRANCE } from "../actions";
+import {
+  RELOCATE_ENTRANCE,
+  DAY,
+  ADD_ENTRANCE,
+  CHANGE_ASSIGNED_STREETS,
+} from "../actions";
 import { client } from "../../../../context/client/ApolloClient";
 
 import UnusedHouses from "../DND/UnusedHouses";
@@ -38,6 +43,11 @@ import {
   AddEntrance,
 } from "../../../../generated/AddEntrance";
 import DayMenagerFormModal from "../DayMenagerFormModal";
+import { Alert } from "@material-ui/lab";
+import {
+  ChangeAssignedStreets,
+  ChangeAssignedStreetsVariables,
+} from "../../../../generated/ChangeAssignedStreets";
 
 const drawerWidth = 240;
 
@@ -55,6 +65,22 @@ const DayManager: React.FC<Props> = ({ match }) => {
     RelocateEntrance,
     RelocateEntranceVariables
   >(RELOCATE_ENTRANCE);
+
+  const [changeAssignedStreets] = useMutation<
+    ChangeAssignedStreets,
+    ChangeAssignedStreetsVariables
+  >(CHANGE_ASSIGNED_STREETS, {
+    onCompleted: (data) => {
+      if (!data.updateDay) return;
+      const query = readDayQuery();
+      if (!query.day) return;
+
+      writeDayQuery({
+        ...query.day,
+        ...data.updateDay,
+      });
+    },
+  });
 
   const [addEntrance] = useMutation<AddEntrance, AddEntranceVariables>(
     ADD_ENTRANCE,
@@ -268,16 +294,36 @@ const DayManager: React.FC<Props> = ({ match }) => {
       : handleEntranceCreation(draggableId, destinationPastoralVisitIndex);
   };
 
+  const handleStreetSubmitChange = () => {
+    const tempStreetsIds = tempAssignedStreets.map(({ id }) => id);
+    const initialStreetsIds = data.day!.assignedStreets.map(({ id }) => id);
+
+    const areStreetsSame =
+      initialStreetsIds.findIndex((id) => !(id in tempStreetsIds)) === -1;
+
+    if (areStreetsSame) return;
+
+    changeAssignedStreets({
+      variables: { id: dayId, streets: tempStreetsIds },
+    });
+  };
+
   return (
     <>
       <DayMenagerFormModal
         open={isEditing}
-        headerText={"Edytuj dzień"}
+        headerText={"Zmień ulice"}
         submitText={"Zatwierdz zmiany"}
         selectedStreets={tempAssignedStreets}
         day={currDate}
+        infoComponent={
+          <Alert severity="warning">
+            Usunięcie ulicy spowoduje usunięcie wszyskich domów powiązanych z tą
+            ulicą.
+          </Alert>
+        }
         setSelectedStreets={setTempAssignedStreets}
-        onFormSubmit={() => {}}
+        onFormSubmit={handleStreetSubmitChange}
         onModalClose={handleModalClose}
       />
 
@@ -311,9 +357,8 @@ const DayManager: React.FC<Props> = ({ match }) => {
           </Grid>
           <Grid container spacing={3} justify="center">
             {pastoralVisits.map(({ id, priest, entrances }) => (
-              <Grid item xs={12} md={2}>
+              <Grid item xs={12} md={2} key={id}>
                 <Column
-                  key={id}
                   droppableId={id}
                   title={
                     priest?.username

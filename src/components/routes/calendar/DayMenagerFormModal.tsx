@@ -26,6 +26,7 @@ interface Props<S = AllStreets_streets> {
   headerText: string;
   submitText: string;
   selectedStreets: S[];
+  infoComponent?: React.ReactNode;
   setSelectedStreets: (users: S[]) => void;
   onModalClose: () => void;
   onFormSubmit: () => void;
@@ -37,6 +38,7 @@ const DayMenagerFormModal: React.FC<Props> = ({
   submitText,
   open,
   selectedStreets,
+  infoComponent,
   setSelectedStreets,
   onModalClose,
   onFormSubmit,
@@ -49,13 +51,12 @@ const DayMenagerFormModal: React.FC<Props> = ({
 
   if (streetsQuery.error || !streetsQuery.data) return <div>error</div>;
 
-  console.log(selectedStreets);
   return (
     <Modal open={open} onClose={onModalClose}>
       <Paper className={classes.modalContent}>
-        <Typography>{headerText}</Typography>
+        <Typography variant={"h4"}>{headerText}</Typography>
         <Typography variant={"body2"}>{day.toLocaleDateString()}r.</Typography>
-
+        {infoComponent}
         <PickAndList
           options={streetsQuery.data.streets}
           selectedItems={selectedStreets}
@@ -67,6 +68,7 @@ const DayMenagerFormModal: React.FC<Props> = ({
         <Button
           color={"primary"}
           variant={"contained"}
+          className={classes.submitButton}
           size={"large"}
           onClick={onFormSubmit}
         >
@@ -86,6 +88,12 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2),
+    outline: 0,
+    display: "flex",
+    flexDirection: "column",
+  },
+  submitButton: {
+    margin: theme.spacing(2, "auto"),
   },
 }));
 
