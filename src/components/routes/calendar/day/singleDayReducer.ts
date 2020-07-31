@@ -10,7 +10,7 @@ import { DAY } from "../actions";
 import { client } from "../../../../context/client/ApolloClient";
 
 export enum ActionTypes {
-  RELOCATE_ENTRANCE,
+  RELOCATE_ENTRANCES,
   DELETE_ENTRANCE,
   CREATE_FAKE_ENTRANCE,
   CREATE_ENTRANCE,
@@ -18,8 +18,12 @@ export enum ActionTypes {
 
 type Action =
   | {
-      type: ActionTypes.RELOCATE_ENTRANCE;
-      payload: { entranceId: string; pastoralVisitId: string };
+      type: ActionTypes.RELOCATE_ENTRANCES;
+      payload: {
+        entrancesIds: string[];
+        sourcePastoralVisitId: string;
+        destinationPastoralVisitId: string;
+      };
     }
   | {
       type: ActionTypes.DELETE_ENTRANCE;
@@ -64,31 +68,37 @@ export const useDayReducer = (dayId: string) => {
   return dispath;
 };
 
-const reducer = (state: State, action: Action): State => {
+export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case ActionTypes.RELOCATE_ENTRANCE:
+    case ActionTypes.RELOCATE_ENTRANCES:
       return produce(state, (draft) => {
         const {
-          entranceIndex,
-          pastoralVisitIndex: sourcePastoralVisitIndex,
-        } = findEntranceInPastoralVisits(
-          action.payload.entranceId,
-          draft.pastoralVisits
-        )!;
+          destinationPastoralVisitId,
+          sourcePastoralVisitId,
+        } = action.payload;
+
+        const sourcePastoralVisitIndex = findPastoralVisitIndexById(
+          draft,
+          sourcePastoralVisitId
+        );
 
         const destinationPastoralVisitIndex = findPastoralVisitIndexById(
           draft,
-          action.payload.pastoralVisitId
+          destinationPastoralVisitId
         );
 
-        //remove dragged entrance from source pastoralVisit entrances
-        const entrance = draft.pastoralVisits[
+        const removedEntrances = draft.pastoralVisits[
           sourcePastoralVisitIndex
-        ].entrances.splice(entranceIndex, 1)[0];
+        ].entrances.filter((entrance, i, arrRef) => {
+          if (!action.payload.entrancesIds.includes(entrance.id)) return false;
+          // removing from entrances
+          arrRef.splice(i, 1);
+          return true;
+        });
 
-        //and put that into dropped column
+        // and put them into dropped column
         draft.pastoralVisits[destinationPastoralVisitIndex].entrances.push(
-          entrance
+          ...removedEntrances
         );
       });
 
