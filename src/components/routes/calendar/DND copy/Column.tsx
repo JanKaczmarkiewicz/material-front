@@ -16,19 +16,27 @@ type AbstractItem = { id: string };
 
 interface Props<T extends AbstractItem> extends InnerListProps<T> {
   title: string;
-  droppableId: string;
 }
 
 interface InnerListProps<T extends AbstractItem> {
   items: T[];
+  droppableId: string;
+  selectionData: SelectionData | null;
   getElementCategory: (item: T) => string | undefined;
   renderListItemContent: (item: T) => React.ReactNode;
-  onItemSelected: (id: string) => void;
+  onItemSelected: (columnId: string, itemId: string) => void;
   getItemNumber: (item: T) => string | undefined;
 }
 
+type SelectionData = {
+  draggedItemId: string | null;
+  selectedItems: string[];
+};
+
 const InnerList = <T extends AbstractItem>({
   items,
+  droppableId,
+  selectionData,
   renderListItemContent,
   getElementCategory,
   getItemNumber,
@@ -41,18 +49,37 @@ const InnerList = <T extends AbstractItem>({
       {getKeys(spitedItems).map((key) => (
         <HousesSteetList key={`c-in-${key}`} title={key as string}>
           {sortByHouseNumber(spitedItems[key], getItemNumber).map((item) => (
-            <Draggable draggableId={item.id} index={item.index}>
-              {(provided, snapshot) => (
-                <ListItem
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                  innerRef={provided.innerRef}
-                  onClick={onItemSelected.bind(null, item.id)}
-                  style={getStyle(provided.draggableProps?.style, snapshot)}
-                >
-                  {renderListItemContent(item)}
-                </ListItem>
-              )}
+            <Draggable draggableId={item.id} index={item.index} key={item.id}>
+              {(provided, snapshot) => {
+                let baseStyles: object;
+
+                if (!selectionData) baseStyles = styles.UNSELECTED;
+                else if (!selectionData.selectedItems.includes(item.id))
+                  baseStyles = styles.UNSELECTED;
+                else if (item.id === selectionData.draggedItemId)
+                  baseStyles = styles.DRAGGED;
+                else
+                  baseStyles = !!selectionData.draggedItemId
+                    ? styles.SELECTED_FADED
+                    : styles.SELECTED;
+
+                const style = {
+                  ...baseStyles,
+                  ...getStyle(provided.draggableProps?.style, snapshot),
+                };
+
+                return (
+                  <ListItem
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    innerRef={provided.innerRef}
+                    onClick={onItemSelected.bind(null, droppableId, item.id)}
+                    style={style}
+                  >
+                    {renderListItemContent(item)}
+                  </ListItem>
+                );
+              }}
             </Draggable>
           ))}
         </HousesSteetList>
@@ -63,12 +90,8 @@ const InnerList = <T extends AbstractItem>({
 
 const InnerListMemorized = React.memo(InnerList) as typeof InnerList;
 
-const Column = <T extends AbstractItem>({
-  title,
-  droppableId,
-  ...restProps
-}: Props<T>) => (
-  <Droppable droppableId={droppableId}>
+const Column = <T extends AbstractItem>({ title, ...restProps }: Props<T>) => (
+  <Droppable droppableId={restProps.droppableId}>
     {(provided) => (
       <div ref={provided.innerRef} {...provided.droppableProps}>
         <Typography variant={"h6"}>{title}</Typography>
@@ -82,11 +105,19 @@ const Column = <T extends AbstractItem>({
 
 export default Column;
 
+const styles = {
+  SELECTED: { border: "1px solid black" },
+  SELECTED_FADED: { border: "1px solid black", display: "none" },
+  DRAGGED: { backGroundColor: "red", color: "white" },
+  UNSELECTED: {},
+};
+
 export function getStyle(
   style: DraggingStyle | NotDraggingStyle | undefined,
   snapshot: DraggableStateSnapshot
 ) {
   if (!snapshot.isDragging) return {};
+
   if (!snapshot.isDropAnimating) {
     return style;
   }
