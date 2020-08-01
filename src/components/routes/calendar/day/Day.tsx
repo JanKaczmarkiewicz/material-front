@@ -54,6 +54,7 @@ import {
   addTemporaryEntrance,
   relocateEntranceInCache,
   removeAllHousesByStreetInDay,
+  handleEntranceRemoval,
 } from "./cacheActions";
 import { difference } from "../../../../utils/diffrence";
 
@@ -118,17 +119,8 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
-  const handleEntranceCreation = (
-    houseId: string,
-    destinationPastoralVisitIndex: number
-  ) => {
-    const pastoralVisitId = addTemporaryEntrance(
-      dayId,
-      houseId,
-      destinationPastoralVisitIndex
-    );
-
-    if (!pastoralVisitId) return;
+  const handleEntranceCreation = (houseId: string, pastoralVisitId: string) => {
+    addTemporaryEntrance(dayId, houseId, pastoralVisitId);
 
     addEntrance({
       variables: {
@@ -140,15 +132,9 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const handleEntranceRelocation = (
     entranceId: string,
-    destinationPastoralVisitIndex: number
+    pastoralVisitId: string
   ) => {
-    const pastoralVisitId = relocateEntranceInCache(
-      dayId,
-      entranceId,
-      destinationPastoralVisitIndex
-    );
-
-    if (!pastoralVisitId) return;
+    relocateEntranceInCache(dayId, entranceId, pastoralVisitId);
 
     relocateEntrance({
       variables: {
@@ -160,7 +146,6 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
-
     if (!destination) {
       return;
     }
@@ -169,15 +154,11 @@ const DayManager: React.FC<Props> = ({ match }) => {
       return;
     }
 
-    const destinationPastoralVisitIndex = data.day!.pastoralVisits.findIndex(
-      ({ id }) => id === destination.droppableId
-    );
-
-    if (destinationPastoralVisitIndex < 0) return;
-
-    source.droppableId !== "unusedHouses"
-      ? handleEntranceRelocation(draggableId, destinationPastoralVisitIndex)
-      : handleEntranceCreation(draggableId, destinationPastoralVisitIndex);
+    if (source.droppableId === "unusedHouses")
+      handleEntranceCreation(draggableId, destination.droppableId);
+    else if (destination.droppableId === "unusedHouses")
+      handleEntranceRemoval(draggableId);
+    else handleEntranceRelocation(draggableId, destination.droppableId);
   };
 
   const handleStreetSubmitChange = () => {

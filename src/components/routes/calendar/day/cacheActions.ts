@@ -103,13 +103,19 @@ const dayInput = (id: string) => ({
 export const addTemporaryEntrance = (
   dayId: string,
   houseId: string,
-  destinationPastoralVisitIndex: number
-): string | null => {
+  pastoralVisitId: string
+) => {
   const input = dayInput(dayId);
 
   const query = readDayQuery(input);
 
-  if (!query.day) return null;
+  if (!query.day) return;
+
+  const destinationPastoralVisitIndex = query.day.pastoralVisits.findIndex(
+    ({ id }) => id === pastoralVisitId
+  );
+
+  if (destinationPastoralVisitIndex < 0) return;
 
   const pastoralVisitsCopy = [...query.day.pastoralVisits];
   const unusedHousesCopy = [...query.day.unusedHouses];
@@ -118,7 +124,7 @@ export const addTemporaryEntrance = (
     (house) => house.id === houseId
   );
 
-  if (houseIndex < 0) return null;
+  if (houseIndex < 0) return;
 
   const house = unusedHousesCopy.splice(houseIndex, 1)[0];
 
@@ -147,8 +153,6 @@ export const addTemporaryEntrance = (
     unusedHouses: unusedHousesCopy,
     pastoralVisits: pastoralVisitsCopy,
   });
-
-  return pastoralVisitsCopy[destinationPastoralVisitIndex].id;
 };
 
 export const replaceTemporaryEntranceWithRealOne = (
@@ -231,18 +235,24 @@ export const assignDayStateAfterAssignedStreetsChanged = (
 export const relocateEntranceInCache = (
   dayId: string,
   entranceId: string,
-  destinationPastoralVisitIndex: number
+  pastoralVisitId: string
 ) => {
   const index = dayInput(dayId);
   const query = readDayQuery(index);
 
-  if (!query.day) return null;
+  if (!query.day) return;
 
   const pastoralVisitsCopy = [...query.day.pastoralVisits];
 
   const indexes = findEntranceInPastoralVisits(entranceId, pastoralVisitsCopy);
 
-  if (!indexes) return null;
+  if (!indexes) return;
+
+  const destinationPastoralVisitIndex = query.day.pastoralVisits.findIndex(
+    ({ id }) => id === pastoralVisitId
+  );
+
+  if (destinationPastoralVisitIndex < 0) return;
 
   const {
     entranceIndex,
@@ -276,4 +286,8 @@ export const relocateEntranceInCache = (
     ...query.day,
     pastoralVisits: pastoralVisitsCopy,
   });
+};
+
+export const handleEntranceRemoval = (dayId: string) => {
+  console.error(dayId);
 };
