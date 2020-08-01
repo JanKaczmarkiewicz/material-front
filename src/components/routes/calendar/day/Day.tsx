@@ -9,8 +9,6 @@ import {
 import {
   Day,
   DayVariables,
-  Day_day_pastoralVisits,
-  Day_day,
   Day_day_assignedStreets,
 } from "../../../../generated/Day";
 
@@ -48,6 +46,16 @@ import {
   ChangeAssignedStreets,
   ChangeAssignedStreetsVariables,
 } from "../../../../generated/ChangeAssignedStreets";
+import { getKeys } from "../../../Layout/DataTable/util";
+import {
+  assignDayStateAfterAssignedStreetsChanged,
+  replaceTemporaryEntranceWithRealOne,
+  assignProperDeletedHousesToDay,
+  addTemporaryEntrance,
+  relocateEntranceInCache,
+  removeAllHousesByStreetInDay,
+} from "./cacheActions";
+import { difference } from "../../../../utils/diffrence";
 
 const drawerWidth = 240;
 
@@ -72,13 +80,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
   >(CHANGE_ASSIGNED_STREETS, {
     onCompleted: (data) => {
       if (!data.updateDay) return;
-      const query = readDayQuery();
-      if (!query.day) return;
-
-      writeDayQuery({
-        ...query.day,
-        ...data.updateDay,
-      });
+      assignDayStateAfterAssignedStreetsChanged(dayId, data.updateDay);
     },
   });
 
@@ -86,40 +88,8 @@ const DayManager: React.FC<Props> = ({ match }) => {
     ADD_ENTRANCE,
     {
       onCompleted: (data) => {
-        const query = readDayQuery();
         if (!data.addEntrance) return;
-
-        if (!query.day) return;
-        const pastoralVisitsCopy = [...query.day.pastoralVisits];
-
-        const indexes = findEntranceInPastoralVisits(
-          data.addEntrance.house!.id,
-          pastoralVisitsCopy
-        );
-
-        if (!indexes) return;
-
-        const {
-          entranceIndex,
-          pastoralVisitIndex: destinationPastoralVisitIndex,
-        } = indexes;
-
-        const destinationPastoralVisit = {
-          ...pastoralVisitsCopy[destinationPastoralVisitIndex],
-        };
-
-        //replece dummy one with real one
-        const entrancesCopy = [...destinationPastoralVisit.entrances];
-
-        entrancesCopy.splice(entranceIndex, 1, data.addEntrance);
-
-        destinationPastoralVisit.entrances = entrancesCopy;
-
-        pastoralVisitsCopy[
-          destinationPastoralVisitIndex
-        ] = destinationPastoralVisit;
-
-        writeDayQuery({ ...query.day, pastoralVisits: pastoralVisitsCopy });
+        replaceTemporaryEntranceWithRealOne(dayId, data.addEntrance);
       },
     }
   );
@@ -148,68 +118,22 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
-  const queryOptions = {
-    query: DAY,
-    variables: dayQueryVariables,
-  };
-
-  const readDayQuery = () => client.readQuery<Day, DayVariables>(queryOptions)!;
-
-  const writeDayQuery = (data: Day_day) =>
-    client.writeQuery<Day, DayVariables>({
-      ...queryOptions,
-      data: { day: data },
-    });
-
   const handleEntranceCreation = (
     houseId: string,
     destinationPastoralVisitIndex: number
   ) => {
-    const query = readDayQuery();
-
-    if (!query.day) return;
-
-    const pastoralVisitsCopy = [...query.day.pastoralVisits];
-    const unusedHousesCopy = [...query.day.unusedHouses];
-
-    const houseIndex = unusedHousesCopy.findIndex(
-      (house) => house.id === houseId
+    const pastoralVisitId = addTemporaryEntrance(
+      dayId,
+      houseId,
+      destinationPastoralVisitIndex
     );
 
-    if (houseIndex < 0) return;
-
-    const house = unusedHousesCopy.splice(houseIndex, 1)[0];
-
-    const newEntrance = {
-      id: house.id, //temp
-      __typename: "Entrance",
-      house: house,
-      comment: null,
-    };
-
-    const destinationPastoralVisitCopy = {
-      ...pastoralVisitsCopy[destinationPastoralVisitIndex],
-    };
-
-    destinationPastoralVisitCopy.entrances = [
-      ...destinationPastoralVisitCopy.entrances,
-      newEntrance,
-    ];
-
-    pastoralVisitsCopy[
-      destinationPastoralVisitIndex
-    ] = destinationPastoralVisitCopy;
-
-    writeDayQuery({
-      ...query.day,
-      unusedHouses: unusedHousesCopy,
-      pastoralVisits: pastoralVisitsCopy,
-    });
+    if (!pastoralVisitId) return;
 
     addEntrance({
       variables: {
         houseId,
-        pastoralVisitId: pastoralVisitsCopy[destinationPastoralVisitIndex].id,
+        pastoralVisitId,
       },
     });
   };
@@ -218,56 +142,18 @@ const DayManager: React.FC<Props> = ({ match }) => {
     entranceId: string,
     destinationPastoralVisitIndex: number
   ) => {
-    const query = readDayQuery();
-
-    if (!query.day) return;
-
-    const pastoralVisitsCopy = [...query.day.pastoralVisits];
-
-    const indexes = findEntranceInPastoralVisits(
+    const pastoralVisitId = relocateEntranceInCache(
+      dayId,
       entranceId,
-      pastoralVisitsCopy
+      destinationPastoralVisitIndex
     );
 
-    if (!indexes) return;
-
-    const {
-      entranceIndex,
-      pastoralVisitIndex: sourcePastoralVisitIndex,
-    } = indexes;
-
-    const sourceEntrances = [
-      ...pastoralVisitsCopy[sourcePastoralVisitIndex].entrances,
-    ];
-
-    //delete entrance from cache copy
-    const entrance = sourceEntrances.splice(entranceIndex, 1)[0];
-
-    pastoralVisitsCopy[sourcePastoralVisitIndex].entrances = sourceEntrances;
-
-    const destinationPastoralVisitCopy = {
-      ...pastoralVisitsCopy[destinationPastoralVisitIndex],
-    };
-
-    //add updated entrance to cache copy
-    destinationPastoralVisitCopy.entrances = [
-      ...destinationPastoralVisitCopy.entrances,
-      entrance,
-    ];
-
-    pastoralVisitsCopy[
-      destinationPastoralVisitIndex
-    ] = destinationPastoralVisitCopy;
-
-    writeDayQuery({
-      ...query.day,
-      pastoralVisits: pastoralVisitsCopy,
-    });
+    if (!pastoralVisitId) return;
 
     relocateEntrance({
       variables: {
         id: entranceId,
-        to: pastoralVisitsCopy[destinationPastoralVisitIndex].id,
+        to: pastoralVisitId,
       },
     });
   };
@@ -298,13 +184,43 @@ const DayManager: React.FC<Props> = ({ match }) => {
     const tempStreetsIds = tempAssignedStreets.map(({ id }) => id);
     const initialStreetsIds = data.day!.assignedStreets.map(({ id }) => id);
 
+    const removedStreetsIds: string[] = difference(
+      initialStreetsIds,
+      tempStreetsIds
+    );
+
     const areStreetsSame =
-      initialStreetsIds.findIndex((id) => !(id in tempStreetsIds)) === -1;
+      removedStreetsIds.length === 0 &&
+      tempStreetsIds.length === initialStreetsIds.length;
 
     if (areStreetsSame) return;
 
     changeAssignedStreets({
       variables: { id: dayId, streets: tempStreetsIds },
+    });
+
+    const removedHouses = removeAllHousesByStreetInDay(
+      dayId,
+      removedStreetsIds
+    );
+
+    const allQueries = (client.extract() as any).ROOT_QUERY;
+
+    // update rest day queries cache
+    getKeys(allQueries).forEach((key) => {
+      const queryInfo = allQueries[key];
+
+      if (queryInfo.typename !== "Day" || typeof queryInfo.id !== "string")
+        return;
+
+      const currentDayId = queryInfo.id.split(":")[1] as string;
+
+      if (currentDayId === dayId) return;
+
+      assignProperDeletedHousesToDay(
+        { input: { id: currentDayId } },
+        removedHouses
+      );
     });
   };
 
@@ -374,26 +290,6 @@ const DayManager: React.FC<Props> = ({ match }) => {
       </DragDropContext>
     </>
   );
-};
-
-const findEntranceInPastoralVisits = (
-  id: string,
-  pastoralVisits: Day_day_pastoralVisits[]
-) => {
-  let pastoralVisitIndex = null;
-  let entranceIndex = null;
-  for (let i = 0; i < pastoralVisits.length; i++) {
-    for (let j = 0; j < pastoralVisits[i].entrances.length; j++) {
-      const entrance = pastoralVisits[i].entrances[j];
-      if (entrance.id === id) {
-        pastoralVisitIndex = i;
-        entranceIndex = j;
-      }
-    }
-  }
-  if (pastoralVisitIndex === null || entranceIndex === null) return null;
-
-  return { pastoralVisitIndex, entranceIndex };
 };
 
 export default DayManager;

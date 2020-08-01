@@ -24,7 +24,6 @@ const PickAndList = <T extends ObjectWithId>({
     const result = selectedItems.filter(
       (selectedItem) => selectedItem.id !== id
     );
-    console.log(selectedItems, result);
     return setSelectedItems(result);
   };
 
