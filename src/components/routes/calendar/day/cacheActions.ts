@@ -13,49 +13,49 @@ type HousesGroupedByStreetId = {
   [key: string]: Day_day_pastoralVisits_entrances_house[];
 };
 
-export const removeAllHousesByStreetInDay = (
-  id: string,
-  streets: string[]
-): HousesGroupedByStreetId => {
-  const queryVariables = { input: { id } };
+// export const removeAllHousesByStreetInDay = (
+//   id: string,
+//   streets: string[]
+// ): HousesGroupedByStreetId => {
+//   const queryVariables = { input: { id } };
 
-  const query = readDayQuery({ input: { id } });
+//   const query = readDayQuery({ input: { id } });
 
-  if (!query.day) return {};
+//   if (!query.day) return {};
 
-  const deletedHouses: HousesGroupedByStreetId = {};
+//   const deletedHouses: HousesGroupedByStreetId = {};
 
-  const pastoralVisitsCopy = query.day.pastoralVisits.map((pastoralVisit) => ({
-    ...pastoralVisit,
-    entrances: pastoralVisit.entrances.filter(({ house }) => {
-      const currentEntranceHouseStreetId = house?.street?.id;
-      if (
-        currentEntranceHouseStreetId &&
-        streets.includes(currentEntranceHouseStreetId)
-      ) {
-        deletedHouses[currentEntranceHouseStreetId] = [
-          ...(deletedHouses[currentEntranceHouseStreetId] || []),
-          house!,
-        ];
+//   const pastoralVisitsCopy = query.day.pastoralVisits.map((pastoralVisit) => ({
+//     ...pastoralVisit,
+//     entrances: pastoralVisit.entrances.filter(({ house }) => {
+//       const currentEntranceHouseStreetId = house?.street?.id;
+//       if (
+//         currentEntranceHouseStreetId &&
+//         streets.includes(currentEntranceHouseStreetId)
+//       ) {
+//         deletedHouses[currentEntranceHouseStreetId] = [
+//           ...(deletedHouses[currentEntranceHouseStreetId] || []),
+//           house!,
+//         ];
 
-        return false;
-      }
-      return true;
-    }),
-  }));
+//         return false;
+//       }
+//       return true;
+//     }),
+//   }));
 
-  const unusedHousesCopy = query.day.unusedHouses.filter(
-    (house) => !streets.includes(house.street?.id || "")
-  );
+//   const unusedHousesCopy = query.day.unusedHouses.filter(
+//     (house) => !streets.includes(house.street?.id || "")
+//   );
 
-  writeDayQuery(queryVariables, {
-    ...query.day,
-    pastoralVisits: pastoralVisitsCopy,
-    unusedHouses: unusedHousesCopy,
-  });
+//   writeDayQuery(queryVariables, {
+//     ...query.day,
+//     pastoralVisits: pastoralVisitsCopy,
+//     unusedHouses: unusedHousesCopy,
+//   });
 
-  return deletedHouses;
-};
+//   return deletedHouses;
+// };
 
 const readDayQuery = (variables: DayVariables) => {
   return client.readQuery<Day, DayVariables>({ query: DAY, variables })!;
@@ -68,43 +68,43 @@ const writeDayQuery = (variables: DayVariables, data: Day_day) =>
     data: { day: data },
   });
 
-export const assignProperDeletedHousesToDay = (
-  queryVariables: DayVariables,
-  deletedHousesByStreets: HousesGroupedByStreetId
-) => {
-  const query = readDayQuery(queryVariables);
+// export const assignProperDeletedHousesToDay = (
+//   queryVariables: DayVariables,
+//   deletedHousesByStreets: HousesGroupedByStreetId
+// ) => {
+//   const query = readDayQuery(queryVariables);
 
-  if (!query.day) return;
+//   if (!query.day) return;
 
-  const deletedStreetsIds = getKeys(deletedHousesByStreets);
+//   const deletedStreetsIds = getKeys(deletedHousesByStreets);
 
-  const commonPartOfStreetsSets = query.day.assignedStreets
-    .map(({ id }) => id)
-    .filter(deletedStreetsIds.includes);
+//   const commonPartOfStreetsSets = query.day.assignedStreets
+//     .map(({ id }) => id)
+//     .filter(deletedStreetsIds.includes);
 
-  const properHouses = commonPartOfStreetsSets.flatMap(
-    (key) => deletedHousesByStreets[key]
-  );
+//   const properHouses = commonPartOfStreetsSets.flatMap(
+//     (key) => deletedHousesByStreets[key]
+//   );
 
-  writeDayQuery(queryVariables, {
-    ...query.day,
-    unusedHouses: [...query.day.unusedHouses, ...properHouses],
-  });
-};
+//   writeDayQuery(queryVariables, {
+//     ...query.day,
+//     unusedHouses: [...query.day.unusedHouses, ...properHouses],
+//   });
+// };
 
-export const assignDayStateAfterAssignedStreetsChanged = (
-  dayId: string,
-  updatedDay: ChangeAssignedStreets_updateDay
-) => {
-  const input = dayInput(dayId);
-  const query = readDayQuery(input);
+// export const assignDayStateAfterAssignedStreetsChanged = (
+//   dayId: string,
+//   updatedDay: ChangeAssignedStreets_updateDay
+// ) => {
+//   const input = dayInput(dayId);
+//   const query = readDayQuery(input);
 
-  if (!query.day) return;
+//   if (!query.day) return;
 
-  writeDayQuery(input, {
-    ...query.day,
-    ...updatedDay,
-  });
-};
+//   writeDayQuery(input, {
+//     ...query.day,
+//     ...updatedDay,
+//   });
+// };
 
 const dayInput = (id: string) => ({ input: { id } });

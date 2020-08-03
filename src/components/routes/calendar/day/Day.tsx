@@ -21,7 +21,6 @@ import {
   Typography,
   Grid,
   Button,
-  ListItemText,
 } from "@material-ui/core";
 import Column from "../DND copy/Column";
 import { DragDropContext, DropResult, DragStart } from "react-beautiful-dnd";
@@ -35,7 +34,6 @@ import {
   CHANGE_ASSIGNED_STREETS,
   DELETE_ENTRANCE,
 } from "../actions";
-import { client } from "../../../../context/client/ApolloClient";
 
 import {
   AddEntranceVariables,
@@ -53,11 +51,7 @@ import {
 
 import { Alert } from "@material-ui/lab";
 import { getKeys } from "../../../Layout/DataTable/util";
-import {
-  assignDayStateAfterAssignedStreetsChanged,
-  assignProperDeletedHousesToDay,
-  removeAllHousesByStreetInDay,
-} from "./cacheActions";
+// import { assignDayStateAfterAssignedStreetsChanged } from "./cacheActions";
 import { difference } from "../../../../utils/diffrence";
 
 import { useDayReducer, ActionTypes } from "./singleDayReducer";
@@ -67,13 +61,12 @@ import {
   entrancesSelectionInitialState,
 } from "./selectionReducer";
 import {
-  extractHouseCategory,
-  extractHouseNumber,
-  renderHouseItemContent,
   extractEntranceHouseNumber,
   extractEntranceHouseCategory,
   renderEntranceHouseItemContent,
 } from "../DND copy/Item";
+import UnusedHousesColumn from "./UnusedHousesColumn";
+import { useSeasonContext } from "../../../../context/Season/SeasonContext";
 
 const drawerWidth = 240;
 
@@ -82,7 +75,12 @@ type Props = RouteComponentProps<{
 }>;
 
 const DayManager: React.FC<Props> = ({ match }) => {
-  const { dayId } = match.params;
+  const { currentSeason } = useSeasonContext();
+
+  const dayQueryVariables: DayVariables = {
+    input: { id: match.params.dayId },
+    season: currentSeason.id,
+  };
 
   const classes = useStyles();
 
@@ -91,14 +89,14 @@ const DayManager: React.FC<Props> = ({ match }) => {
     Day_day_assignedStreets[]
   >([]);
 
-  const dispathDay = useCallback(useDayReducer(dayId), []);
+  const dispathDay = useCallback(useDayReducer(dayQueryVariables), []);
   const [selection, dispathSelection] = React.useReducer(
     selectionReducer,
     entrancesSelectionInitialState
   );
 
   const { loading, error, data } = useQuery<Day, DayVariables>(DAY, {
-    variables: { input: { id: dayId } },
+    variables: dayQueryVariables,
     onCompleted({ day }) {
       if (!day) return;
       setTempAssignedStreets([...day.assignedStreets]);
@@ -120,7 +118,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
   >(CHANGE_ASSIGNED_STREETS, {
     onCompleted: (data) => {
       if (!data.updateDay) return;
-      assignDayStateAfterAssignedStreetsChanged(dayId, data.updateDay);
+      // assignDayStateAfterAssignedStreetsChanged(dayId, data.updateDay);
     },
   });
 
@@ -131,7 +129,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
         if (!data.addEntrance) return;
         dispathDay({
           type: ActionTypes.CREATE_ENTRANCE,
-          payload: { entrance: data.addEntrance },
+          payload: { entrances: [data.addEntrance] },
         });
       },
     }
@@ -151,7 +149,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
     (houseId: string, pastoralVisitId: string) => {
       dispathDay({
         type: ActionTypes.CREATE_FAKE_ENTRANCE,
-        payload: { houseId, pastoralVisitId },
+        payload: { housesIds: [], pastoralVisitId },
       });
 
       addEntrance({
@@ -190,13 +188,16 @@ const DayManager: React.FC<Props> = ({ match }) => {
     []
   );
 
-  const handleEntranceRemoval = useCallback((entranceId: string) => {
-    dispathDay({
-      type: ActionTypes.DELETE_ENTRANCE,
-      payload: { entranceId },
-    });
-    deleteEntrance({ variables: { input: { id: entranceId } } });
-  }, []);
+  const handleEntranceRemoval = useCallback(
+    (entrancesIds: string[], sourcePastoralVisitId: string) => {
+      dispathDay({
+        type: ActionTypes.DELETE_ENTRANCES,
+        payload: { sourcePastoralVisitId, entrancesIds },
+      });
+      // deleteEntrance({ variables: { input: { id: entranceId } } });
+    },
+    []
+  );
 
   const handleHouseSelected = useCallback((id) => {}, []);
 
@@ -223,7 +224,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
       if (source.droppableId === "unusedHouses")
         handleEntranceCreation(draggableId, destination.droppableId);
       else if (destination.droppableId === "unusedHouses")
-        handleEntranceRemoval(draggableId);
+        handleEntranceRemoval(selection.selectedEntrances, source.droppableId);
       else
         handleEntranceRelocation(
           draggableId,
@@ -241,56 +242,43 @@ const DayManager: React.FC<Props> = ({ match }) => {
   if (loading) return <div>loading...</div>;
   if (error || !data || !data.day) return <div>error</div>;
 
-  console.log(JSON.stringify(data.day));
-
-  const { pastoralVisits, visitDate, unusedHouses } = data.day;
+  const { pastoralVisits, visitDate, assignedStreets } = data.day;
 
   const currDate = new Date(visitDate);
 
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
   const handleStreetSubmitChange = () => {
-    const tempStreetsIds = tempAssignedStreets.map(({ id }) => id);
-    const initialStreetsIds = data.day!.assignedStreets.map(({ id }) => id);
-
-    const removedStreetsIds: string[] = difference(
-      initialStreetsIds,
-      tempStreetsIds
-    );
-
-    const areStreetsSame =
-      removedStreetsIds.length === 0 &&
-      tempStreetsIds.length === initialStreetsIds.length;
-
-    if (areStreetsSame) return;
-
-    changeAssignedStreets({
-      variables: { id: dayId, streets: tempStreetsIds },
-    });
-
-    const removedHouses = removeAllHousesByStreetInDay(
-      dayId,
-      removedStreetsIds
-    );
-
-    const allQueries = (client.extract() as any).ROOT_QUERY;
-
-    // update rest day queries cache
-    getKeys(allQueries).forEach((key) => {
-      const queryInfo = allQueries[key];
-
-      if (queryInfo.typename !== "Day" || typeof queryInfo.id !== "string")
-        return;
-
-      const currentDayId = queryInfo.id.split(":")[1] as string;
-
-      if (currentDayId === dayId) return;
-
-      assignProperDeletedHousesToDay(
-        { input: { id: currentDayId } },
-        removedHouses
-      );
-    });
+    // const tempStreetsIds = tempAssignedStreets.map(({ id }) => id);
+    // const initialStreetsIds = data.day!.assignedStreets.map(({ id }) => id);
+    // const removedStreetsIds: string[] = difference(
+    //   initialStreetsIds,
+    //   tempStreetsIds
+    // );
+    // const areStreetsSame =
+    //   removedStreetsIds.length === 0 &&
+    //   tempStreetsIds.length === initialStreetsIds.length;
+    // if (areStreetsSame) return;
+    // changeAssignedStreets({
+    //   variables: { id: dayId, streets: tempStreetsIds },
+    // });
+    // const removedHouses = removeAllHousesByStreetInDay(
+    //   dayId,
+    //   removedStreetsIds
+    // );
+    // const allQueries = (client.extract() as any).ROOT_QUERY;
+    // // update rest day queries cache
+    // getKeys(allQueries).forEach((key) => {
+    //   const queryInfo = allQueries[key];
+    //   if (queryInfo.typename !== "Day" || typeof queryInfo.id !== "string")
+    //     return;
+    //   const currentDayId = queryInfo.id.split(":")[1] as string;
+    //   if (currentDayId === dayId) return;
+    //   assignProperDeletedHousesToDay(
+    //     { input: { id: currentDayId } },
+    //     removedHouses
+    //   );
+    // });
   };
 
   return (
@@ -323,15 +311,9 @@ const DayManager: React.FC<Props> = ({ match }) => {
         >
           <div className={classes.drawerContainer}>
             <Toolbar />
-            <Column
-              items={unusedHouses}
-              selectionData={null}
-              droppableId={"unusedHouses"}
-              getElementCategory={extractHouseCategory}
-              getItemNumber={extractHouseNumber}
-              renderListItemContent={renderHouseItemContent}
-              onItemSelected={handleHouseSelected}
-              title={"Nieurzywane domy"}
+            <UnusedHousesColumn
+              assignedStreets={assignedStreets}
+              onHouseSelected={handleHouseSelected}
             />
           </div>
         </Drawer>

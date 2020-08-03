@@ -1,16 +1,17 @@
 import React from "react";
 import ListMultiple, { ObjectWithId } from "./ListMultiple";
 import PickMultiple from "./PickMultiple";
+import { AllStreets, AllStreets_streets } from "../../../generated/AllStreets";
 
-interface BaseProps<T> {
+interface BaseProps<T extends ObjectWithId> {
   getOptionLabel: (item: T) => string;
   selectedItems: T[];
 }
 
-interface Props<T> extends BaseProps<T> {
-  setSelectedItems: (items: T[]) => void;
-  options: T[];
+interface Props<T extends ObjectWithId> extends BaseProps<T> {
   label: string;
+  options: T[];
+  setSelectedItems: (items: T[]) => void;
 }
 
 const PickAndList = <T extends ObjectWithId>({

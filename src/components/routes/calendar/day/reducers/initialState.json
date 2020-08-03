@@ -1,9 +1,1097 @@
 {
   "id": "5f1fd98118c4a42facc8072e",
-  "unusedHouses": [],
   "reeceDate": "2020-12-31T23:00:00.000Z",
   "visitDate": "2021-01-01T23:00:00.000Z",
-  "assignedStreets": [],
+  "assignedStreets": [
+    {
+      "id": "5f1fd97e18c4a42facc7fd92",
+      "name": "Miodowa",
+      "__typename": "Street",
+      "unusedHouses": [
+        {
+          "id": "5f1fd97e18c4a42facc7feb3",
+          "number": "45\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feb4",
+          "number": "41\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feb5",
+          "number": "119\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feb6",
+          "number": "121a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feb7",
+          "number": "121e\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feb8",
+          "number": "121\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feba",
+          "number": "120\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7febb",
+          "number": "35a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7febc",
+          "number": "39a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7febd",
+          "number": "56\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7febe",
+          "number": "119d\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7febf",
+          "number": "121c\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec0",
+          "number": "119g\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec1",
+          "number": "121b\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec2",
+          "number": "103a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec3",
+          "number": "44\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec4",
+          "number": "125a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec5",
+          "number": "118\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec6",
+          "number": "114\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec7",
+          "number": "125c\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec8",
+          "number": "121d\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fec9",
+          "number": "116\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feca",
+          "number": "82\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fecb",
+          "number": "119a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fecc",
+          "number": "105\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fecd",
+          "number": "46\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fece",
+          "number": "83a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fecf",
+          "number": "125\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fed0",
+          "number": "132\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fed2",
+          "number": "119e\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fed3",
+          "number": "126\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fed5",
+          "number": "125b\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fed6",
+          "number": "83\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fed9",
+          "number": "119c\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feda",
+          "number": "109a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fedb",
+          "number": "101a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fedc",
+          "number": "131\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd92",
+            "name": "Miodowa",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        }
+      ]
+    },
+    {
+      "id": "5f1fd97e18c4a42facc7fd93",
+      "name": "Obotrycka",
+      "__typename": "Street",
+      "unusedHouses": [
+        {
+          "id": "5f1fd97e18c4a42facc7fede",
+          "number": "6\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd93",
+            "name": "Obotrycka",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fee0",
+          "number": "15b\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd93",
+            "name": "Obotrycka",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fee4",
+          "number": "7\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd93",
+            "name": "Obotrycka",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        }
+      ]
+    },
+    {
+      "id": "5f1fd97e18c4a42facc7fd94",
+      "name": "Tadeusza Zawadzkiego",
+      "__typename": "Street",
+      "unusedHouses": [
+        {
+          "id": "5f1fd97e18c4a42facc7fe7a",
+          "number": "141\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe7b",
+          "number": "123\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe7e",
+          "number": "140\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe83",
+          "number": "115\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe84",
+          "number": "119\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe88",
+          "number": "129\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe8d",
+          "number": "141a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe90",
+          "number": "125\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe96",
+          "number": "176\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe97",
+          "number": "136\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fe9f",
+          "number": "118\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fea0",
+          "number": "124\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fea1",
+          "number": "168\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fea2",
+          "number": "170\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fea7",
+          "number": "132\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feac",
+          "number": "162\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feae",
+          "number": "150\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feb0",
+          "number": "116\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feb2",
+          "number": "166\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd94",
+            "name": "Tadeusza Zawadzkiego",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        }
+      ]
+    },
+    {
+      "id": "5f1fd97e18c4a42facc7fd95",
+      "name": "Duńska",
+      "__typename": "Street",
+      "unusedHouses": [
+        {
+          "id": "5f1fd97e18c4a42facc7feea",
+          "number": "45\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feee",
+          "number": "112\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7feef",
+          "number": "80\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fef1",
+          "number": "68\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fef2",
+          "number": "84\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fef3",
+          "number": "72\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fef4",
+          "number": "48\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fef5",
+          "number": "27d\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fef6",
+          "number": "67\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fef9",
+          "number": "6\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7fefd",
+          "number": "8a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff03",
+          "number": "46a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff07",
+          "number": "40a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff08",
+          "number": "86\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff09",
+          "number": "40\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff0e",
+          "number": "31b\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff11",
+          "number": "21a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff13",
+          "number": "6a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff14",
+          "number": "88\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff15",
+          "number": "55\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97e18c4a42facc7ff19",
+          "number": "61\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff1a",
+          "number": "15c\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff1c",
+          "number": "15\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff1d",
+          "number": "44\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff1e",
+          "number": "27b\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff20",
+          "number": "114\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff22",
+          "number": "104\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff24",
+          "number": "42a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff25",
+          "number": "74\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff26",
+          "number": "50b\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff27",
+          "number": "28\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff28",
+          "number": "76\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff29",
+          "number": "15b\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff2a",
+          "number": "8\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff2b",
+          "number": "47\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff2c",
+          "number": "82\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff2f",
+          "number": "70\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff32",
+          "number": "59\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff33",
+          "number": "110\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff34",
+          "number": "51\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff37",
+          "number": "23\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff38",
+          "number": "27h\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff39",
+          "number": "15a\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff3a",
+          "number": "20\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff3f",
+          "number": "26\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff42",
+          "number": "62\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        },
+        {
+          "id": "5f1fd97f18c4a42facc7ff43",
+          "number": "106\r",
+          "street": {
+            "id": "5f1fd97e18c4a42facc7fd95",
+            "name": "Duńska",
+            "__typename": "Street"
+          },
+          "__typename": "House"
+        }
+      ]
+    }
+  ],
   "pastoralVisits": [
     {
       "id": "5f1fd98118c4a42facc8072f",
@@ -34,21 +1122,6 @@
           "house": {
             "id": "5f1fd97e18c4a42facc7fee2",
             "number": "15c\r",
-            "street": {
-              "id": "5f1fd97e18c4a42facc7fd93",
-              "name": "Obotrycka",
-              "__typename": "Street"
-            },
-            "__typename": "House"
-          },
-          "__typename": "Entrance"
-        },
-        {
-          "id": "5f1fd98218c4a42facc80888",
-          "comment": null,
-          "house": {
-            "id": "5f1fd97e18c4a42facc7fee3",
-            "number": "15e\r",
             "street": {
               "id": "5f1fd97e18c4a42facc7fd93",
               "name": "Obotrycka",
@@ -143,7 +1216,428 @@
         "username": "Marek Jaworski\r",
         "__typename": "User"
       },
-      "entrances": [],
+      "entrances": [
+        {
+          "id": "5f1fd98218c4a42facc80874",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7feb9",
+            "number": "9\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd92",
+              "name": "Miodowa",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80881",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fed7",
+            "number": "119b\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd92",
+              "name": "Miodowa",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80884",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fedd",
+            "number": "129\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd92",
+              "name": "Miodowa",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80885",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fedf",
+            "number": "4\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80886",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee1",
+            "number": "3\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80888",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee3",
+            "number": "15e\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80889",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee5",
+            "number": "15a\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8088b",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee7",
+            "number": "5\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd93",
+              "name": "Obotrycka",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8088c",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe7c",
+            "number": "144\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8088d",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe7d",
+            "number": "142\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8088e",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe7f",
+            "number": "135\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8088f",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe80",
+            "number": "146\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80890",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe85",
+            "number": "121a\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80895",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe8c",
+            "number": "117\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80896",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe8f",
+            "number": "91\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8089c",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe9a",
+            "number": "152\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc8089d",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe9b",
+            "number": "112\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a0",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fea3",
+            "number": "160\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a1",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fea4",
+            "number": "148\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a6",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7feab",
+            "number": "158\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a7",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fead",
+            "number": "122\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f201e24803d7b20ac472ed5",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7feaf",
+            "number": "108\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f201e26803d7b20ac472ed6",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7feb1",
+            "number": "114\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f201e2c803d7b20ac472ed7",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe8e",
+            "number": "85\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f201e2f803d7b20ac472ed8",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe93",
+            "number": "93\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f23de2a2e21b8075cd8bcc2",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe81",
+            "number": "111\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f2418092e21b8075cd8bcc4",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fea6",
+            "number": "120\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f24180b2e21b8075cd8bcc6",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fe82",
+            "number": "121\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd94",
+              "name": "Tadeusza Zawadzkiego",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        }
+      ],
       "__typename": "PastoralVisit"
     },
     {
@@ -160,6 +1654,21 @@
           "house": {
             "id": "5f1fd97e18c4a42facc7fed4",
             "number": "134\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd92",
+              "name": "Miodowa",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc80882",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fed8",
+            "number": "99\r",
             "street": {
               "id": "5f1fd97e18c4a42facc7fd92",
               "name": "Miodowa",
@@ -389,7 +1898,68 @@
         "username": "Marcin Kózka",
         "__typename": "User"
       },
-      "entrances": [],
+      "entrances": [
+        {
+          "id": "5f1fd98218c4a42facc808a8",
+          "comment": "przed 17",
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee8",
+            "number": "90\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd95",
+              "name": "Duńska",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808a9",
+          "comment": null,
+          "house": {
+            "id": "5f1fd97e18c4a42facc7fee9",
+            "number": "58b\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd95",
+              "name": "Duńska",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808aa",
+          "comment": "po 20",
+          "house": {
+            "id": "5f1fd97e18c4a42facc7feeb",
+            "number": "92\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd95",
+              "name": "Duńska",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        },
+        {
+          "id": "5f1fd98218c4a42facc808ab",
+          "comment": "przed 18",
+          "house": {
+            "id": "5f1fd97e18c4a42facc7feec",
+            "number": "52\r",
+            "street": {
+              "id": "5f1fd97e18c4a42facc7fd95",
+              "name": "Duńska",
+              "__typename": "Street"
+            },
+            "__typename": "House"
+          },
+          "__typename": "Entrance"
+        }
+      ],
       "__typename": "PastoralVisit"
     }
   ],

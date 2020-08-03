@@ -8,11 +8,12 @@ import {
 import produce from "immer";
 import { DAY } from "../actions";
 import { client } from "../../../../context/client/ApolloClient";
+import { splitByLabel } from "../../../../utils/splitByLabel";
 
 export enum ActionTypes {
   RELOCATE_ENTRANCES,
-  DELETE_ENTRANCE,
-  CREATE_FAKE_ENTRANCE,
+  DELETE_ENTRANCES,
+  CREATE_FAKE_ENTRANCES,
   CREATE_ENTRANCE,
 }
 
@@ -26,25 +27,23 @@ type Action =
       };
     }
   | {
-      type: ActionTypes.DELETE_ENTRANCE;
-      payload: { entranceId: string };
+      type: ActionTypes.DELETE_ENTRANCES;
+      payload: { entrancesIds: string[]; sourcePastoralVisitId: string };
     }
   | {
       type: ActionTypes.CREATE_ENTRANCE;
       payload: {
-        entrance: Day_day_pastoralVisits_entrances;
+        entrances: Day_day_pastoralVisits_entrances[];
       };
     }
   | {
-      type: ActionTypes.CREATE_FAKE_ENTRANCE;
-      payload: { houseId: string; pastoralVisitId: string };
+      type: ActionTypes.CREATE_FAKE_ENTRANCES;
+      payload: { housesIds: string[]; destinationPastoralVisitId: string };
     };
 
 type State = Day_day;
 
-export const useDayReducer = (dayId: string) => {
-  const variables = { input: { id: dayId } };
-
+export const useDayReducer = (variables: DayVariables) => {
   const dispath = (action: Action) => {
     const query = client.readQuery<Day, DayVariables>({
       query: DAY,
@@ -52,7 +51,7 @@ export const useDayReducer = (dayId: string) => {
     });
 
     if (!query || !query.day) {
-      console.error("nothing found");
+      console.error("day not found");
       return;
     }
 
@@ -71,10 +70,11 @@ export const useDayReducer = (dayId: string) => {
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case ActionTypes.RELOCATE_ENTRANCES:
-      return produce(state, (draft) => {
+      const result = produce(state, (draft) => {
         const {
           destinationPastoralVisitId,
           sourcePastoralVisitId,
+          entrancesIds,
         } = action.payload;
 
         const sourcePastoralVisitIndex = findPastoralVisitIndexById(
@@ -82,84 +82,134 @@ export const reducer = (state: State, action: Action): State => {
           sourcePastoralVisitId
         );
 
+        const removedEntrances = [];
+        const restEntrances = [];
+
+        for (const entrance of draft.pastoralVisits[sourcePastoralVisitIndex]
+          .entrances)
+          entrancesIds.includes(entrance.id)
+            ? removedEntrances.push(entrance)
+            : restEntrances.push(entrance);
+
+        draft.pastoralVisits[
+          sourcePastoralVisitIndex
+        ].entrances = restEntrances;
+
         const destinationPastoralVisitIndex = findPastoralVisitIndexById(
           draft,
           destinationPastoralVisitId
         );
-
-        const removedEntrances = draft.pastoralVisits[
-          sourcePastoralVisitIndex
-        ].entrances.filter((entrance, i, arrRef) => {
-          if (!action.payload.entrancesIds.includes(entrance.id)) return false;
-          // removing from entrances
-          arrRef.splice(i, 1);
-          return true;
-        });
 
         // and put them into dropped column
         draft.pastoralVisits[destinationPastoralVisitIndex].entrances.push(
           ...removedEntrances
         );
       });
+      return result;
 
-    case ActionTypes.CREATE_FAKE_ENTRANCE:
+    case ActionTypes.CREATE_FAKE_ENTRANCES:
       return produce(state, (draft) => {
+        const { housesIds, destinationPastoralVisitId } = action.payload;
+
         const destinationPastoralVisitIndex = findPastoralVisitIndexById(
           state,
-          action.payload.pastoralVisitId
+          destinationPastoralVisitId
         );
 
-        const houseIndex = state.unusedHouses.findIndex(
-          (house) => house.id === action.payload.houseId
-        );
-        //remove dragged house from source unusedHouses
-        const house = draft.unusedHouses.splice(houseIndex, 1)[0];
+        const removedHouses = [];
 
-        const fakeEntrance = {
+        for (const assignedStreet of draft.assignedStreets) {
+          const restHouses = [];
+
+          for (const house of assignedStreet.unusedHouses)
+            housesIds.includes(house.id)
+              ? removedHouses.push(house)
+              : restHouses.push(house);
+
+          assignedStreet.unusedHouses = restHouses;
+        }
+
+        const fakeHouses = removedHouses.map((house) => ({
           id: house.id, //fake
           comment: null,
           __typename: "Entrance",
           house,
-        };
+        }));
 
         //and put created entrance (with fake temporary id) into dropped column
         draft.pastoralVisits[destinationPastoralVisitIndex].entrances.push(
-          fakeEntrance
+          ...fakeHouses
         );
       });
 
     case ActionTypes.CREATE_ENTRANCE:
       return produce(state, (draft) => {
-        const { entrance } = action.payload;
+        const { entrances } = action.payload;
+
+        if (!entrances.length) return;
 
         const indexes = findEntranceInPastoralVisits(
-          entrance.house!.id,
+          entrances[0].house!.id,
           draft.pastoralVisits
         )!;
+
+        const clearedEntrances = [];
+
+        for (const entrance of draft.pastoralVisits[indexes.pastoralVisitIndex]
+          .entrances) {
+          for (const newEntrance of entrances)
+            if (entrance.id === newEntrance.house?.id) {
+              clearedEntrances.push(newEntrance);
+              break;
+            }
+          clearedEntrances.push(entrance);
+        }
 
         //replece fake entrance (see: CREATE_FAKE_ENTRANCE case) with real one
-        draft.pastoralVisits[indexes.pastoralVisitIndex].entrances.splice(
-          indexes.entranceIndex,
-          1,
-          entrance
-        );
+        draft.pastoralVisits[
+          indexes.pastoralVisitIndex
+        ].entrances = clearedEntrances;
       });
 
-    case ActionTypes.DELETE_ENTRANCE:
+    case ActionTypes.DELETE_ENTRANCES:
       return produce(state, (draft) => {
-        const {
-          entranceIndex,
-          pastoralVisitIndex,
-        } = findEntranceInPastoralVisits(
-          action.payload.entranceId,
-          draft.pastoralVisits
-        )!;
+        const { entrancesIds, sourcePastoralVisitId } = action.payload;
 
-        const { house } = draft.pastoralVisits[
-          pastoralVisitIndex
-        ].entrances.splice(entranceIndex, 1)[0];
+        const sourcePastoralVisitIndex = findPastoralVisitIndexById(
+          draft,
+          sourcePastoralVisitId
+        );
 
-        draft.unusedHouses.push(house!);
+        const removedEntrances = [];
+        const restEntrances = [];
+
+        for (const entrance of draft.pastoralVisits[sourcePastoralVisitIndex]
+          .entrances) {
+          entrancesIds.includes(entrance.id)
+            ? removedEntrances.push(entrance)
+            : restEntrances.push(entrance);
+        }
+
+        draft.pastoralVisits[
+          sourcePastoralVisitIndex
+        ].entrances = restEntrances;
+
+        const sanitizedHouses = removedEntrances.map(({ house }) => house!);
+
+        const splitedHouses = splitByLabel(
+          sanitizedHouses,
+          ({ street }) => street?.id
+        );
+
+        for (const streetId in splitedHouses) {
+          const pastoralVisit = draft.assignedStreets.find(
+            (street) => street.id === streetId
+          );
+
+          if (!pastoralVisit) continue;
+
+          pastoralVisit.unusedHouses.push(...splitedHouses[streetId]);
+        }
       });
 
     default:

@@ -1,28 +1,24 @@
 import React from "react";
 import {
-  Day_day_pastoralVisits_entrances,
-  Day_day_unusedHouses,
+  Day_day_pastoralVisits_entrances as Entrance,
+  Day_day_assignedStreets_unusedHouses as House,
 } from "../../../../generated/Day";
 import { ListItemText } from "@material-ui/core";
 
-export const extractEntranceHouseCategory = ({
-  house,
-}: Day_day_pastoralVisits_entrances) => extractHouseCategory(house);
+export const extractEntranceHouseCategory = ({ house }: Entrance) =>
+  extractHouseCategory(house);
 
-export const extractHouseCategory = (house: Day_day_unusedHouses | null) =>
+export const extractHouseCategory = (house: House | null) =>
   house?.street?.name;
 
-export const renderEntranceHouseItemContent = (
-  entrance: Day_day_pastoralVisits_entrances
-) => renderHouseItemContent(entrance.house);
+export const renderEntranceHouseItemContent = (entrance: Entrance) =>
+  renderHouseItemContent(entrance.house);
 
-export const extractHouseNumber = (house: Day_day_unusedHouses | null) =>
-  house?.number;
+export const extractHouseNumber = (house: House | null) => house?.number;
 
-export const extractEntranceHouseNumber = (
-  entrance: Day_day_pastoralVisits_entrances
-) => extractHouseNumber(entrance.house);
+export const extractEntranceHouseNumber = (entrance: Entrance) =>
+  extractHouseNumber(entrance.house);
 
-export const renderHouseItemContent = (house: Day_day_unusedHouses | null) => (
+export const renderHouseItemContent = (house: House | null) => (
   <ListItemText>{extractHouseNumber(house)}</ListItemText>
 );

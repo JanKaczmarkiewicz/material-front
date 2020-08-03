@@ -20,29 +20,30 @@ const STREETS = gql`
   }
 `;
 
-interface Props<S = AllStreets_streets> {
+interface Props<T> {
   open: boolean;
   day: Date;
   headerText: string;
   submitText: string;
-  selectedStreets: S[];
+  selectedStreets: T[];
   infoComponent?: React.ReactNode;
-  setSelectedStreets: (users: S[]) => void;
+  setSelectedStreets: (streets: T[]) => void;
   onModalClose: () => void;
   onFormSubmit: () => void;
 }
 
-const DayMenagerFormModal: React.FC<Props> = ({
-  day,
-  headerText,
-  submitText,
-  open,
-  selectedStreets,
-  infoComponent,
-  setSelectedStreets,
-  onModalClose,
-  onFormSubmit,
-}) => {
+const DayMenagerFormModal = <T extends AllStreets_streets>(props: Props<T>) => {
+  const {
+    day,
+    headerText,
+    submitText,
+    open,
+    selectedStreets,
+    infoComponent,
+    setSelectedStreets,
+    onModalClose,
+    onFormSubmit,
+  } = props;
   const classes = useStyles();
 
   const streetsQuery = useQuery<AllStreets>(STREETS);
@@ -58,7 +59,7 @@ const DayMenagerFormModal: React.FC<Props> = ({
         <Typography variant={"body2"}>{day.toLocaleDateString()}r.</Typography>
         {infoComponent}
         <PickAndList
-          options={streetsQuery.data.streets}
+          options={streetsQuery.data.streets as T[]}
           selectedItems={selectedStreets}
           getOptionLabel={({ name }) => name}
           setSelectedItems={setSelectedStreets}

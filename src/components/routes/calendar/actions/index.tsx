@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost";
 
-export const StreetsFragment = gql`
-  fragment StreetsFragment on Street {
+export const StreetFragment = gql`
+  fragment StreetFragment on Street {
     id
     name
   }
@@ -12,10 +12,10 @@ export const HouseFragment = gql`
     id
     number
     street {
-      ...StreetsFragment
+      ...StreetFragment
     }
   }
-  ${StreetsFragment}
+  ${StreetFragment}
 `;
 
 export const EntranceFragment = gql`
@@ -52,13 +52,17 @@ export const DELETE_ENTRANCE = gql`
 `;
 
 export const CHANGE_ASSIGNED_STREETS = gql`
-  mutation ChangeAssignedStreets($id: String!, $streets: [String]!) {
+  mutation ChangeAssignedStreets(
+    $id: String!
+    $streets: [String]!
+    $season: String!
+  ) {
     updateDay(input: { id: $id, assignedStreets: $streets }) {
       assignedStreets {
-        ...StreetsFragment
-      }
-      unusedHouses {
-        ...HouseFragment
+        ...StreetFragment
+        unusedHouses(season: $season) {
+          ...HouseFragment
+        }
       }
       pastoralVisits {
         ...PastoralVisitFragment
@@ -66,7 +70,7 @@ export const CHANGE_ASSIGNED_STREETS = gql`
     }
   }
   ${PastoralVisitFragment}
-  ${StreetsFragment}
+  ${StreetFragment}
   ${HouseFragment}
 `;
 
@@ -88,16 +92,16 @@ export const ADD_ENTRANCE = gql`
 `;
 
 export const DAY = gql`
-  query Day($input: FindOneInput!) {
+  query Day($input: FindOneInput!, $season: String!) {
     day(input: $input) {
       id
-      unusedHouses {
-        ...HouseFragment
-      }
       reeceDate
       visitDate
       assignedStreets {
-        ...StreetsFragment
+        ...StreetFragment
+        unusedHouses(season: $season) {
+          ...HouseFragment
+        }
       }
       pastoralVisits {
         ...PastoralVisitFragment
@@ -105,6 +109,6 @@ export const DAY = gql`
     }
   }
   ${PastoralVisitFragment}
-  ${StreetsFragment}
   ${EntranceFragment}
+  ${StreetFragment}
 `;
