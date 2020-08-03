@@ -1,35 +1,107 @@
 import { reducer, ActionTypes } from "../singleDayReducer";
 import { Day_day } from "../../../../../generated/Day";
+import { splitByLabel } from "../../../../../utils/splitByLabel";
 
 // prettier-ignore
 const getInitialState= ():Day_day => require("./initialState.json")
 
-describe("", () => {
-  let state: Day_day;
+let state: Day_day;
 
-  beforeEach(() => {
-    state = getInitialState();
+describe("DELETE_ENTRANCES", () => {
+  state = getInitialState();
+  const entrancesToMove = state.pastoralVisits[0].entrances.filter(
+    (_, i) => i % 2 === 0
+  );
+
+  const splitedEntrancesToMove = splitByLabel(
+    entrancesToMove,
+    ({ house }) => house?.street?.id
+  );
+
+  const entrancesIdsToMove = entrancesToMove.map(({ id }) => id);
+
+  const newState = reducer(state, {
+    type: ActionTypes.DELETE_ENTRANCES,
+    payload: {
+      entrancesIds: entrancesIdsToMove,
+      sourcePastoralVisitId: state.pastoralVisits[0].id,
+    },
+  });
+  // reference checks
+  it("should change reference in changed properties", () => {
+    expect(newState.id).toBe(state.id);
+    expect(newState.reeceDate).toBe(state.reeceDate);
+    expect(newState.visitDate).toBe(state.visitDate);
+    expect(newState.assignedStreets).not.toBe(state.assignedStreets);
+
+    expect(newState).not.toBe(state);
+    expect(newState.pastoralVisits).not.toBe(state.pastoralVisits);
+
+    expect(newState.pastoralVisits[0].id).toBe(state.pastoralVisits[0].id);
+    expect(newState.pastoralVisits[0]).not.toBe(state.pastoralVisits[0]);
+
+    expect(newState.pastoralVisits[0].entrances).not.toBe(
+      state.pastoralVisits[0].entrances
+    );
   });
 
-  test("should crate new updatedState state", () => {
-    const entrancesIdsToMove: string[] = [
-      state.pastoralVisits[0].entrances[0].id,
-    ];
+  // array content checks
+  const newSourceEntrancesIds = newState.pastoralVisits[0].entrances.map(
+    ({ id }) => id
+  );
 
-    const newState = reducer(state, {
-      type: ActionTypes.RELOCATE_ENTRANCES,
-      payload: {
-        destinationPastoralVisitId: state.pastoralVisits[1].id,
-        entrancesIds: entrancesIdsToMove,
-        sourcePastoralVisitId: state.pastoralVisits[0].id,
-      },
-    });
+  const initialSourceEntrancesIds = state.pastoralVisits[0].entrances.map(
+    ({ id }) => id
+  );
 
-    // reference checks
+  it("should have changed content of pastoralVisit[0].entrances and assignedStreets", () => {
+    for (const streetId of Object.keys(splitedEntrancesToMove)) {
+      const newHousesIdsInThisStreet = splitedEntrancesToMove[streetId].map(
+        ({ house }) => house!.id
+      );
+
+      const unusedHousesIds = newState.assignedStreets
+        .find(({ id }) => id === streetId)!
+        .unusedHouses.map(({ id }) => id);
+
+      expect(unusedHousesIds).toEqual(
+        expect.arrayContaining(newHousesIdsInThisStreet)
+      );
+    }
+    expect(newSourceEntrancesIds.length).toBe(
+      initialSourceEntrancesIds.length - entrancesIdsToMove.length
+    );
+
+    expect(newSourceEntrancesIds).not.toEqual(
+      expect.arrayContaining(entrancesIdsToMove)
+    );
+  });
+});
+
+describe("RELOCATE_ENTRANCES", () => {
+  state = getInitialState();
+
+  const entrancesIdsToMove: string[] = [
+    state.pastoralVisits[0].entrances[0].id,
+    state.pastoralVisits[0].entrances[
+      state.pastoralVisits[0].entrances.length - 1
+    ].id,
+  ];
+
+  const newState = reducer(state, {
+    type: ActionTypes.RELOCATE_ENTRANCES,
+    payload: {
+      destinationPastoralVisitId: state.pastoralVisits[1].id,
+      entrancesIds: entrancesIdsToMove,
+      sourcePastoralVisitId: state.pastoralVisits[0].id,
+    },
+  });
+
+  // reference checks
+  it("should change reference in changed properties", () => {
     expect(newState).not.toBe(state);
     expect(newState.assignedStreets).toBe(state.assignedStreets);
     expect(newState.id).toBe(state.id);
-    expect(newState.unusedHouses).toBe(state.unusedHouses);
     expect(newState.reeceDate).toBe(state.reeceDate);
     expect(newState.visitDate).toBe(state.visitDate);
     expect(newState.pastoralVisits).not.toBe(state.pastoralVisits);
@@ -42,23 +114,25 @@ describe("", () => {
     expect(newState.pastoralVisits[1].entrances).not.toBe(
       state.pastoralVisits[1].entrances
     );
+  });
 
-    const newSourceEntrancesIds = newState.pastoralVisits[0].entrances.map(
-      ({ id }) => id
-    );
+  const newSourceEntrancesIds = newState.pastoralVisits[0].entrances.map(
+    ({ id }) => id
+  );
 
-    const newDestinationEntrancesIds = newState.pastoralVisits[1].entrances.map(
-      ({ id }) => id
-    );
+  const newDestinationEntrancesIds = newState.pastoralVisits[1].entrances.map(
+    ({ id }) => id
+  );
 
-    const initialSourceEntrancesIds = state.pastoralVisits[0].entrances.map(
-      ({ id }) => id
-    );
+  const initialSourceEntrancesIds = state.pastoralVisits[0].entrances.map(
+    ({ id }) => id
+  );
 
-    const initalDestinationEntrancesIds = state.pastoralVisits[1].entrances.map(
-      ({ id }) => id
-    );
+  const initalDestinationEntrancesIds = state.pastoralVisits[1].entrances.map(
+    ({ id }) => id
+  );
 
+  it("should have changed content of pastoralVisit[0].entrances and pastoralVisit[1].entrances", () => {
     expect(newSourceEntrancesIds.length).toBe(
       initialSourceEntrancesIds.length - entrancesIdsToMove.length
     );
@@ -72,6 +146,72 @@ describe("", () => {
 
     expect(newDestinationEntrancesIds).toEqual(
       expect.arrayContaining(entrancesIdsToMove)
+    );
+  });
+});
+
+describe("CREATE_FAKE_ENTRANCES", () => {
+  state = getInitialState();
+  const housesIdsToMove: string[] = state.assignedStreets
+    .flatMap(({ unusedHouses }) => unusedHouses.map(({ id }) => id))
+    .filter((_, i) => i % 2 === 0);
+
+  const newState = reducer(state, {
+    type: ActionTypes.CREATE_FAKE_ENTRANCES,
+    payload: {
+      housesIds: housesIdsToMove,
+      destinationPastoralVisitId: state.pastoralVisits[0].id,
+    },
+  });
+
+  it("should change reference in changed properties", () => {
+    expect(newState.id).toBe(state.id);
+    expect(newState.reeceDate).toBe(state.reeceDate);
+    expect(newState.visitDate).toBe(state.visitDate);
+    expect(newState.assignedStreets).not.toBe(state.assignedStreets);
+
+    expect(newState).not.toBe(state);
+    expect(newState.pastoralVisits).not.toBe(state.pastoralVisits);
+
+    expect(newState.pastoralVisits[0].id).toBe(state.pastoralVisits[0].id);
+    expect(newState.pastoralVisits[0]).not.toBe(state.pastoralVisits[0]);
+
+    expect(newState.pastoralVisits[0].entrances).not.toBe(
+      state.pastoralVisits[0].entrances
+    );
+  });
+
+  // array content checks
+  const newDestinationEntrancesIds = newState.pastoralVisits[0].entrances.map(
+    ({ id }) => id
+  );
+
+  const initialDestinationEntrancesIds = state.pastoralVisits[0].entrances.map(
+    ({ id }) => id
+  );
+
+  const newUnusedHousesIds = newState.assignedStreets.flatMap(
+    ({ unusedHouses }) => unusedHouses.map(({ id }) => id)
+  );
+
+  const initialUnusedHousesIds = state.assignedStreets.flatMap(
+    ({ unusedHouses }) => unusedHouses.map(({ id }) => id)
+  );
+
+  it("should have changed content of pastoralVisit[0].entrances and assignedStreets", () => {
+    expect(newDestinationEntrancesIds.length).toBe(
+      initialDestinationEntrancesIds.length + housesIdsToMove.length
+    );
+    expect(newUnusedHousesIds.length).toBe(
+      initialUnusedHousesIds.length - housesIdsToMove.length
+    );
+
+    expect(newDestinationEntrancesIds).toEqual(
+      expect.arrayContaining(initialDestinationEntrancesIds)
+    );
+
+    expect(newUnusedHousesIds).not.toEqual(
+      expect.arrayContaining(housesIdsToMove)
     );
   });
 });
