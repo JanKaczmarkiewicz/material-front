@@ -7,81 +7,75 @@ export enum SelectAction {
   CANCEL_DRAG,
 }
 
-export type EntrancesSelectionState = {
-  currentPastoralVisitId: string | null;
-  selectedEntrances: string[];
-  currentDraggedEntranceId: string | null;
+export type SelectionState = {
+  currentColumnId: string | null;
+  selectedItems: string[];
+  currentDraggedItemId: string | null;
 };
 
 type ActionTypes =
   | {
       type: SelectAction.SELECT;
-      payload: { entranceId: string; columnId: string };
+      payload: { itemId: string; columnId: string };
     }
   | {
       type: SelectAction.CLEAR;
     }
   | {
       type: SelectAction.START_DRAG;
-      payload: { entranceId: string };
+      payload: { itemId: string; columnId: string };
     }
   | {
       type: SelectAction.CANCEL_DRAG;
     };
 
-export const entrancesSelectionInitialState = {
-  currentPastoralVisitId: null,
-  currentDraggedEntranceId: null,
-  selectedEntrances: [],
+export const selectionInitialState: SelectionState = {
+  currentColumnId: null,
+  currentDraggedItemId: null,
+  selectedItems: [],
 };
 
 export const reducer = (
-  state: EntrancesSelectionState,
+  state: SelectionState,
   action: ActionTypes
-): EntrancesSelectionState => {
+): SelectionState => {
   switch (action.type) {
     case SelectAction.SELECT:
       return produce(state, (draft) => {
-        const { columnId, entranceId } = action.payload;
+        const { columnId, itemId } = action.payload;
 
-        draft.currentDraggedEntranceId = null;
+        draft.currentDraggedItemId = null;
 
-        if (columnId !== state.currentPastoralVisitId) {
-          draft.selectedEntrances = [entranceId];
-          draft.currentPastoralVisitId = columnId;
+        if (columnId !== state.currentColumnId) {
+          draft.selectedItems = [itemId];
+          draft.currentColumnId = columnId;
           return;
         }
 
-        const index = draft.selectedEntrances.indexOf(entranceId);
+        const index = draft.selectedItems.indexOf(itemId);
 
-        // if there is not selected entrance then add it, else slice it
+        // if there is not selected item then add it, else slice it
         index === -1
-          ? draft.selectedEntrances.push(entranceId)
-          : draft.selectedEntrances.splice(index, 1);
+          ? draft.selectedItems.push(itemId)
+          : draft.selectedItems.splice(index, 1);
       });
 
     case SelectAction.START_DRAG:
+      reducer(state, { type: SelectAction.SELECT, payload: action.payload });
+
       return produce(state, (draft) => {
-        const { entranceId } = action.payload;
+        const { itemId } = action.payload;
 
-        draft.currentDraggedEntranceId = entranceId;
-
-        const selected = state.selectedEntrances.find(
-          (id) => entranceId === id
-        );
-
-        if (!selected) {
-          draft.selectedEntrances = [entranceId];
-        }
+        draft.currentDraggedItemId = itemId;
       });
 
     case SelectAction.CLEAR:
-      return entrancesSelectionInitialState;
+      return selectionInitialState;
 
     case SelectAction.CANCEL_DRAG:
       return {
         ...state,
-        currentDraggedEntranceId: null,
+        currentDraggedItemId: null,
       };
 
     default:

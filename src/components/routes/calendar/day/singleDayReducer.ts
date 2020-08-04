@@ -14,7 +14,7 @@ export enum ActionTypes {
   RELOCATE_ENTRANCES,
   DELETE_ENTRANCES,
   CREATE_FAKE_ENTRANCES,
-  CREATE_ENTRANCE,
+  CREATE_ENTRANCES,
 }
 
 type Action =
@@ -31,7 +31,7 @@ type Action =
       payload: { entrancesIds: string[]; sourcePastoralVisitId: string };
     }
   | {
-      type: ActionTypes.CREATE_ENTRANCE;
+      type: ActionTypes.CREATE_ENTRANCES;
       payload: {
         entrances: Day_day_pastoralVisits_entrances[];
       };
@@ -142,7 +142,7 @@ export const reducer = (state: State, action: Action): State => {
         );
       });
 
-    case ActionTypes.CREATE_ENTRANCE:
+    case ActionTypes.CREATE_ENTRANCES:
       return produce(state, (draft) => {
         const { entrances } = action.payload;
 
@@ -157,15 +157,13 @@ export const reducer = (state: State, action: Action): State => {
 
         for (const entrance of draft.pastoralVisits[indexes.pastoralVisitIndex]
           .entrances) {
-          for (const newEntrance of entrances)
-            if (entrance.id === newEntrance.house?.id) {
-              clearedEntrances.push(newEntrance);
-              break;
-            }
-          clearedEntrances.push(entrance);
+          const entraceToReplece = entrances.find(
+            ({ house }) => house?.id === entrance.id
+          );
+          clearedEntrances.push(entraceToReplece ?? entrance);
         }
 
-        //replece fake entrance (see: CREATE_FAKE_ENTRANCE case) with real one
+        //replece fake entrances (see: CREATE_FAKE_ENTRANCES case) with real ones
         draft.pastoralVisits[
           indexes.pastoralVisitIndex
         ].entrances = clearedEntrances;
