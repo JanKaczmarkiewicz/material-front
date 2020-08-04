@@ -1,0 +1,92 @@
+[
+  {
+    "id": "5f299b343ba6222a34e78bcb",
+    "comment": null,
+    "house": {
+      "id": "5f1fd97f18c4a42facc7ff44",
+      "number": "1\r",
+      "street": {
+        "id": "5f1fd97e18c4a42facc7fd97",
+        "name": "Kormoranów",
+        "__typename": "Street"
+      },
+      "__typename": "House"
+    },
+    "__typename": "Entrance"
+  },
+  {
+    "id": "5f299b343ba6222a34e78bcc",
+    "comment": null,
+    "house": {
+      "id": "5f1fd97f18c4a42facc7ff4f",
+      "number": "3\r",
+      "street": {
+        "id": "5f1fd97e18c4a42facc7fd97",
+        "name": "Kormoranów",
+        "__typename": "Street"
+      },
+      "__typename": "House"
+    },
+    "__typename": "Entrance"
+  },
+  {
+    "id": "5f299b343ba6222a34e78bcd",
+    "comment": null,
+    "house": {
+      "id": "5f1fd97f18c4a42facc7ff69",
+      "number": "2\r",
+      "street": {
+        "id": "5f1fd97e18c4a42facc7fd98",
+        "name": "Złotowska",
+        "__typename": "Street"
+      },
+      "__typename": "House"
+    },
+    "__typename": "Entrance"
+  },
+  {
+    "id": "5f299b343ba6222a34e78bce",
+    "comment": null,
+    "house": {
+      "id": "5f1fd97f18c4a42facc7ff6e",
+      "number": "1\r",
+      "street": {
+        "id": "5f1fd97e18c4a42facc7fd98",
+        "name": "Złotowska",
+        "__typename": "Street"
+      },
+      "__typename": "House"
+    },
+    "__typename": "Entrance"
+  },
+  {
+    "id": "5f299b343ba6222a34e78bcf",
+    "comment": null,
+    "house": {
+      "id": "5f1fd97f18c4a42facc7ff63",
+      "number": "2c\r",
+      "street": {
+        "id": "5f1fd97e18c4a42facc7fd98",
+        "name": "Złotowska",
+        "__typename": "Street"
+      },
+      "__typename": "House"
+    },
+    "__typename": "Entrance"
+  },
+  {
+    "id": "5f299b343ba6222a34e78bd0",
+    "comment": null,
+    "house": {
+      "id": "5f1fd97f18c4a42facc7ff70",
+      "number": "3b\r",
+      "street": {
+        "id": "5f1fd97e18c4a42facc7fd98",
+        "name": "Złotowska",
+        "__typename": "Street"
+      },
+      "__typename": "House"
+    },
+    "__typename": "Entrance"
+  }
+]
