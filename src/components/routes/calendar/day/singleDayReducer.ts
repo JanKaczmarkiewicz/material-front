@@ -15,6 +15,7 @@ export enum ActionTypes {
   DELETE_ENTRANCES,
   CREATE_FAKE_ENTRANCES,
   CREATE_ENTRANCES,
+  CHANGE_ASSIGNED_STREETS,
 }
 
 type Action =
@@ -39,6 +40,10 @@ type Action =
   | {
       type: ActionTypes.CREATE_FAKE_ENTRANCES;
       payload: { housesIds: string[]; destinationPastoralVisitId: string };
+    }
+  | {
+      type: ActionTypes.CHANGE_ASSIGNED_STREETS;
+      payload: { assignedStreetsIds: string[] };
     };
 
 type State = Day_day;

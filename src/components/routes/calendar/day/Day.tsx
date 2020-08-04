@@ -6,7 +6,6 @@ import { RouteComponentProps } from "react-router-dom";
 import {
   Day,
   DayVariables,
-  Day_day_assignedStreets,
   Day_day_pastoralVisits_entrances,
 } from "../../../../generated/Day";
 
@@ -40,9 +39,6 @@ import {
 } from "../../../../generated/ChangeAssignedStreets";
 
 import { Alert } from "@material-ui/lab";
-import { getKeys } from "../../../Layout/DataTable/util";
-// import { assignDayStateAfterAssignedStreetsChanged } from "./cacheActions";
-import { difference } from "../../../../utils/diffrence";
 
 import { useDayReducer, ActionTypes } from "./singleDayReducer";
 import {
@@ -80,9 +76,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
   const { currentSeason } = useSeasonContext();
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [tempAssignedStreets, setTempAssignedStreets] = useState<
-    Day_day_assignedStreets[]
-  >([]);
+  const [tempAssignedStreets, setTempAssignedStreets] = useState<string[]>([]);
   const [selection, dispathSelection] = React.useReducer(
     selectionReducer,
     selectionInitialState
@@ -99,7 +93,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
     variables: dayQueryVariables,
     onCompleted({ day }) {
       if (!day) return;
-      setTempAssignedStreets([...day.assignedStreets]);
+      setTempAssignedStreets(day.assignedStreets.map(({ id }) => id));
     },
   });
 
@@ -250,36 +244,13 @@ const DayManager: React.FC<Props> = ({ match }) => {
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
   const handleStreetSubmitChange = () => {
-    // const tempStreetsIds = tempAssignedStreets.map(({ id }) => id);
-    // const initialStreetsIds = data.day!.assignedStreets.map(({ id }) => id);
-    // const removedStreetsIds: string[] = difference(
-    //   initialStreetsIds,
-    //   tempStreetsIds
-    // );
-    // const areStreetsSame =
-    //   removedStreetsIds.length === 0 &&
-    //   tempStreetsIds.length === initialStreetsIds.length;
-    // if (areStreetsSame) return;
-    // changeAssignedStreets({
-    //   variables: { id: dayId, streets: tempStreetsIds },
-    // });
-    // const removedHouses = removeAllHousesByStreetInDay(
-    //   dayId,
-    //   removedStreetsIds
-    // );
-    // const allQueries = (client.extract() as any).ROOT_QUERY;
-    // // update rest day queries cache
-    // getKeys(allQueries).forEach((key) => {
-    //   const queryInfo = allQueries[key];
-    //   if (queryInfo.typename !== "Day" || typeof queryInfo.id !== "string")
-    //     return;
-    //   const currentDayId = queryInfo.id.split(":")[1] as string;
-    //   if (currentDayId === dayId) return;
-    //   assignProperDeletedHousesToDay(
-    //     { input: { id: currentDayId } },
-    //     removedHouses
-    //   );
-    // });
+    changeAssignedStreets({
+      variables: {
+        season: currentSeason.id,
+        streets: tempAssignedStreets,
+        id: dayQueryVariables.input.id,
+      },
+    });
   };
 
   return (

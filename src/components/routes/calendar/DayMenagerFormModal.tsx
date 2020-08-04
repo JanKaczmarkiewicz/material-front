@@ -25,9 +25,9 @@ interface Props<T> {
   day: Date;
   headerText: string;
   submitText: string;
-  selectedStreets: T[];
+  selectedStreets: string[];
   infoComponent?: React.ReactNode;
-  setSelectedStreets: (streets: T[]) => void;
+  setSelectedStreets: (streets: string[]) => void;
   onModalClose: () => void;
   onFormSubmit: () => void;
 }
@@ -60,9 +60,9 @@ const DayMenagerFormModal = <T extends AllStreets_streets>(props: Props<T>) => {
         {infoComponent}
         <PickAndList
           options={streetsQuery.data.streets as T[]}
-          selectedItems={selectedStreets}
+          selectedItemsIds={selectedStreets}
           getOptionLabel={({ name }) => name}
-          setSelectedItems={setSelectedStreets}
+          setSelectedItemsIds={setSelectedStreets}
           label={"Dodaj ulicę"}
         />
 

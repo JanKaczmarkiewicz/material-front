@@ -1,44 +1,48 @@
 import React from "react";
 import ListMultiple, { ObjectWithId } from "./ListMultiple";
 import PickMultiple from "./PickMultiple";
-import { AllStreets, AllStreets_streets } from "../../../generated/AllStreets";
 
 interface BaseProps<T extends ObjectWithId> {
   getOptionLabel: (item: T) => string;
-  selectedItems: T[];
+  selectedItemsIds: string[];
 }
 
 interface Props<T extends ObjectWithId> extends BaseProps<T> {
   label: string;
   options: T[];
-  setSelectedItems: (items: T[]) => void;
+  setSelectedItemsIds: (ids: string[]) => void;
 }
 
 const PickAndList = <T extends ObjectWithId>({
-  selectedItems,
+  selectedItemsIds,
   options,
   label,
   getOptionLabel,
-  setSelectedItems,
+  setSelectedItemsIds,
 }: Props<T>) => {
   const removeItem = (id: string) => {
-    const result = selectedItems.filter(
-      (selectedItem) => selectedItem.id !== id
+    const result = selectedItemsIds.filter(
+      (selectedItemId) => selectedItemId !== id
     );
-    return setSelectedItems(result);
+    return setSelectedItemsIds(result);
   };
 
-  const addItem = (item: T) => setSelectedItems([...selectedItems, item]);
+  const addItem = (id: string) =>
+    setSelectedItemsIds([...selectedItemsIds, id]);
+
+  const selectedItems: T[] = selectedItemsIds
+    .map((itemId) => options.find(({ id }) => id === itemId)!)
+    .filter(Boolean);
 
   return (
     <div>
-      <ListMultiple
-        selectedItems={selectedItems}
+      <ListMultiple<T>
+        items={selectedItems}
         getOptionLabel={getOptionLabel}
         onItemRemoval={removeItem}
       />
-      <PickMultiple
-        selectedItems={selectedItems}
+      <PickMultiple<T>
+        selectedItemsIds={selectedItemsIds}
         items={options}
         label={label}
         onItemSelected={addItem}
