@@ -2,14 +2,12 @@ import React, { useState, useCallback } from "react";
 
 //types
 import { RouteComponentProps } from "react-router-dom";
-import {
-  RelocateEntrance,
-  RelocateEntranceVariables,
-} from "../../../../generated/RelocateEntrance";
+
 import {
   Day,
   DayVariables,
   Day_day_assignedStreets,
+  Day_day_pastoralVisits_entrances,
 } from "../../../../generated/Day";
 
 //ui
@@ -28,26 +26,18 @@ import { DragDropContext, DropResult, DragStart } from "react-beautiful-dnd";
 //data
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import {
-  RELOCATE_ENTRANCE,
   DAY,
-  ADD_ENTRANCE,
   CHANGE_ASSIGNED_STREETS,
-  DELETE_ENTRANCE,
+  ADD_ENTRANCES,
+  DELETE_ENTRANCES,
+  RELOCATE_ENTRANCES,
 } from "../actions";
 
-import {
-  AddEntranceVariables,
-  AddEntrance,
-} from "../../../../generated/AddEntrance";
 import DayMenagerFormModal from "../DayMenagerFormModal";
 import {
   ChangeAssignedStreets,
   ChangeAssignedStreetsVariables,
 } from "../../../../generated/ChangeAssignedStreets";
-import {
-  DeleteEntrance,
-  DeleteEntranceVariables,
-} from "../../../../generated/DeleteEntrance";
 
 import { Alert } from "@material-ui/lab";
 import { getKeys } from "../../../Layout/DataTable/util";
@@ -58,7 +48,7 @@ import { useDayReducer, ActionTypes } from "./singleDayReducer";
 import {
   reducer as selectionReducer,
   SelectAction,
-  entrancesSelectionInitialState,
+  selectionInitialState,
 } from "./selectionReducer";
 import {
   extractEntranceHouseNumber,
@@ -67,6 +57,18 @@ import {
 } from "../DND copy/Item";
 import UnusedHousesColumn from "./UnusedHousesColumn";
 import { useSeasonContext } from "../../../../context/Season/SeasonContext";
+import {
+  DeleteEntrances,
+  DeleteEntrancesVariables,
+} from "../../../../generated/DeleteEntrances";
+import {
+  RelocateEntrances,
+  RelocateEntrancesVariables,
+} from "../../../../generated/RelocateEntrances";
+import {
+  AddEntrancesVariables,
+  AddEntrances,
+} from "../../../../generated/AddEntrances";
 
 const drawerWidth = 240;
 
@@ -76,24 +78,22 @@ type Props = RouteComponentProps<{
 
 const DayManager: React.FC<Props> = ({ match }) => {
   const { currentSeason } = useSeasonContext();
+  const classes = useStyles();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [tempAssignedStreets, setTempAssignedStreets] = useState<
+    Day_day_assignedStreets[]
+  >([]);
+  const [selection, dispathSelection] = React.useReducer(
+    selectionReducer,
+    selectionInitialState
+  );
 
   const dayQueryVariables: DayVariables = {
     input: { id: match.params.dayId },
     season: currentSeason.id,
   };
 
-  const classes = useStyles();
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [tempAssignedStreets, setTempAssignedStreets] = useState<
-    Day_day_assignedStreets[]
-  >([]);
-
   const dispathDay = useCallback(useDayReducer(dayQueryVariables), []);
-  const [selection, dispathSelection] = React.useReducer(
-    selectionReducer,
-    entrancesSelectionInitialState
-  );
 
   const { loading, error, data } = useQuery<Day, DayVariables>(DAY, {
     variables: dayQueryVariables,
@@ -103,13 +103,27 @@ const DayManager: React.FC<Props> = ({ match }) => {
     },
   });
 
-  const [relocateEntrance] = useMutation<
-    RelocateEntrance,
-    RelocateEntranceVariables
-  >(RELOCATE_ENTRANCE);
+  const [relocateEntrances] = useMutation<
+    RelocateEntrances,
+    RelocateEntrancesVariables
+  >(RELOCATE_ENTRANCES);
 
-  const [deleteEntrance] = useMutation<DeleteEntrance, DeleteEntranceVariables>(
-    DELETE_ENTRANCE
+  const [deleteEntrances] = useMutation<
+    DeleteEntrances,
+    DeleteEntrancesVariables
+  >(DELETE_ENTRANCES);
+
+  const [addEntrances] = useMutation<AddEntrances, AddEntrancesVariables>(
+    ADD_ENTRANCES,
+    {
+      onCompleted: (data) => {
+        if (!data.addEntrances) return;
+        dispathDay({
+          type: ActionTypes.CREATE_ENTRANCES,
+          payload: { entrances: data.addEntrances },
+        });
+      },
+    }
   );
 
   const [changeAssignedStreets] = useMutation<
@@ -122,65 +136,53 @@ const DayManager: React.FC<Props> = ({ match }) => {
     },
   });
 
-  const [addEntrance] = useMutation<AddEntrance, AddEntranceVariables>(
-    ADD_ENTRANCE,
-    {
-      onCompleted: (data) => {
-        if (!data.addEntrance) return;
-        dispathDay({
-          type: ActionTypes.CREATE_ENTRANCE,
-          payload: { entrances: [data.addEntrance] },
-        });
-      },
-    }
-  );
-
-  const handleEntranceSelection = useCallback(
-    (pastoralVisitId: string, entranceId: string) => {
+  const handleItemSelection = useCallback(
+    (columnId: string, itemId: string) => {
       dispathSelection({
         type: SelectAction.SELECT,
-        payload: { entranceId, columnId: pastoralVisitId },
+        payload: { itemId, columnId },
       });
     },
     []
   );
 
-  const handleEntranceCreation = useCallback(
-    (houseId: string, pastoralVisitId: string) => {
+  const handleEntrancesCreation = useCallback(
+    (housesIds: string[], pastoralVisitId: string) => {
       dispathDay({
-        type: ActionTypes.CREATE_FAKE_ENTRANCE,
-        payload: { housesIds: [], pastoralVisitId },
+        type: ActionTypes.CREATE_FAKE_ENTRANCES,
+        payload: { housesIds, destinationPastoralVisitId: pastoralVisitId },
       });
 
-      addEntrance({
+      addEntrances({
         variables: {
-          houseId,
-          pastoralVisitId,
+          input: {
+            houses: housesIds,
+            pastoralVisit: pastoralVisitId,
+          },
         },
       });
     },
     []
   );
 
-  const handleEntranceRelocation = useCallback(
+  const handleEntrancesRelocation = useCallback(
     (
-      entranceId: string,
       sourcePastoralVisitId: string,
       destinationPastoralVisitId: string,
-      selectedEntrancesIds: string[]
+      selectedItemsIds: string[]
     ) => {
       dispathDay({
         type: ActionTypes.RELOCATE_ENTRANCES,
         payload: {
           sourcePastoralVisitId,
           destinationPastoralVisitId,
-          entrancesIds: selectedEntrancesIds,
+          entrancesIds: selectedItemsIds,
         },
       });
 
-      relocateEntrance({
+      relocateEntrances({
         variables: {
-          id: entranceId,
+          ids: selectedItemsIds,
           to: destinationPastoralVisitId,
         },
       });
@@ -188,31 +190,28 @@ const DayManager: React.FC<Props> = ({ match }) => {
     []
   );
 
-  const handleEntranceRemoval = useCallback(
-    (entrancesIds: string[], sourcePastoralVisitId: string) => {
+  const handleEntrancesRemoval = useCallback(
+    (sourcePastoralVisitId: string, selectedEntrances: string[]) => {
       dispathDay({
         type: ActionTypes.DELETE_ENTRANCES,
-        payload: { sourcePastoralVisitId, entrancesIds },
+        payload: { sourcePastoralVisitId, entrancesIds: selectedEntrances },
       });
-      // deleteEntrance({ variables: { input: { id: entranceId } } });
+      deleteEntrances({ variables: { input: { ids: selectedEntrances } } });
     },
     []
   );
 
-  const handleHouseSelected = useCallback((id) => {}, []);
-
   const onDragStart = useCallback(({ draggableId, source }: DragStart) => {
     const id = draggableId;
-    if (source.droppableId !== "unsuedHouses")
-      dispathSelection({
-        type: SelectAction.START_DRAG,
-        payload: { entranceId: id },
-      });
+    dispathSelection({
+      type: SelectAction.START_DRAG,
+      payload: { itemId: id, columnId: source.droppableId },
+    });
   }, []);
 
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      const { destination, source, draggableId } = result;
+      const { destination, source } = result;
 
       if (!destination || destination.droppableId === source.droppableId) {
         dispathSelection({ type: SelectAction.CANCEL_DRAG });
@@ -222,18 +221,20 @@ const DayManager: React.FC<Props> = ({ match }) => {
       dispathSelection({ type: SelectAction.CLEAR });
 
       if (source.droppableId === "unusedHouses")
-        handleEntranceCreation(draggableId, destination.droppableId);
+        handleEntrancesCreation(
+          selection.selectedItems,
+          destination.droppableId
+        );
       else if (destination.droppableId === "unusedHouses")
-        handleEntranceRemoval(selection.selectedEntrances, source.droppableId);
+        handleEntrancesRemoval(source.droppableId, selection.selectedItems);
       else
-        handleEntranceRelocation(
-          draggableId,
+        handleEntrancesRelocation(
           source.droppableId,
           destination.droppableId,
-          selection.selectedEntrances
+          selection.selectedItems
         );
     },
-    [selection.selectedEntrances]
+    [selection.selectedItems]
   );
 
   const handleModalClose = useCallback(() => setIsEditing(false), []);
@@ -313,7 +314,8 @@ const DayManager: React.FC<Props> = ({ match }) => {
             <Toolbar />
             <UnusedHousesColumn
               assignedStreets={assignedStreets}
-              onHouseSelected={handleHouseSelected}
+              selection={selection}
+              onHouseSelected={handleItemSelection}
             />
           </div>
         </Drawer>
@@ -331,35 +333,25 @@ const DayManager: React.FC<Props> = ({ match }) => {
             </Grid>
           </Grid>
           <Grid container spacing={3} justify="center">
-            {pastoralVisits.map(({ id, priest, entrances }) => {
-              const propWithSelectedItems =
-                selection.currentPastoralVisitId === id
-                  ? {
-                      draggedItemId: selection.currentDraggedEntranceId,
-                      selectedItems: selection.selectedEntrances,
-                    }
-                  : null;
-
-              return (
-                <Grid item xs={12} md={2} key={id}>
-                  <Column
-                    key={id}
-                    selectionData={propWithSelectedItems}
-                    onItemSelected={handleEntranceSelection}
-                    items={entrances}
-                    droppableId={id}
-                    getItemNumber={extractEntranceHouseNumber}
-                    getElementCategory={extractEntranceHouseCategory}
-                    renderListItemContent={renderEntranceHouseItemContent}
-                    title={
-                      priest?.username
-                        ? `ks. ${(priest?.username).split(" ")[1]}`
-                        : "Brak kapłana"
-                    }
-                  />
-                </Grid>
-              );
-            })}
+            {pastoralVisits.map(({ id, priest, entrances }) => (
+              <Grid item xs={12} md={2} key={id}>
+                <Column<Day_day_pastoralVisits_entrances>
+                  key={id}
+                  items={entrances}
+                  droppableId={id}
+                  selection={selection}
+                  onItemSelected={handleItemSelection}
+                  getItemNumber={extractEntranceHouseNumber}
+                  getElementCategory={extractEntranceHouseCategory}
+                  renderListItemContent={renderEntranceHouseItemContent}
+                  title={
+                    priest?.username
+                      ? `ks. ${(priest?.username).split(" ")[1]}`
+                      : "Brak kapłana"
+                  }
+                />
+              </Grid>
+            ))}
           </Grid>
         </Container>
       </DragDropContext>

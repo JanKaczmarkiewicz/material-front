@@ -1,5 +1,6 @@
 import { gql } from "apollo-boost";
 
+//fragments
 export const StreetFragment = gql`
   fragment StreetFragment on Street {
     id
@@ -43,14 +44,7 @@ export const PastoralVisitFragment = gql`
   ${EntranceFragment}
 `;
 
-export const DELETE_ENTRANCE = gql`
-  mutation DeleteEntrance($input: DeleteOneInput!) {
-    deleteEntrance(input: $input) {
-      id
-    }
-  }
-`;
-
+// actions
 export const CHANGE_ASSIGNED_STREETS = gql`
   mutation ChangeAssignedStreets(
     $id: String!
@@ -74,17 +68,23 @@ export const CHANGE_ASSIGNED_STREETS = gql`
   ${HouseFragment}
 `;
 
-export const RELOCATE_ENTRANCE = gql`
-  mutation RelocateEntrance($id: String!, $to: String!) {
-    updateEntrance(input: { id: $id, pastoralVisit: $to }) {
+export const DELETE_ENTRANCES = gql`
+  mutation DeleteEntrances($input: DeleteManyInput!) {
+    deleteEntrances(input: $input)
+  }
+`;
+
+export const RELOCATE_ENTRANCES = gql`
+  mutation RelocateEntrances($ids: [String!]!, $to: String!) {
+    updateEntrances(input: { ids: $ids, pastoralVisit: $to }) {
       id
     }
   }
 `;
 
-export const ADD_ENTRANCE = gql`
-  mutation AddEntrance($houseId: String!, $pastoralVisitId: String!) {
-    addEntrance(input: { house: $houseId, pastoralVisit: $pastoralVisitId }) {
+export const ADD_ENTRANCES = gql`
+  mutation AddEntrances($input: AddEntrancesInput!) {
+    addEntrances(input: $input) {
       ...EntranceFragment
     }
   }

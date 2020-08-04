@@ -11,22 +11,27 @@ import { splitByLabel } from "../../../../utils/splitByLabel";
 import { getKeys } from "../../../Layout/DataTable/util";
 import { sortByHouseNumber } from "../../../../utils/sortByHouseNumber";
 import HousesSteetList from "./HousesSteetList";
+import { SelectionState } from "../day/selectionReducer";
 
 type AbstractItem = { id: string };
 
-interface Props<T extends AbstractItem> extends InnerListProps<T> {
+interface Props<T extends AbstractItem> extends AbstractInnerListProps<T> {
   title: string;
+  selection: SelectionState;
 }
 
-interface InnerListProps<T extends AbstractItem> {
+interface AbstractInnerListProps<T extends AbstractItem> {
   items: T[];
   droppableId: string;
-  selectionData: SelectionData | null;
   getElementCategory: (item: T) => string | undefined;
   renderListItemContent: (item: T) => React.ReactNode;
   onItemSelected: (columnId: string, itemId: string) => void;
   getItemNumber: (item: T) => string | undefined;
 }
+
+type InnerListProps<T extends AbstractItem> = {
+  selectionData: SelectionData | null;
+} & AbstractInnerListProps<T>;
 
 type SelectionData = {
   draggedItemId: string | null;
@@ -90,18 +95,35 @@ const InnerList = <T extends AbstractItem>({
 
 const InnerListMemorized = React.memo(InnerList) as typeof InnerList;
 
-const Column = <T extends AbstractItem>({ title, ...restProps }: Props<T>) => (
-  <Droppable droppableId={restProps.droppableId}>
-    {(provided) => (
-      <div ref={provided.innerRef} {...provided.droppableProps}>
-        <Typography variant={"h6"}>{title}</Typography>
-        <Paper>
-          <InnerListMemorized<T> {...restProps} />
-        </Paper>
-      </div>
-    )}
-  </Droppable>
-);
+const Column = <T extends AbstractItem>({
+  title,
+  selection,
+  ...restProps
+}: Props<T>) => {
+  const selectionData =
+    selection.currentColumnId === restProps.droppableId
+      ? {
+          draggedItemId: selection.currentDraggedItemId,
+          selectedItems: selection.selectedItems,
+        }
+      : null;
+
+  return (
+    <Droppable droppableId={restProps.droppableId}>
+      {(provided) => (
+        <div ref={provided.innerRef} {...provided.droppableProps}>
+          <Typography variant={"h6"}>{title}</Typography>
+          <Paper>
+            <InnerListMemorized<T>
+              selectionData={selectionData}
+              {...restProps}
+            />
+          </Paper>
+        </div>
+      )}
+    </Droppable>
+  );
+};
 
 export default Column;
 
