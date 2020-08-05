@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
-import { Day_day_assignedStreets } from "../../../../generated/Day";
+import { Day_day_assignedStreets } from "../../../../../generated/Day";
 import {
   extractHouseCategory,
   extractHouseNumber,
   renderHouseItemContent,
-} from "../DND copy/Item";
-import Column from "../DND copy/Column";
-import { SelectionState } from "./selectionReducer";
+} from "./Item";
+import Column from "./Column";
+import { SelectionState } from "../selection/selectionReducer";
 
 interface Props {
   assignedStreets: Day_day_assignedStreets[];

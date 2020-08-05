@@ -61,15 +61,21 @@ export const reducer = (
       });
 
     case SelectAction.START_DRAG:
-      const newState = reducer(state, {
-        type: SelectAction.SELECT,
-        payload: action.payload,
-      });
-
-      return produce(newState, (draft) => {
-        const { itemId } = action.payload;
+      return produce(state, (draft) => {
+        const { columnId, itemId } = action.payload;
 
         draft.currentDraggedItemId = itemId;
+
+        if (
+          columnId !== state.currentColumnId ||
+          draft.selectedItems.indexOf(itemId) === -1
+        ) {
+          draft.selectedItems = [itemId];
+          draft.currentColumnId = columnId;
+          return;
+        }
+
+        draft.selectedItems.push(itemId);
       });
 
     case SelectAction.CLEAR:

@@ -50,9 +50,7 @@ const Calendar = () => {
   const [mouth, setMouth] = useState<number>(initialMouth);
   const { currentSeason } = useSeasonContext();
   const [selectedDayToAdd, setSelectedDayToAdd] = useState<Date | null>(null);
-  const [selectedStreets, setSelectedStreets] = useState<AllStreets_streets[]>(
-    []
-  );
+  const [selectedStreets, setSelectedStreets] = useState<string[]>([]);
 
   const handleModalClose = () => setSelectedDayToAdd(null);
   const handleModalOpen = (day: number) =>
@@ -60,7 +58,7 @@ const Calendar = () => {
 
   const handleDayAddition = () => {
     if (selectedStreets.length === 0 || !selectedDayToAdd) return;
-    const assignedStreets = selectedStreets.map(({ id }) => id);
+
     const tempDate = new Date(selectedDayToAdd);
     tempDate.setDate(tempDate.getDate() - 1);
     const reeceDate = tempDate.toISOString();
@@ -68,7 +66,7 @@ const Calendar = () => {
     addDay({
       variables: {
         input: {
-          assignedStreets: assignedStreets,
+          assignedStreets: selectedStreets,
           season: currentSeason.id,
           reeceDate: reeceDate,
           visitDate: selectedDayToAdd.toISOString(),

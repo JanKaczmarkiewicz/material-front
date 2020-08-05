@@ -1,7 +1,7 @@
-import { reducer, ActionTypes } from "../singleDayReducer";
-import { Day_day } from "../../../../../generated/Day";
-import { splitByLabel } from "../../../../../utils/splitByLabel";
-import { AddEntrances_addEntrances } from "../../../../../generated/AddEntrances";
+import { reducer, ActionTypes } from "./singleDayReducer";
+import { Day_day } from "../../../../../../generated/Day";
+import { splitByLabel } from "../../../../../../utils/splitByLabel";
+import { AddEntrances_addEntrances } from "../../../../../../generated/AddEntrances";
 
 // prettier-ignore
 const getInitialState= ():Day_day => require("./initialState.json")
@@ -284,13 +284,13 @@ describe("CREATE_ENTRANCES", () => {
   });
 
   describe("CHANGE_ASSIGNED_STREETS", () => {
-  
-    const state = getInitialState()
-  
-    const initialAssignedStretsIds = state.assignedStreets.map(({id})=> id)
+    const state = getInitialState();
 
-    const newAssignedStreetsIds =initialAssignedStretsIds.filter((_, i)=> i%2===0)
+    const initialAssignedStretsIds = state.assignedStreets.map(({ id }) => id);
 
+    const newAssignedStreetsIds = initialAssignedStretsIds.filter(
+      (_, i) => i % 2 === 0
+    );
 
     const newState = reducer(state, {
       type: ActionTypes.CHANGE_ASSIGNED_STREETS,
@@ -298,7 +298,7 @@ describe("CREATE_ENTRANCES", () => {
         assignedStreetsIds: newAssignedStreetsIds,
       },
     });
-  
+
     it("should change reference in changed properties", () => {
       expect(newState).not.toBe(state);
 
@@ -308,17 +308,18 @@ describe("CREATE_ENTRANCES", () => {
       expect(newState.assignedStreets).not.toBe(state.assignedStreets);
       expect(newState.pastoralVisits).not.toBe(state.pastoralVisits);
     });
-  
+
     // array content checks
     it("should have changed content of pastoralVisit containing entrances with houses streets that has been deleted and assignedStreets", () => {
       expect(newEntrancesIds.length).toBe(initialEntrancesIds.length);
-  
+
       expect(newEntrancesIds).toEqual(
         expect.arrayContaining(replecedEntrancesIds)
       );
-  
+
       expect(newEntrancesIds).not.toEqual(
         expect.arrayContaining(entrancesToReplece)
       );
     });
+  });
 });

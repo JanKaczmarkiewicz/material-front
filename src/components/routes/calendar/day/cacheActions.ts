@@ -4,107 +4,50 @@ import {
   Day,
   Day_day,
   Day_day_pastoralVisits_entrances_house,
+  Day_day_assignedStreets_unusedHouses,
+  Day_day_assignedStreets,
 } from "../../../../generated/Day";
 import { client } from "../../../../context/client/ApolloClient";
-import { DAY } from "../actions";
+import { DAY, HouseFragment } from "../actions";
 import { getKeys } from "../../../Layout/DataTable/util";
+import { gql } from "apollo-boost";
+import produce from "immer";
+import { StreetFragment } from "../../data/streets/actions";
 
 type HousesGroupedByStreetId = {
   [key: string]: Day_day_pastoralVisits_entrances_house[];
 };
 
-// export const removeAllHousesByStreetInDay = (
-//   id: string,
-//   streets: string[]
-// ): HousesGroupedByStreetId => {
-//   const queryVariables = { input: { id } };
+export const updateStreets = (
+  houses: HousesGroupedByStreetId,
+  seasonId: string
+) => {
+  for (const streetId of Object.keys(houses)) {
+    const fragment = gql`
+    fragment AssignedStreetFragment on Street {
+      ...StreetFragment
+      unusedHouses(season: ${seasonId}){
+        ...HouseFragment
+      }
+    }
+    ${StreetFragment}
+    ${HouseFragment}`;
 
-//   const query = readDayQuery({ input: { id } });
+    const streetQuery = client.readFragment<Day_day_assignedStreets>({
+      id: streetId,
+      fragment,
+    });
 
-//   if (!query.day) return {};
+    if (!streetQuery) continue;
 
-//   const deletedHouses: HousesGroupedByStreetId = {};
+    const updatedStreet = produce(streetQuery, (draft) => {
+      draft.unusedHouses.push(...houses[streetId]);
+    });
 
-//   const pastoralVisitsCopy = query.day.pastoralVisits.map((pastoralVisit) => ({
-//     ...pastoralVisit,
-//     entrances: pastoralVisit.entrances.filter(({ house }) => {
-//       const currentEntranceHouseStreetId = house?.street?.id;
-//       if (
-//         currentEntranceHouseStreetId &&
-//         streets.includes(currentEntranceHouseStreetId)
-//       ) {
-//         deletedHouses[currentEntranceHouseStreetId] = [
-//           ...(deletedHouses[currentEntranceHouseStreetId] || []),
-//           house!,
-//         ];
-
-//         return false;
-//       }
-//       return true;
-//     }),
-//   }));
-
-//   const unusedHousesCopy = query.day.unusedHouses.filter(
-//     (house) => !streets.includes(house.street?.id || "")
-//   );
-
-//   writeDayQuery(queryVariables, {
-//     ...query.day,
-//     pastoralVisits: pastoralVisitsCopy,
-//     unusedHouses: unusedHousesCopy,
-//   });
-
-//   return deletedHouses;
-// };
-
-const readDayQuery = (variables: DayVariables) => {
-  return client.readQuery<Day, DayVariables>({ query: DAY, variables })!;
+    client.writeFragment<Day_day_assignedStreets>({
+      id: streetId,
+      fragment,
+      data: updatedStreet,
+    });
+  }
 };
-
-const writeDayQuery = (variables: DayVariables, data: Day_day) =>
-  client.writeQuery<Day, DayVariables>({
-    query: DAY,
-    variables,
-    data: { day: data },
-  });
-
-// export const assignProperDeletedHousesToDay = (
-//   queryVariables: DayVariables,
-//   deletedHousesByStreets: HousesGroupedByStreetId
-// ) => {
-//   const query = readDayQuery(queryVariables);
-
-//   if (!query.day) return;
-
-//   const deletedStreetsIds = getKeys(deletedHousesByStreets);
-
-//   const commonPartOfStreetsSets = query.day.assignedStreets
-//     .map(({ id }) => id)
-//     .filter(deletedStreetsIds.includes);
-
-//   const properHouses = commonPartOfStreetsSets.flatMap(
-//     (key) => deletedHousesByStreets[key]
-//   );
-
-//   writeDayQuery(queryVariables, {
-//     ...query.day,
-//     unusedHouses: [...query.day.unusedHouses, ...properHouses],
-//   });
-// };
-
-// export const assignDayStateAfterAssignedStreetsChanged = (
-//   dayId: string,
-//   updatedDay: ChangeAssignedStreets_updateDay
-// ) => {
-//   const input = dayInput(dayId);
-//   const query = readDayQuery(input);
-
-//   if (!query.day) return;
-
-//   writeDayQuery(input, {
-//     ...query.day,
-//     ...updatedDay,
-//   });
-// };
-
-const dayInput = (id: string) => ({ input: { id } });

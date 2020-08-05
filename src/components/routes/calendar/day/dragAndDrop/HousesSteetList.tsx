@@ -1,6 +1,6 @@
 import React from "react";
 
-import { stringToColour } from "../../../../utils/stringToColor";
+import { stringToColour } from "../../../../../utils/stringToColor";
 import { List, ListSubheader } from "@material-ui/core";
 
 type Props = {

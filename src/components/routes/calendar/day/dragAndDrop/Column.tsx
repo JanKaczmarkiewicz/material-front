@@ -7,11 +7,11 @@ import {
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 import { Paper, Typography, ListItem } from "@material-ui/core";
-import { splitByLabel } from "../../../../utils/splitByLabel";
-import { getKeys } from "../../../Layout/DataTable/util";
-import { sortByHouseNumber } from "../../../../utils/sortByHouseNumber";
+import { splitByLabel } from "../../../../../utils/splitByLabel";
+import { getKeys } from "../../../../Layout/DataTable/util";
+import { sortByHouseNumber } from "../../../../../utils/sortByHouseNumber";
 import HousesSteetList from "./HousesSteetList";
-import { SelectionState } from "../day/selectionReducer";
+import { SelectionState } from "../selection/selectionReducer";
 
 type AbstractItem = { id: string };
 

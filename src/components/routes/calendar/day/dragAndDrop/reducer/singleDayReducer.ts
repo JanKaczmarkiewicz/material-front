@@ -4,11 +4,11 @@ import {
   Day_day_pastoralVisits_entrances,
   Day,
   DayVariables,
-} from "../../../../generated/Day";
+} from "../../../../../../generated/Day";
 import produce from "immer";
-import { DAY } from "../actions";
-import { client } from "../../../../context/client/ApolloClient";
-import { splitByLabel } from "../../../../utils/splitByLabel";
+import { DAY } from "../../../actions";
+import { client } from "../../../../../../context/client/ApolloClient";
+import { splitByLabel } from "../../../../../../utils/splitByLabel";
 
 export enum ActionTypes {
   RELOCATE_ENTRANCES,

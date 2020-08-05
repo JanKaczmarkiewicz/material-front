@@ -2,7 +2,7 @@ import React from "react";
 import {
   Day_day_pastoralVisits_entrances as Entrance,
   Day_day_assignedStreets_unusedHouses as House,
-} from "../../../../generated/Day";
+} from "../../../../../generated/Day";
 import { ListItemText } from "@material-ui/core";
 
 export const extractEntranceHouseCategory = ({ house }: Entrance) =>

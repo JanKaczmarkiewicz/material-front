@@ -19,7 +19,7 @@ import {
   Grid,
   Button,
 } from "@material-ui/core";
-import Column from "../DND copy/Column";
+import Column from "./dragAndDrop/Column";
 import { DragDropContext, DropResult, DragStart } from "react-beautiful-dnd";
 
 //data
@@ -40,18 +40,21 @@ import {
 
 import { Alert } from "@material-ui/lab";
 
-import { useDayReducer, ActionTypes } from "./singleDayReducer";
+import {
+  useDayReducer,
+  ActionTypes,
+} from "./dragAndDrop/reducer/singleDayReducer";
 import {
   reducer as selectionReducer,
   SelectAction,
   selectionInitialState,
-} from "./selectionReducer";
+} from "./selection/selectionReducer";
 import {
   extractEntranceHouseNumber,
   extractEntranceHouseCategory,
   renderEntranceHouseItemContent,
-} from "../DND copy/Item";
-import UnusedHousesColumn from "./UnusedHousesColumn";
+} from "./dragAndDrop/Item";
+import UnusedHousesColumn from "./dragAndDrop/UnusedHousesColumn";
 import { useSeasonContext } from "../../../../context/Season/SeasonContext";
 import {
   DeleteEntrances,
@@ -197,6 +200,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
 
   const onDragStart = useCallback(({ draggableId, source }: DragStart) => {
     const id = draggableId;
+
     dispathSelection({
       type: SelectAction.START_DRAG,
       payload: { itemId: id, columnId: source.droppableId },
