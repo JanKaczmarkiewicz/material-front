@@ -61,9 +61,12 @@ export const reducer = (
       });
 
     case SelectAction.START_DRAG:
-      reducer(state, { type: SelectAction.SELECT, payload: action.payload });
+      const newState = reducer(state, {
+        type: SelectAction.SELECT,
+        payload: action.payload,
+      });
 
-      return produce(state, (draft) => {
+      return produce(newState, (draft) => {
         const { itemId } = action.payload;
 
         draft.currentDraggedItemId = itemId;
