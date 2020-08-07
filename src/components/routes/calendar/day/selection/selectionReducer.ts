@@ -2,9 +2,11 @@ import produce from "immer";
 
 export enum SelectAction {
   CLEAR,
-  SELECT,
+  TOGGLE_ONE,
   START_DRAG,
   CANCEL_DRAG,
+  SELECT,
+  UNSELECT,
 }
 
 export type SelectionState = {
@@ -15,7 +17,7 @@ export type SelectionState = {
 
 type ActionTypes =
   | {
-      type: SelectAction.SELECT;
+      type: SelectAction.TOGGLE_ONE;
       payload: { itemId: string; columnId: string };
     }
   | {
@@ -27,6 +29,14 @@ type ActionTypes =
     }
   | {
       type: SelectAction.CANCEL_DRAG;
+    }
+  | {
+      type: SelectAction.SELECT;
+      payload: { itemsIds: string[]; columnId: string };
+    }
+  | {
+      type: SelectAction.UNSELECT;
+      payload: { itemsIds: string[] };
     };
 
 export const selectionInitialState: SelectionState = {
@@ -42,6 +52,34 @@ export const reducer = (
   switch (action.type) {
     case SelectAction.SELECT:
       return produce(state, (draft) => {
+        const { columnId, itemsIds } = action.payload;
+
+        draft.currentDraggedItemId = null;
+
+        if (columnId !== state.currentColumnId) {
+          draft.selectedItems = itemsIds;
+          draft.currentColumnId = columnId;
+          return;
+        }
+
+        draft.selectedItems = [
+          ...new Set([...itemsIds, ...draft.selectedItems]),
+        ];
+      });
+
+    case SelectAction.UNSELECT:
+      return produce(state, (draft) => {
+        const { itemsIds } = action.payload;
+
+        draft.currentDraggedItemId = null;
+
+        draft.selectedItems = draft.selectedItems.filter(
+          (id) => !itemsIds.includes(id)
+        );
+      });
+
+    case SelectAction.TOGGLE_ONE:
+      return produce(state, (draft) => {
         const { columnId, itemId } = action.payload;
 
         draft.currentDraggedItemId = null;
@@ -54,7 +92,7 @@ export const reducer = (
 
         const index = draft.selectedItems.indexOf(itemId);
 
-        // if there is not selected item then add it, else slice it
+        // if item not found
         index === -1
           ? draft.selectedItems.push(itemId)
           : draft.selectedItems.splice(index, 1);
