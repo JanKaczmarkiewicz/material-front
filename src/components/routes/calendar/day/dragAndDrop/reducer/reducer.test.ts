@@ -283,43 +283,42 @@ describe("CREATE_ENTRANCES", () => {
     );
   });
 
-  describe("CHANGE_ASSIGNED_STREETS", () => {
-    const state = getInitialState();
+  // describe("CHANGE_ASSIGNED_STREETS", () => {
+  //   const state = getInitialState();
 
-    const initialAssignedStretsIds = state.assignedStreets.map(({ id }) => id);
+  //   const initialAssignedStretsIds = state.assignedStreets.map(({ id }) => id);
 
-    const newAssignedStreetsIds = initialAssignedStretsIds.filter(
-      (_, i) => i % 2 === 0
+  //   const newAssignedStreetsIds = initialAssignedStretsIds.filter(
+  //     (_, i) => i % 2 === 0
+  //   );
+
+  //   const newState = reducer(state, {
+  //     type: ActionTypes.CHANGE_ASSIGNED_STREETS,
+  //     payload: {
+  //       assignedStreetsIds: newAssignedStreetsIds,
+  //     },
+  //   });
+
+  //   it("should change reference in changed properties", () => {
+  //     expect(newState).not.toBe(state);
+
+  //     expect(newState.id).toBe(state.id);
+  //     expect(newState.reeceDate).toBe(state.reeceDate);
+  //     expect(newState.visitDate).toBe(state.visitDate);
+  //     expect(newState.assignedStreets).not.toBe(state.assignedStreets);
+  //     expect(newState.pastoralVisits).not.toBe(state.pastoralVisits);
+  //   });
+
+  // array content checks
+  it("should have changed content of pastoralVisit containing entrances with houses streets that has been deleted and assignedStreets", () => {
+    expect(newEntrancesIds.length).toBe(initialEntrancesIds.length);
+
+    expect(newEntrancesIds).toEqual(
+      expect.arrayContaining(replecedEntrancesIds)
     );
 
-    const newState = reducer(state, {
-      type: ActionTypes.CHANGE_ASSIGNED_STREETS,
-      payload: {
-        assignedStreetsIds: newAssignedStreetsIds,
-      },
-    });
-
-    it("should change reference in changed properties", () => {
-      expect(newState).not.toBe(state);
-
-      expect(newState.id).toBe(state.id);
-      expect(newState.reeceDate).toBe(state.reeceDate);
-      expect(newState.visitDate).toBe(state.visitDate);
-      expect(newState.assignedStreets).not.toBe(state.assignedStreets);
-      expect(newState.pastoralVisits).not.toBe(state.pastoralVisits);
-    });
-
-    // array content checks
-    it("should have changed content of pastoralVisit containing entrances with houses streets that has been deleted and assignedStreets", () => {
-      expect(newEntrancesIds.length).toBe(initialEntrancesIds.length);
-
-      expect(newEntrancesIds).toEqual(
-        expect.arrayContaining(replecedEntrancesIds)
-      );
-
-      expect(newEntrancesIds).not.toEqual(
-        expect.arrayContaining(entrancesToReplece)
-      );
-    });
+    expect(newEntrancesIds).not.toEqual(
+      expect.arrayContaining(entrancesToReplece)
+    );
   });
 });
