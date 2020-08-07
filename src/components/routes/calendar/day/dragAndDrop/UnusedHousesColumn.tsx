@@ -10,14 +10,18 @@ import { SelectionState } from "../selection/selectionReducer";
 
 interface Props {
   assignedStreets: Day_day_assignedStreets[];
-  onHouseSelected: (columnId: string, itemId: string) => void;
   selection: SelectionState;
+  onHousesSelect: (columnId: string, itemsIds: string[]) => void;
+  onHouseSelect: (columnId: string, itemId: string) => void;
+  onHousesUnselect: (itemsIds: string[]) => void;
 }
 
 const UnusedHousesColumn: React.FC<Props> = ({
   assignedStreets,
-  onHouseSelected,
   selection,
+  onHousesSelect,
+  onHouseSelect,
+  onHousesUnselect,
 }) => {
   const unusedHouses = useMemo(
     () => assignedStreets.flatMap(({ unusedHouses }) => unusedHouses),
@@ -29,9 +33,11 @@ const UnusedHousesColumn: React.FC<Props> = ({
       droppableId={"unusedHouses"}
       selection={selection}
       getElementCategory={extractHouseCategory}
+      onItemSelect={onHouseSelect}
+      onItemsUnselect={onHousesUnselect}
       getItemNumber={extractHouseNumber}
       renderListItemContent={renderHouseItemContent}
-      onItemSelected={onHouseSelected}
+      onItemsSelect={onHousesSelect}
       title={"Nieużywane domy"}
     />
   );

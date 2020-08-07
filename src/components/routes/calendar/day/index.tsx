@@ -69,6 +69,11 @@ import {
   AddEntrances,
 } from "../../../../generated/AddEntrances";
 
+import {
+  updateStreets,
+  assignDayStateAfterAssignedStreetsChanged,
+} from "./cacheActions";
+
 const drawerWidth = 240;
 
 type Props = RouteComponentProps<{
@@ -129,19 +134,36 @@ const DayManager: React.FC<Props> = ({ match }) => {
   >(CHANGE_ASSIGNED_STREETS, {
     onCompleted: (data) => {
       if (!data.updateDay) return;
-      // assignDayStateAfterAssignedStreetsChanged(dayId, data.updateDay);
+      assignDayStateAfterAssignedStreetsChanged(
+        dayQueryVariables,
+        data.updateDay
+      );
     },
   });
 
-  const handleItemSelection = useCallback(
-    (columnId: string, itemId: string) => {
+  const handleSelectMultiple = useCallback(
+    (columnId: string, itemsIds: string[]) => {
       dispathSelection({
         type: SelectAction.SELECT,
-        payload: { itemId, columnId },
+        payload: { itemsIds, columnId },
       });
     },
     []
   );
+
+  const handleUnselectMultiple = useCallback((itemsIds: string[]) => {
+    dispathSelection({
+      type: SelectAction.UNSELECT,
+      payload: { itemsIds },
+    });
+  }, []);
+
+  const handleToggleOne = useCallback((columnId: string, itemId: string) => {
+    dispathSelection({
+      type: SelectAction.TOGGLE_ONE,
+      payload: { columnId, itemId },
+    });
+  }, []);
 
   const handleEntrancesCreation = useCallback(
     (housesIds: string[], pastoralVisitId: string) => {
@@ -248,6 +270,12 @@ const DayManager: React.FC<Props> = ({ match }) => {
   const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
 
   const handleStreetSubmitChange = () => {
+    const removedStreets: string[] = assignedStreets
+      .map(({ id }) => id)
+      .filter((id) => !tempAssignedStreets.includes(id));
+
+    updateStreets(removedStreets, dayQueryVariables);
+
     changeAssignedStreets({
       variables: {
         season: currentSeason.id,
@@ -290,7 +318,9 @@ const DayManager: React.FC<Props> = ({ match }) => {
             <UnusedHousesColumn
               assignedStreets={assignedStreets}
               selection={selection}
-              onHouseSelected={handleItemSelection}
+              onHousesSelect={handleSelectMultiple}
+              onHouseSelect={handleToggleOne}
+              onHousesUnselect={handleUnselectMultiple}
             />
           </div>
         </Drawer>
@@ -315,15 +345,17 @@ const DayManager: React.FC<Props> = ({ match }) => {
                   items={entrances}
                   droppableId={id}
                   selection={selection}
-                  onItemSelected={handleItemSelection}
-                  getItemNumber={extractEntranceHouseNumber}
-                  getElementCategory={extractEntranceHouseCategory}
-                  renderListItemContent={renderEntranceHouseItemContent}
                   title={
                     priest?.username
                       ? `ks. ${(priest?.username).split(" ")[1]}`
                       : "Brak kapłana"
                   }
+                  onItemsSelect={handleSelectMultiple}
+                  onItemSelect={handleToggleOne}
+                  onItemsUnselect={handleUnselectMultiple}
+                  getItemNumber={extractEntranceHouseNumber}
+                  getElementCategory={extractEntranceHouseCategory}
+                  renderListItemContent={renderEntranceHouseItemContent}
                 />
               </Grid>
             ))}
