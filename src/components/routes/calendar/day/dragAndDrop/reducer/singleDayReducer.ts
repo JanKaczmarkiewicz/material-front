@@ -16,6 +16,7 @@ export enum ActionTypes {
   CREATE_FAKE_ENTRANCES,
   CREATE_ENTRANCES,
   CHANGE_ASSIGNED_STREETS,
+  ADD_PASTORAL_VISIT,
 }
 
 type Action =
@@ -44,6 +45,10 @@ type Action =
   | {
       type: ActionTypes.CHANGE_ASSIGNED_STREETS;
       payload: { assignedStreetsIds: string[] };
+    }
+  | {
+      type: ActionTypes.ADD_PASTORAL_VISIT;
+      payload: { pastoralVisit: Day_day_pastoralVisits };
     };
 
 type State = Day_day;
@@ -213,6 +218,11 @@ export const reducer = (state: State, action: Action): State => {
 
           pastoralVisit.unusedHouses.push(...splitedHouses[streetId]);
         }
+      });
+
+    case ActionTypes.ADD_PASTORAL_VISIT:
+      return produce(state, (draft) => {
+        draft.pastoralVisits.push(action.payload.pastoralVisit);
       });
 
     default:

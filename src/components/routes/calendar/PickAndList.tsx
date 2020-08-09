@@ -10,6 +10,7 @@ interface BaseProps<T extends ObjectWithId> {
 interface Props<T extends ObjectWithId> extends BaseProps<T> {
   label: string;
   options: T[];
+  max?: number;
   setSelectedItemsIds: (ids: string[]) => void;
 }
 
@@ -17,6 +18,7 @@ const PickAndList = <T extends ObjectWithId>({
   selectedItemsIds,
   options,
   label,
+  max,
   getOptionLabel,
   setSelectedItemsIds,
 }: Props<T>) => {
@@ -34,20 +36,27 @@ const PickAndList = <T extends ObjectWithId>({
     .map((itemId) => options.find(({ id }) => id === itemId)!)
     .filter(Boolean);
 
+  const displayPickComponent = !max || selectedItems.length < max;
+  const displayListComponent = selectedItems.length > 0;
+
   return (
     <div>
-      <ListMultiple<T>
-        items={selectedItems}
-        getOptionLabel={getOptionLabel}
-        onItemRemoval={removeItem}
-      />
-      <PickMultiple<T>
-        selectedItemsIds={selectedItemsIds}
-        items={options}
-        label={label}
-        onItemSelected={addItem}
-        getOptionLabel={getOptionLabel}
-      />
+      {displayListComponent && (
+        <ListMultiple<T>
+          items={selectedItems}
+          getOptionLabel={getOptionLabel}
+          onItemRemoval={removeItem}
+        />
+      )}
+      {displayPickComponent && (
+        <PickMultiple<T>
+          selectedItemsIds={selectedItemsIds}
+          items={options}
+          label={label}
+          onItemSelected={addItem}
+          getOptionLabel={getOptionLabel}
+        />
+      )}
     </div>
   );
 };
