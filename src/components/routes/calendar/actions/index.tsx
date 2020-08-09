@@ -30,18 +30,27 @@ export const EntranceFragment = gql`
   ${HouseFragment}
 `;
 
+export const BaseUserFragment = gql`
+  fragment BaseUserFragment on User {
+    id
+    username
+  }
+`;
 export const PastoralVisitFragment = gql`
   fragment PastoralVisitFragment on PastoralVisit {
     id
     priest {
-      id
-      username
+      ...BaseUserFragment
+    }
+    acolytes {
+      ...BaseUserFragment
     }
     entrances {
       ...EntranceFragment
     }
   }
   ${EntranceFragment}
+  ${BaseUserFragment}
 `;
 
 // actions
@@ -72,6 +81,15 @@ export const DELETE_ENTRANCES = gql`
   mutation DeleteEntrances($input: DeleteManyInput!) {
     deleteEntrances(input: $input)
   }
+`;
+
+export const ADD_PASTORAL_VISIT = gql`
+  mutation AddPastoralVisit($input: AddPastoralVisitInput!) {
+    addPastoralVisit(input: $input) {
+      ...PastoralVisitFragment
+    }
+  }
+  ${PastoralVisitFragment}
 `;
 
 export const RELOCATE_ENTRANCES = gql`

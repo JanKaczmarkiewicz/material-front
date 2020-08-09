@@ -30,9 +30,10 @@ import {
   ADD_ENTRANCES,
   DELETE_ENTRANCES,
   RELOCATE_ENTRANCES,
+  ADD_PASTORAL_VISIT,
 } from "../actions";
 
-import DayMenagerFormModal from "../DayMenagerFormModal";
+import AssignedStreetsFormModal from "./modals/AssignedStreetsFormModal";
 import {
   ChangeAssignedStreets,
   ChangeAssignedStreetsVariables,
@@ -74,6 +75,13 @@ import {
   assignDayStateAfterAssignedStreetsChanged,
 } from "./cacheActions";
 
+import PastoralVisitFormModal from "./modals/PastoralVisitFormModal";
+import { AddPastoralVisitHandler } from "../../../../types/day";
+import {
+  AddPastoralVisitVariables,
+  AddPastoralVisit,
+} from "../../../../generated/AddPastoralVisit";
+
 const drawerWidth = 240;
 
 type Props = RouteComponentProps<{
@@ -84,6 +92,10 @@ const DayManager: React.FC<Props> = ({ match }) => {
   const { currentSeason } = useSeasonContext();
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isAddPastoralVisitFormOpen, setIsAddPastoralVisitFormOpen] = useState<
+    boolean
+  >(false);
+
   const [tempAssignedStreets, setTempAssignedStreets] = useState<string[]>([]);
   const [selection, dispathSelection] = React.useReducer(
     selectionReducer,
@@ -127,6 +139,19 @@ const DayManager: React.FC<Props> = ({ match }) => {
       },
     }
   );
+
+  const [addPastoralVisit] = useMutation<
+    AddPastoralVisit,
+    AddPastoralVisitVariables
+  >(ADD_PASTORAL_VISIT, {
+    onCompleted: (data) => {
+      if (!data.addPastoralVisit) return;
+      dispathDay({
+        type: ActionTypes.ADD_PASTORAL_VISIT,
+        payload: { pastoralVisit: data.addPastoralVisit },
+      });
+    },
+  });
 
   const [changeAssignedStreets] = useMutation<
     ChangeAssignedStreets,
@@ -257,8 +282,23 @@ const DayManager: React.FC<Props> = ({ match }) => {
     [selection.selectedItems]
   );
 
-  const handleModalClose = useCallback(() => setIsEditing(false), []);
-  const handleModalOpen = useCallback(() => setIsEditing(true), []);
+  const handleAssignedStreetsModalClose = useCallback(
+    () => setIsEditing(false),
+    []
+  );
+  const handleAssignedStreetsModalOpen = useCallback(
+    () => setIsEditing(true),
+    []
+  );
+
+  const handleAddPastoralVisitModalOpen = useCallback(
+    () => setIsAddPastoralVisitFormOpen(true),
+    []
+  );
+  const handleAddPastoralVisitModalClose = useCallback(
+    () => setIsAddPastoralVisitFormOpen(false),
+    []
+  );
 
   if (loading) return <div>loading...</div>;
   if (error || !data || !data.day) return <div>error</div>;
@@ -285,9 +325,32 @@ const DayManager: React.FC<Props> = ({ match }) => {
     });
   };
 
+  const handlePastoralVisitAdd: AddPastoralVisitHandler = (formData) => {
+    const input = { ...formData, day: dayQueryVariables.input.id };
+    // run qraphQL action
+    addPastoralVisit({ variables: { input } });
+  };
+
+  const inUsePriests = pastoralVisits
+    .map(({ priest }) => priest?.id!)
+    .filter(Boolean);
+
+  const inUseAcolytes = pastoralVisits
+    .flatMap(({ acolytes }) => acolytes.map(({ id }) => id!))
+    .filter(Boolean);
+
   return (
     <>
-      <DayMenagerFormModal
+      <PastoralVisitFormModal
+        open={isAddPastoralVisitFormOpen}
+        headerText={"Dodaj kolędę tego dnia"}
+        submitText={"Zatwierdz"}
+        usedPriests={inUsePriests}
+        usedAcolytes={inUseAcolytes}
+        onFormSubmit={handlePastoralVisitAdd}
+        onModalClose={handleAddPastoralVisitModalClose}
+      />
+      <AssignedStreetsFormModal
         open={isEditing}
         headerText={"Zmień ulice"}
         submitText={"Zatwierdz zmiany"}
@@ -301,7 +364,7 @@ const DayManager: React.FC<Props> = ({ match }) => {
         }
         setSelectedStreets={setTempAssignedStreets}
         onFormSubmit={handleStreetSubmitChange}
-        onModalClose={handleModalClose}
+        onModalClose={handleAssignedStreetsModalClose}
       />
 
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
@@ -326,13 +389,23 @@ const DayManager: React.FC<Props> = ({ match }) => {
         </Drawer>
         <Container maxWidth={"lg"}>
           <Grid container justify="center" alignItems="center">
-            <Grid item xs={10}>
+            <Grid item xs={9}>
               <Typography variant={"h3"} className={classes.title}>
                 {headerText}
               </Typography>
             </Grid>
-            <Grid item xs={2}>
-              <Button color={"primary"} onClick={handleModalOpen}>
+            <Grid item xs={3}>
+              <Button
+                variant="contained"
+                color={"primary"}
+                onClick={handleAddPastoralVisitModalOpen}
+              >
+                Dodaj
+              </Button>
+              <Button
+                color={"primary"}
+                onClick={handleAssignedStreetsModalOpen}
+              >
                 Dostosuj
               </Button>
             </Grid>
@@ -346,8 +419,8 @@ const DayManager: React.FC<Props> = ({ match }) => {
                   droppableId={id}
                   selection={selection}
                   title={
-                    priest?.username
-                      ? `ks. ${(priest?.username).split(" ")[1]}`
+                    priest
+                      ? `ks. ${priest.username.split(" ")[1]}`
                       : "Brak kapłana"
                   }
                   onItemsSelect={handleSelectMultiple}
