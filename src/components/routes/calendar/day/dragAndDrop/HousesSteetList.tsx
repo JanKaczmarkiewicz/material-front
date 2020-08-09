@@ -121,7 +121,7 @@ const HousesSteetList = <T extends AbstractItemWithIndex>({
 
   const open = Boolean(anchorEl);
 
-  const selectWord = <span className={classes.selectWord}>Zaznacz </span>;
+  const selectWord = <span className={classes.selectWord}>Zaznacz</span>;
   const unselectWord = <span className={classes.unselectWord}>Odznacz</span>;
 
   return (
@@ -141,21 +141,23 @@ const HousesSteetList = <T extends AbstractItemWithIndex>({
             onClose={handleClose}
           >
             <MenuItem onClick={handleSelectOdd}>
-              {selectWord} nieparzyste
+              <span>{selectWord} nieparzyste</span>
             </MenuItem>
             <MenuItem onClick={handleSelectEven}>
-              {selectWord} parzyste
+              <span>{selectWord} parzyste</span>
             </MenuItem>
-            <MenuItem onClick={handleSelectAll}>{selectWord} wszyskie</MenuItem>
+            <MenuItem onClick={handleSelectAll}>
+              <span>{selectWord} wszyskie</span>
+            </MenuItem>
             <Divider />
             <MenuItem onClick={handleUnselectOdd}>
-              {unselectWord} nieparzyste
+              <span>{unselectWord} nieparzyste</span>
             </MenuItem>
             <MenuItem onClick={handleUnselectEven}>
-              {unselectWord} parzyste
+              <span> {unselectWord} parzyste</span>
             </MenuItem>
             <MenuItem onClick={handleUnselectAll}>
-              {unselectWord} wszyskie
+              <span>{unselectWord} wszyskie</span>
             </MenuItem>
           </Menu>
         </ListSubheader>
