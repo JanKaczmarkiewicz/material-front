@@ -4,11 +4,16 @@ import {
   Day_day_pastoralVisits_entrances,
   Day,
   DayVariables,
-} from "../../../../../../generated/Day";
+} from "../../generated/Day";
 import produce from "immer";
-import { DAY } from "../../../actions";
-import { client } from "../../../../../../context/client/ApolloClient";
-import { splitByLabel } from "../../../../../../utils/splitByLabel";
+import { DAY } from "../../components/routes/calendar/actions";
+import { client } from "../client/ApolloClient";
+import { splitByLabel } from "../../utils/splitByLabel";
+import {
+  RelocateEntrancesPayload,
+  DeleteEntrancesPayload,
+  CreateEntrancesPayload,
+} from "../../types/day";
 
 export enum ActionTypes {
   RELOCATE_ENTRANCES,
@@ -22,15 +27,11 @@ export enum ActionTypes {
 type Action =
   | {
       type: ActionTypes.RELOCATE_ENTRANCES;
-      payload: {
-        entrancesIds: string[];
-        sourcePastoralVisitId: string;
-        destinationPastoralVisitId: string;
-      };
+      payload: RelocateEntrancesPayload;
     }
   | {
       type: ActionTypes.DELETE_ENTRANCES;
-      payload: { entrancesIds: string[]; sourcePastoralVisitId: string };
+      payload: DeleteEntrancesPayload;
     }
   | {
       type: ActionTypes.CREATE_ENTRANCES;
@@ -40,7 +41,7 @@ type Action =
     }
   | {
       type: ActionTypes.CREATE_FAKE_ENTRANCES;
-      payload: { housesIds: string[]; destinationPastoralVisitId: string };
+      payload: CreateEntrancesPayload;
     }
   | {
       type: ActionTypes.CHANGE_ASSIGNED_STREETS;
@@ -60,10 +61,7 @@ export const useDayReducer = (variables: DayVariables) => {
       variables,
     });
 
-    if (!query || !query.day) {
-      console.error("day not found");
-      return;
-    }
+    if (!query || !query.day) throw new Error("day not found");
 
     const newState = reducer(query.day, action);
 

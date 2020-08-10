@@ -92,6 +92,14 @@ export const ADD_PASTORAL_VISIT = gql`
   ${PastoralVisitFragment}
 `;
 
+export const UPDATE_PASTORAL_VISIT = gql`
+  mutation UpdatePastoralVisit($input: UpdatePastoralVisitInput!) {
+    updatePastoralVisit(input: $input) {
+      id
+    }
+  }
+`;
+
 export const RELOCATE_ENTRANCES = gql`
   mutation RelocateEntrances($ids: [String!]!, $to: String!) {
     updateEntrances(input: { ids: $ids, pastoralVisit: $to }) {

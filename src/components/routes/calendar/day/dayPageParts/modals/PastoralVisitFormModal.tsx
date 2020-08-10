@@ -1,37 +1,22 @@
 import React, { useState } from "react";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
-import ModalForm from "../ModalForm";
-import PickAndList from "../../PickAndList";
+import ModalForm from "../../ModalForm";
+import PickAndList from "../../../PickAndList";
 
 import {
-  AllUsers,
   AllUsers_priests,
   AllUsers_acolytes,
-} from "../../../../../generated/AllUsers";
-import { BaseUserFragment } from "../../actions";
+} from "../../../../../../generated/AllUsers";
 import { Typography, TextField, makeStyles, Button } from "@material-ui/core";
-import { AddPastoralVisitHandler } from "../../../../../types/day";
 import { Alert } from "@material-ui/lab";
+import { AddPastoralVisitHandler } from "../../../../../../types/day";
+import { useAvailablePeople } from "./useAvailablePeople";
 
-const USERS = gql`
-  query AllUsers {
-    priests: users(input: { role: PRIEST }) {
-      ...BaseUserFragment
-    }
-    acolytes: users(input: { role: ACOLYTE }) {
-      ...BaseUserFragment
-    }
-  }
-  ${BaseUserFragment}
-`;
-
-interface Props {
+export interface Props {
   open: boolean;
+  initialPriestId?: string;
+  initialAcolytesIds?: string[];
   headerText: string;
   submitText: string;
-  usedPriests: string[];
-  usedAcolytes: string[];
   onModalClose: () => void;
   onFormSubmit: AddPastoralVisitHandler;
 }
@@ -40,36 +25,46 @@ const getUsername = (user: AllUsers_acolytes | AllUsers_priests) =>
   user.username;
 
 const PastoralVisitFormModal = (props: Props) => {
-  const { usedPriests, usedAcolytes, onFormSubmit, ...restProps } = props;
+  const {
+    onFormSubmit,
+    initialAcolytesIds = [],
+    initialPriestId = null,
+    ...restProps
+  } = props;
+
   const classes = useStyles();
+
+  const initialPriestsIds = initialPriestId ? [initialPriestId] : [];
+
+  const { loading, error, data } = useAvailablePeople(
+    initialAcolytesIds,
+    initialPriestsIds
+  );
+
   const [hour, setHour] = useState<string>("16:00");
-  const [selectedPriest, setSelectedPriest] = useState<string | null>(null);
-  const [selectedAcolytes, setSelectedAcolytes] = useState<string[]>([]);
-
-  const handleSubmit = () => {
-    onFormSubmit({ priest: selectedPriest, acolytes: selectedAcolytes, hour });
-  };
-
-  const { loading, error, data } = useQuery<AllUsers>(USERS);
+  const [selectedPriest, setSelectedPriest] = useState<string | null>(
+    initialPriestId
+  );
+  const [selectedAcolytes, setSelectedAcolytes] = useState<string[]>(
+    initialAcolytesIds
+  );
 
   if (loading) return <div>loading...</div>;
-
   if (error || !data) return <div>error</div>;
 
-  const { priests: allPriests, acolytes: allAcolytes } = data;
+  const { availableAcolytes, availablePriests } = data;
 
-  const availableAcolytes = allAcolytes.filter(
-    ({ id }) => !usedAcolytes.includes(id)
-  );
-
-  const availablePriests = allPriests.filter(
-    ({ id }) => !usedPriests.includes(id)
-  );
+  const handleSubmit = () =>
+    onFormSubmit({
+      priest: selectedPriest,
+      acolytes: selectedAcolytes,
+      hour,
+    });
 
   const disableFormState =
-    availablePriests.length === 0 ? (
+    !selectedPriest && availablePriests.length === 0 ? (
       <>
-        <Alert severity="error">Brak dostępnych księży w tym dniu.</Alert>
+        <Alert severity="error">Wszyscy księża są zajęci.</Alert>
         <Button onClick={restProps.onModalClose}>Powrót</Button>
       </>
     ) : null;

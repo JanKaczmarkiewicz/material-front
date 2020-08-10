@@ -8,7 +8,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "pretest": "jest --clearCache",
-    "gen:query": "apollo codegen:generate --excludes=node_modules/* --includes=**/*.tsx --endpoint http://localhost:3001 --target typescript --tagName gql --outputFlat src/generated --no-addTypename"
+    "gen": "apollo codegen:generate --excludes=node_modules/* --includes=**/*.tsx --endpoint http://localhost:3001 --target typescript --tagName gql --outputFlat src/generated --no-addTypename"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",

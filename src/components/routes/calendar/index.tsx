@@ -12,7 +12,7 @@ import {
 import { AddDay, AddDayVariables } from "../../../generated/AddDay";
 import { client } from "../../../context/client/ApolloClient";
 import { useHistory } from "react-router-dom";
-import DayMenagerFormModal from "./day/modals/AssignedStreetsFormModal";
+import DayMenagerFormModal from "./day/dayPageParts/modals/AssignedStreetsFormModal";
 
 const DayFragment = gql`
   fragment DayFragment on Day {
@@ -127,7 +127,6 @@ const Calendar = () => {
           open
           headerText={"Dodaj dzień"}
           submitText={"Zaplanuj ten dzień"}
-          day={selectedDayToAdd}
           selectedStreets={selectedStreets}
           setSelectedStreets={setSelectedStreets}
           onFormSubmit={handleDayAddition}

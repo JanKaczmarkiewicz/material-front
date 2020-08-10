@@ -1,4 +1,4 @@
-import { reducer, ActionTypes } from "./singleDayReducer";
+import { reducer, ActionTypes } from "../../../../../../context/day/dayReducer";
 import { Day_day } from "../../../../../../generated/Day";
 import { splitByLabel } from "../../../../../../utils/splitByLabel";
 import { AddEntrances_addEntrances } from "../../../../../../generated/AddEntrances";

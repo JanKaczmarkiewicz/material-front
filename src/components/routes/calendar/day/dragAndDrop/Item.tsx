@@ -1,24 +1,91 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { AbstractItemWithIndex, SelectionData } from "./HousesSteetList";
 import {
-  Day_day_pastoralVisits_entrances as Entrance,
-  Day_day_assignedStreets_unusedHouses as House,
-} from "../../../../../generated/Day";
-import { ListItemText } from "@material-ui/core";
+  Draggable,
+  DraggingStyle,
+  NotDraggingStyle,
+  DraggableStateSnapshot,
+} from "react-beautiful-dnd";
+import { ListItem } from "@material-ui/core";
+import { ToggleHandler } from "../../../../../types/selection";
 
-export const extractEntranceHouseCategory = ({ house }: Entrance) =>
-  extractHouseCategory(house);
+export interface ItemForwardProps<T> {
+  renderListItemContent: (item: T) => React.ReactNode;
+  selectionData: SelectionData | null;
+  columnId: string;
+  toggle: ToggleHandler;
+}
 
-export const extractHouseCategory = (house: House | null) =>
-  house?.street?.name;
+interface Props<T> extends ItemForwardProps<T> {
+  item: T;
+}
 
-export const renderEntranceHouseItemContent = (entrance: Entrance) =>
-  renderHouseItemContent(entrance.house);
+const Item = <T extends AbstractItemWithIndex>({
+  item,
+  selectionData,
+  columnId,
+  toggle,
+  renderListItemContent,
+}: Props<T>) =>
+  useMemo(
+    () => (
+      <Draggable draggableId={item.id} index={item.index} key={item.id}>
+        {(provided, snapshot) => {
+          let baseStyles: object;
 
-export const extractHouseNumber = (house: House | null) => house?.number;
+          if (!selectionData) baseStyles = styles.UNSELECTED;
+          else if (!selectionData.selectedItems.includes(item.id))
+            baseStyles = styles.UNSELECTED;
+          else if (item.id === selectionData.draggedItemId)
+            baseStyles = styles.DRAGGED;
+          else
+            baseStyles = !!selectionData.draggedItemId
+              ? styles.SELECTED_FADED
+              : styles.SELECTED;
 
-export const extractEntranceHouseNumber = (entrance: Entrance) =>
-  extractHouseNumber(entrance.house);
+          const style = {
+            ...baseStyles,
+            ...getStyle(provided.draggableProps?.style, snapshot),
+          };
 
-export const renderHouseItemContent = (house: House | null) => (
-  <ListItemText>{extractHouseNumber(house)}</ListItemText>
-);
+          return (
+            <ListItem
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              innerRef={provided.innerRef}
+              onClick={toggle.bind(null, { columnId, itemId: item.id })}
+              style={style}
+            >
+              {renderListItemContent(item)}
+            </ListItem>
+          );
+        }}
+      </Draggable>
+    ),
+    [selectionData, columnId]
+  );
+
+export default Item;
+
+const styles = {
+  SELECTED: { border: "1px dotted black" },
+  SELECTED_FADED: { border: "1px dotted black", display: "none" },
+  DRAGGED: { backGroundColor: "red", color: "white" },
+  UNSELECTED: {},
+};
+
+export function getStyle(
+  style: DraggingStyle | NotDraggingStyle | undefined,
+  snapshot: DraggableStateSnapshot
+) {
+  if (!snapshot.isDragging) return {};
+
+  if (!snapshot.isDropAnimating) {
+    return style;
+  }
+
+  return {
+    ...style,
+    transitionDuration: `0.001s`,
+  };
+}

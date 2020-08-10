@@ -1,468 +1,54 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 //types
 import { RouteComponentProps } from "react-router-dom";
 
-import {
-  Day,
-  DayVariables,
-  Day_day_pastoralVisits_entrances,
-} from "../../../../generated/Day";
-
 //ui
-import {
-  Container,
-  Drawer,
-  makeStyles,
-  Toolbar,
-  Typography,
-  Grid,
-  Button,
-} from "@material-ui/core";
-import Column from "./dragAndDrop/Column";
-import { DragDropContext, DropResult, DragStart } from "react-beautiful-dnd";
+import { Container } from "@material-ui/core";
 
-//data
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import {
-  DAY,
-  CHANGE_ASSIGNED_STREETS,
-  ADD_ENTRANCES,
-  DELETE_ENTRANCES,
-  RELOCATE_ENTRANCES,
-  ADD_PASTORAL_VISIT,
-} from "../actions";
-
-import AssignedStreetsFormModal from "./modals/AssignedStreetsFormModal";
-import {
-  ChangeAssignedStreets,
-  ChangeAssignedStreetsVariables,
-} from "../../../../generated/ChangeAssignedStreets";
-
-import { Alert } from "@material-ui/lab";
-
-import {
-  useDayReducer,
-  ActionTypes,
-} from "./dragAndDrop/reducer/singleDayReducer";
-import {
-  reducer as selectionReducer,
-  SelectAction,
-  selectionInitialState,
-} from "./selection/selectionReducer";
-import {
-  extractEntranceHouseNumber,
-  extractEntranceHouseCategory,
-  renderEntranceHouseItemContent,
-} from "./dragAndDrop/Item";
-import UnusedHousesColumn from "./dragAndDrop/UnusedHousesColumn";
-import { useSeasonContext } from "../../../../context/Season/SeasonContext";
-import {
-  DeleteEntrances,
-  DeleteEntrancesVariables,
-} from "../../../../generated/DeleteEntrances";
-import {
-  RelocateEntrances,
-  RelocateEntrancesVariables,
-} from "../../../../generated/RelocateEntrances";
-import {
-  AddEntrancesVariables,
-  AddEntrances,
-} from "../../../../generated/AddEntrances";
-
-import {
-  updateStreets,
-  assignDayStateAfterAssignedStreetsChanged,
-} from "./cacheActions";
-
-import PastoralVisitFormModal from "./modals/PastoralVisitFormModal";
-import { AddPastoralVisitHandler } from "../../../../types/day";
-import {
-  AddPastoralVisitVariables,
-  AddPastoralVisit,
-} from "../../../../generated/AddPastoralVisit";
-
-const drawerWidth = 240;
+import DayModals, { ModalType } from "./dayPageParts/modals/index";
+import DayProvider from "../../../../context/day/DayProvider";
+import Header from "./dayPageParts/Header";
+import UnusedHousesDrawer from "./dayPageParts/UnusedHousesDrawer";
+import PastoralVisitsLists from "./dayPageParts/PastoralVisitsLists";
+import DraggingLogic from "./dayPageParts/DraggingLogic";
+import SelectionProvider from "../../../../context/Selection/selectionProvider";
 
 type Props = RouteComponentProps<{
   dayId: string;
 }>;
 
 const DayManager: React.FC<Props> = ({ match }) => {
-  const { currentSeason } = useSeasonContext();
-  const classes = useStyles();
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isAddPastoralVisitFormOpen, setIsAddPastoralVisitFormOpen] = useState<
-    boolean
-  >(false);
+  const [modal, setModal] = useState<ModalType>(ModalType.CLOSED);
 
-  const [tempAssignedStreets, setTempAssignedStreets] = useState<string[]>([]);
-  const [selection, dispathSelection] = React.useReducer(
-    selectionReducer,
-    selectionInitialState
-  );
-
-  const dayQueryVariables: DayVariables = {
-    input: { id: match.params.dayId },
-    season: currentSeason.id,
-  };
-
-  const dispathDay = useCallback(useDayReducer(dayQueryVariables), []);
-
-  const { loading, error, data } = useQuery<Day, DayVariables>(DAY, {
-    variables: dayQueryVariables,
-    onCompleted({ day }) {
-      if (!day) return;
-      setTempAssignedStreets(day.assignedStreets.map(({ id }) => id));
-    },
-  });
-
-  const [relocateEntrances] = useMutation<
-    RelocateEntrances,
-    RelocateEntrancesVariables
-  >(RELOCATE_ENTRANCES);
-
-  const [deleteEntrances] = useMutation<
-    DeleteEntrances,
-    DeleteEntrancesVariables
-  >(DELETE_ENTRANCES);
-
-  const [addEntrances] = useMutation<AddEntrances, AddEntrancesVariables>(
-    ADD_ENTRANCES,
-    {
-      onCompleted: (data) => {
-        if (!data.addEntrances) return;
-        dispathDay({
-          type: ActionTypes.CREATE_ENTRANCES,
-          payload: { entrances: data.addEntrances },
-        });
-      },
-    }
-  );
-
-  const [addPastoralVisit] = useMutation<
-    AddPastoralVisit,
-    AddPastoralVisitVariables
-  >(ADD_PASTORAL_VISIT, {
-    onCompleted: (data) => {
-      if (!data.addPastoralVisit) return;
-      dispathDay({
-        type: ActionTypes.ADD_PASTORAL_VISIT,
-        payload: { pastoralVisit: data.addPastoralVisit },
-      });
-    },
-  });
-
-  const [changeAssignedStreets] = useMutation<
-    ChangeAssignedStreets,
-    ChangeAssignedStreetsVariables
-  >(CHANGE_ASSIGNED_STREETS, {
-    onCompleted: (data) => {
-      if (!data.updateDay) return;
-      assignDayStateAfterAssignedStreetsChanged(
-        dayQueryVariables,
-        data.updateDay
-      );
-    },
-  });
-
-  const handleSelectMultiple = useCallback(
-    (columnId: string, itemsIds: string[]) => {
-      dispathSelection({
-        type: SelectAction.SELECT,
-        payload: { itemsIds, columnId },
-      });
-    },
-    []
-  );
-
-  const handleUnselectMultiple = useCallback((itemsIds: string[]) => {
-    dispathSelection({
-      type: SelectAction.UNSELECT,
-      payload: { itemsIds },
-    });
-  }, []);
-
-  const handleToggleOne = useCallback((columnId: string, itemId: string) => {
-    dispathSelection({
-      type: SelectAction.TOGGLE_ONE,
-      payload: { columnId, itemId },
-    });
-  }, []);
-
-  const handleEntrancesCreation = useCallback(
-    (housesIds: string[], pastoralVisitId: string) => {
-      dispathDay({
-        type: ActionTypes.CREATE_FAKE_ENTRANCES,
-        payload: { housesIds, destinationPastoralVisitId: pastoralVisitId },
-      });
-
-      addEntrances({
-        variables: {
-          input: {
-            houses: housesIds,
-            pastoralVisit: pastoralVisitId,
-          },
-        },
-      });
-    },
-    []
-  );
-
-  const handleEntrancesRelocation = useCallback(
-    (
-      sourcePastoralVisitId: string,
-      destinationPastoralVisitId: string,
-      selectedItemsIds: string[]
-    ) => {
-      dispathDay({
-        type: ActionTypes.RELOCATE_ENTRANCES,
-        payload: {
-          sourcePastoralVisitId,
-          destinationPastoralVisitId,
-          entrancesIds: selectedItemsIds,
-        },
-      });
-
-      relocateEntrances({
-        variables: {
-          ids: selectedItemsIds,
-          to: destinationPastoralVisitId,
-        },
-      });
-    },
-    []
-  );
-
-  const handleEntrancesRemoval = useCallback(
-    (sourcePastoralVisitId: string, selectedEntrances: string[]) => {
-      dispathDay({
-        type: ActionTypes.DELETE_ENTRANCES,
-        payload: { sourcePastoralVisitId, entrancesIds: selectedEntrances },
-      });
-      deleteEntrances({ variables: { input: { ids: selectedEntrances } } });
-    },
-    []
-  );
-
-  const onDragStart = useCallback(({ draggableId, source }: DragStart) => {
-    const id = draggableId;
-
-    dispathSelection({
-      type: SelectAction.START_DRAG,
-      payload: { itemId: id, columnId: source.droppableId },
-    });
-  }, []);
-
-  const onDragEnd = useCallback(
-    (result: DropResult) => {
-      const { destination, source } = result;
-
-      if (!destination || destination.droppableId === source.droppableId) {
-        dispathSelection({ type: SelectAction.CANCEL_DRAG });
-        return;
-      }
-
-      dispathSelection({ type: SelectAction.CLEAR });
-
-      if (source.droppableId === "unusedHouses")
-        handleEntrancesCreation(
-          selection.selectedItems,
-          destination.droppableId
-        );
-      else if (destination.droppableId === "unusedHouses")
-        handleEntrancesRemoval(source.droppableId, selection.selectedItems);
-      else
-        handleEntrancesRelocation(
-          source.droppableId,
-          destination.droppableId,
-          selection.selectedItems
-        );
-    },
-    [selection.selectedItems]
-  );
-
-  const handleAssignedStreetsModalClose = useCallback(
-    () => setIsEditing(false),
-    []
-  );
+  const handleModalClose = useCallback(() => setModal(ModalType.CLOSED), []);
   const handleAssignedStreetsModalOpen = useCallback(
-    () => setIsEditing(true),
+    () => setModal(ModalType.ASSIGNED_STREETS),
     []
   );
 
   const handleAddPastoralVisitModalOpen = useCallback(
-    () => setIsAddPastoralVisitFormOpen(true),
+    () => setModal(ModalType.ADD_PASTORAL_VISIT),
     []
   );
-  const handleAddPastoralVisitModalClose = useCallback(
-    () => setIsAddPastoralVisitFormOpen(false),
-    []
-  );
-
-  if (loading) return <div>loading...</div>;
-  if (error || !data || !data.day) return <div>error</div>;
-
-  const { pastoralVisits, visitDate, assignedStreets } = data.day;
-
-  const currDate = new Date(visitDate);
-
-  const headerText = `Zaplanuj dzień: ${currDate.toLocaleDateString()}r.`;
-
-  const handleStreetSubmitChange = () => {
-    const removedStreets: string[] = assignedStreets
-      .map(({ id }) => id)
-      .filter((id) => !tempAssignedStreets.includes(id));
-
-    updateStreets(removedStreets, dayQueryVariables);
-
-    changeAssignedStreets({
-      variables: {
-        season: currentSeason.id,
-        streets: tempAssignedStreets,
-        id: dayQueryVariables.input.id,
-      },
-    });
-  };
-
-  const handlePastoralVisitAdd: AddPastoralVisitHandler = (formData) => {
-    const input = { ...formData, day: dayQueryVariables.input.id };
-    // run qraphQL action
-    addPastoralVisit({ variables: { input } });
-  };
-
-  const inUsePriests = pastoralVisits
-    .map(({ priest }) => priest?.id!)
-    .filter(Boolean);
-
-  const inUseAcolytes = pastoralVisits
-    .flatMap(({ acolytes }) => acolytes.map(({ id }) => id!))
-    .filter(Boolean);
 
   return (
-    <>
-      <PastoralVisitFormModal
-        open={isAddPastoralVisitFormOpen}
-        headerText={"Dodaj kolędę tego dnia"}
-        submitText={"Zatwierdz"}
-        usedPriests={inUsePriests}
-        usedAcolytes={inUseAcolytes}
-        onFormSubmit={handlePastoralVisitAdd}
-        onModalClose={handleAddPastoralVisitModalClose}
-      />
-      <AssignedStreetsFormModal
-        open={isEditing}
-        headerText={"Zmień ulice"}
-        submitText={"Zatwierdz zmiany"}
-        selectedStreets={tempAssignedStreets}
-        day={currDate}
-        infoComponent={
-          <Alert severity="warning">
-            Usunięcie ulicy spowoduje usunięcie wszyskich domów powiązanych z tą
-            ulicą.
-          </Alert>
-        }
-        setSelectedStreets={setTempAssignedStreets}
-        onFormSubmit={handleStreetSubmitChange}
-        onModalClose={handleAssignedStreetsModalClose}
-      />
-
-      <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-        <Drawer
-          className={classes.drawer}
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          anchor="left"
-        >
-          <div className={classes.drawerContainer}>
-            <Toolbar />
-            <UnusedHousesColumn
-              assignedStreets={assignedStreets}
-              selection={selection}
-              onHousesSelect={handleSelectMultiple}
-              onHouseSelect={handleToggleOne}
-              onHousesUnselect={handleUnselectMultiple}
+    <DayProvider dayId={match.params.dayId}>
+      <SelectionProvider>
+        <DayModals modal={modal} onModalClose={handleModalClose} />
+        <DraggingLogic>
+          <UnusedHousesDrawer />
+          <Container maxWidth={"lg"}>
+            <Header
+              onAddClick={handleAddPastoralVisitModalOpen}
+              onAdjustClick={handleAssignedStreetsModalOpen}
             />
-          </div>
-        </Drawer>
-        <Container maxWidth={"lg"}>
-          <Grid container justify="center" alignItems="center">
-            <Grid item xs={9}>
-              <Typography variant={"h3"} className={classes.title}>
-                {headerText}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Button
-                variant="contained"
-                color={"primary"}
-                onClick={handleAddPastoralVisitModalOpen}
-              >
-                Dodaj
-              </Button>
-              <Button
-                color={"primary"}
-                onClick={handleAssignedStreetsModalOpen}
-              >
-                Dostosuj
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3} justify="center">
-            {pastoralVisits.map(({ id, priest, entrances }) => (
-              <Grid item xs={12} md={2} key={id}>
-                <Column<Day_day_pastoralVisits_entrances>
-                  key={id}
-                  items={entrances}
-                  droppableId={id}
-                  selection={selection}
-                  title={
-                    priest
-                      ? `ks. ${priest.username.split(" ")[1]}`
-                      : "Brak kapłana"
-                  }
-                  onItemsSelect={handleSelectMultiple}
-                  onItemSelect={handleToggleOne}
-                  onItemsUnselect={handleUnselectMultiple}
-                  getItemNumber={extractEntranceHouseNumber}
-                  getElementCategory={extractEntranceHouseCategory}
-                  renderListItemContent={renderEntranceHouseItemContent}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </DragDropContext>
-    </>
+            <PastoralVisitsLists />
+          </Container>
+        </DraggingLogic>
+      </SelectionProvider>
+    </DayProvider>
   );
 };
 
 export default DayManager;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  title: {
-    margin: theme.spacing(2, 0, 3, 0),
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerContainer: {
-    overflow: "auto",
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-}));
