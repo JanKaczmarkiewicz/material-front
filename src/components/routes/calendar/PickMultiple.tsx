@@ -5,15 +5,15 @@ import { ObjectWithId } from "./ListMultiple";
 
 interface Props<T> {
   items: T[];
-  selectedItems: T[];
+  selectedItemsIds: string[];
   label: string;
-  onItemSelected: (item: T) => void;
+  onItemSelected: (id: string) => void;
   getOptionLabel: (item: T) => string;
 }
 
 const PickMultiple = <T extends ObjectWithId>({
   items,
-  selectedItems,
+  selectedItemsIds,
   label,
   onItemSelected,
   getOptionLabel,
@@ -21,7 +21,10 @@ const PickMultiple = <T extends ObjectWithId>({
   const [itemInput, setItemInput] = useState<string>("");
   const classes = useStyles();
   const allowedItems = items.filter(
-    (item) => selectedItems.findIndex(({ id }) => item.id === id) < 0
+    (item) =>
+      selectedItemsIds.findIndex(
+        (selectedItemId) => item.id === selectedItemId
+      ) < 0
   );
   return (
     <div className={classes.root}>
@@ -33,7 +36,7 @@ const PickMultiple = <T extends ObjectWithId>({
         onChange={(_, item) => {
           if (!item) return;
           setItemInput("");
-          onItemSelected(item);
+          onItemSelected(item.id);
         }}
         onInputChange={(_, value) => {
           setItemInput(value);

@@ -10,7 +10,7 @@ import PastoralVisitList from "../routes/data/history/List";
 import PastoralVisit from "../routes/data/history/PastoralVisit";
 import Street from "../routes/data/streets/Street";
 import Calendar from "../routes/calendar";
-import DayManager from "../routes/calendar/day/Day";
+import DayManager from "../routes/calendar/day";
 
 const Router: React.FC = () => {
   return (

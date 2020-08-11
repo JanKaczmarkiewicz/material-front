@@ -1,5 +1,10 @@
 const matchLetters = /\D/g;
 
+export const parseHouseNumber = (houseNumber: string): number => {
+  const withoutLetters = houseNumber.replace(matchLetters, "");
+  return Number.parseInt(withoutLetters, 10);
+};
+
 export const sortByHouseNumber = <T>(
   items: T[],
   getNumber: (item: T) => string | undefined
@@ -10,13 +15,10 @@ export const sortByHouseNumber = <T>(
 
     if (!firstNumber || !secondNumber) return 0;
 
-    const a = firstNumber.replace(matchLetters, "");
-    const b = secondNumber.replace(matchLetters, "");
+    const firstValue = parseHouseNumber(firstNumber);
+    const secondValue = parseHouseNumber(secondNumber);
 
-    const aValue = Number.parseInt(a, 10);
-    const bValue = Number.parseInt(b, 10);
+    if (Number.isNaN(firstValue) || Number.isNaN(secondValue)) return 0;
 
-    if (Number.isNaN(aValue) || Number.isNaN(bValue)) return 0;
-
-    return aValue > bValue ? 1 : -1;
+    return firstValue > secondValue ? 1 : -1;
   });

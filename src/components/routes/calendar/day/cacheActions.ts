@@ -1,293 +1,87 @@
-import { AddEntrance_addEntrance } from "../../../../generated/AddEntrance";
-import { ChangeAssignedStreets_updateDay } from "../../../../generated/ChangeAssignedStreets";
 import {
-  DayVariables,
-  Day,
-  Day_day,
   Day_day_pastoralVisits_entrances_house,
-  Day_day_pastoralVisits,
+  Day_day_assignedStreets,
+  Day,
+  DayVariables,
 } from "../../../../generated/Day";
 import { client } from "../../../../context/client/ApolloClient";
 import { DAY } from "../actions";
-import { getKeys } from "../../../Layout/DataTable/util";
+import { gql } from "apollo-boost";
+import produce from "immer";
+import { splitByLabelWithoutIndex } from "../../../../utils/splitByLabel";
+import { ChangeAssignedStreets_updateDay } from "../../../../generated/ChangeAssignedStreets";
 
-type HousesGroupedByStreetId = {
-  [key: string]: Day_day_pastoralVisits_entrances_house[];
-};
-
-export const removeAllHousesByStreetInDay = (
-  id: string,
-  streets: string[]
-): HousesGroupedByStreetId => {
-  const queryVariables = { input: { id } };
-
-  const query = readDayQuery({ input: { id } });
-
-  if (!query.day) return {};
-
-  const deletedHouses: HousesGroupedByStreetId = {};
-
-  const pastoralVisitsCopy = query.day.pastoralVisits.map((pastoralVisit) => ({
-    ...pastoralVisit,
-    entrances: pastoralVisit.entrances.filter(({ house }) => {
-      const currentEntranceHouseStreetId = house?.street?.id;
-      if (
-        currentEntranceHouseStreetId &&
-        streets.includes(currentEntranceHouseStreetId)
-      ) {
-        deletedHouses[currentEntranceHouseStreetId] = [
-          ...(deletedHouses[currentEntranceHouseStreetId] || []),
-          house!,
-        ];
-
-        return false;
-      }
-      return true;
-    }),
-  }));
-
-  const unusedHousesCopy = query.day.unusedHouses.filter(
-    (house) => !streets.includes(house.street?.id || "")
-  );
-
-  writeDayQuery(queryVariables, {
-    ...query.day,
-    pastoralVisits: pastoralVisitsCopy,
-    unusedHouses: unusedHousesCopy,
-  });
-
-  return deletedHouses;
-};
-
-const readDayQuery = (variables: DayVariables) => {
-  return client.readQuery<Day, DayVariables>({ query: DAY, variables })!;
-};
-
-const writeDayQuery = (variables: DayVariables, data: Day_day) =>
-  client.writeQuery<Day, DayVariables>({
+export const updateStreets = (
+  removedStreetsIds: string[],
+  dayVariables: DayVariables
+) => {
+  const dayQuery = client.readQuery<Day, DayVariables>({
     query: DAY,
-    variables,
-    data: { day: data },
+    variables: dayVariables,
   });
 
-export const assignProperDeletedHousesToDay = (
-  queryVariables: DayVariables,
-  deletedHousesByStreets: HousesGroupedByStreetId
-) => {
-  const query = readDayQuery(queryVariables);
+  if (!dayQuery || !dayQuery.day) return;
 
-  if (!query.day) return;
-
-  const deletedStreetsIds = getKeys(deletedHousesByStreets);
-
-  const commonPartOfStreetsSets = query.day.assignedStreets
-    .map(({ id }) => id)
-    .filter(deletedStreetsIds.includes);
-
-  const properHouses = commonPartOfStreetsSets.flatMap(
-    (key) => deletedHousesByStreets[key]
+  const removedHouses = dayQuery.day.pastoralVisits.flatMap(
+    ({ entrances }) =>
+      entrances
+        .filter(({ house }) =>
+          removedStreetsIds.includes(house?.street?.id || "")
+        )
+        .map(({ house }) => house) as Day_day_pastoralVisits_entrances_house[]
   );
 
-  writeDayQuery(queryVariables, {
-    ...query.day,
-    unusedHouses: [...query.day.unusedHouses, ...properHouses],
-  });
-};
-
-const dayInput = (id: string) => ({
-  input: {
-    id,
-  },
-});
-
-export const addTemporaryEntrance = (
-  dayId: string,
-  houseId: string,
-  pastoralVisitId: string
-) => {
-  const input = dayInput(dayId);
-
-  const query = readDayQuery(input);
-
-  if (!query.day) return;
-
-  const destinationPastoralVisitIndex = query.day.pastoralVisits.findIndex(
-    ({ id }) => id === pastoralVisitId
+  const splitedRemovedHouses = splitByLabelWithoutIndex(
+    removedHouses,
+    (house) => house?.street?.id
   );
 
-  if (destinationPastoralVisitIndex < 0) return;
-
-  const pastoralVisitsCopy = [...query.day.pastoralVisits];
-  const unusedHousesCopy = [...query.day.unusedHouses];
-
-  const houseIndex = unusedHousesCopy.findIndex(
-    (house) => house.id === houseId
-  );
-
-  if (houseIndex < 0) return;
-
-  const house = unusedHousesCopy.splice(houseIndex, 1)[0];
-
-  const newEntrance = {
-    id: house.id, //temp
-    __typename: "Entrance",
-    house: house,
-    comment: null,
-  };
-
-  const destinationPastoralVisitCopy = {
-    ...pastoralVisitsCopy[destinationPastoralVisitIndex],
-  };
-
-  destinationPastoralVisitCopy.entrances = [
-    ...destinationPastoralVisitCopy.entrances,
-    newEntrance,
-  ];
-
-  pastoralVisitsCopy[
-    destinationPastoralVisitIndex
-  ] = destinationPastoralVisitCopy;
-
-  writeDayQuery(input, {
-    ...query.day,
-    unusedHouses: unusedHousesCopy,
-    pastoralVisits: pastoralVisitsCopy,
-  });
-};
-
-export const replaceTemporaryEntranceWithRealOne = (
-  dayId: string,
-  entrance: AddEntrance_addEntrance
-) => {
-  const input = dayInput(dayId);
-
-  const query = readDayQuery(input);
-
-  if (!query.day) return;
-  const pastoralVisitsCopy = [...query.day.pastoralVisits];
-
-  const indexes = findEntranceInPastoralVisits(
-    entrance.house!.id,
-    pastoralVisitsCopy
-  );
-
-  if (!indexes) return;
-
-  const {
-    entranceIndex,
-    pastoralVisitIndex: destinationPastoralVisitIndex,
-  } = indexes;
-
-  const destinationPastoralVisit = {
-    ...pastoralVisitsCopy[destinationPastoralVisitIndex],
-  };
-
-  //replece dummy one with real one
-  const entrancesCopy = [...destinationPastoralVisit.entrances];
-
-  entrancesCopy.splice(entranceIndex, 1, entrance);
-
-  destinationPastoralVisit.entrances = entrancesCopy;
-
-  pastoralVisitsCopy[destinationPastoralVisitIndex] = destinationPastoralVisit;
-
-  writeDayQuery(input, {
-    ...query.day,
-    pastoralVisits: pastoralVisitsCopy,
-  });
-};
-
-const findEntranceInPastoralVisits = (
-  id: string,
-  pastoralVisits: Day_day_pastoralVisits[]
-) => {
-  let pastoralVisitIndex = null;
-  let entranceIndex = null;
-  for (let i = 0; i < pastoralVisits.length; i++) {
-    for (let j = 0; j < pastoralVisits[i].entrances.length; j++) {
-      const entrance = pastoralVisits[i].entrances[j];
-      if (entrance.id === id) {
-        pastoralVisitIndex = i;
-        entranceIndex = j;
+  const fragment = gql`
+    fragment AssignedStreetFragment on Street {
+      name
+      id
+      unusedHouses(season: "${dayVariables.season}"){
+        number
+        street {
+          name
+          id
+        }
       }
     }
-  }
-  if (pastoralVisitIndex === null || entranceIndex === null) return null;
+    `;
 
-  return { pastoralVisitIndex, entranceIndex };
+  for (const streetId of Object.keys(splitedRemovedHouses)) {
+    const streetQuery = client.readFragment<Day_day_assignedStreets>({
+      id: streetId,
+      fragment,
+    });
+
+    if (!streetQuery) continue;
+
+    const updatedStreet = produce(streetQuery, (draft) => {
+      draft.unusedHouses.push(...splitedRemovedHouses[streetId]);
+    });
+
+    client.writeFragment<Day_day_assignedStreets>({
+      id: streetId,
+      fragment,
+      data: updatedStreet,
+    });
+  }
 };
 
 export const assignDayStateAfterAssignedStreetsChanged = (
-  dayId: string,
-  updatedDay: ChangeAssignedStreets_updateDay
+  dayVariables: DayVariables,
+  day: ChangeAssignedStreets_updateDay
 ) => {
-  const input = dayInput(dayId);
-  const query = readDayQuery(input);
-
-  if (!query.day) return;
-
-  writeDayQuery(input, {
-    ...query.day,
-    ...updatedDay,
+  const query = client.readQuery<Day, DayVariables>({
+    query: DAY,
+    variables: dayVariables,
   });
-};
-
-export const relocateEntranceInCache = (
-  dayId: string,
-  entranceId: string,
-  pastoralVisitId: string
-) => {
-  const index = dayInput(dayId);
-  const query = readDayQuery(index);
-
-  if (!query.day) return;
-
-  const pastoralVisitsCopy = [...query.day.pastoralVisits];
-
-  const indexes = findEntranceInPastoralVisits(entranceId, pastoralVisitsCopy);
-
-  if (!indexes) return;
-
-  const destinationPastoralVisitIndex = query.day.pastoralVisits.findIndex(
-    ({ id }) => id === pastoralVisitId
-  );
-
-  if (destinationPastoralVisitIndex < 0) return;
-
-  const {
-    entranceIndex,
-    pastoralVisitIndex: sourcePastoralVisitIndex,
-  } = indexes;
-
-  const sourceEntrances = [
-    ...pastoralVisitsCopy[sourcePastoralVisitIndex].entrances,
-  ];
-
-  //delete entrance from cache copy
-  const entrance = sourceEntrances.splice(entranceIndex, 1)[0];
-
-  pastoralVisitsCopy[sourcePastoralVisitIndex].entrances = sourceEntrances;
-
-  const destinationPastoralVisitCopy = {
-    ...pastoralVisitsCopy[destinationPastoralVisitIndex],
-  };
-
-  //add updated entrance to cache copy
-  destinationPastoralVisitCopy.entrances = [
-    ...destinationPastoralVisitCopy.entrances,
-    entrance,
-  ];
-
-  pastoralVisitsCopy[
-    destinationPastoralVisitIndex
-  ] = destinationPastoralVisitCopy;
-
-  writeDayQuery(index, {
-    ...query.day,
-    pastoralVisits: pastoralVisitsCopy,
+  if (!query || !query.day) return;
+  client.writeQuery<Day, DayVariables>({
+    query: DAY,
+    variables: dayVariables,
+    data: { day: { ...query.day, ...day } },
   });
-};
-
-export const handleEntranceRemoval = (dayId: string) => {
-  console.error(dayId);
 };

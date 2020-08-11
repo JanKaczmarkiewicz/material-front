@@ -12,8 +12,7 @@ import {
 import { AddDay, AddDayVariables } from "../../../generated/AddDay";
 import { client } from "../../../context/client/ApolloClient";
 import { useHistory } from "react-router-dom";
-import DayMenagerFormModal from "./DayMenagerFormModal";
-import { AllStreets_streets } from "../../../generated/AllStreets";
+import DayMenagerFormModal from "./day/dayPageParts/modals/AssignedStreetsFormModal";
 
 const DayFragment = gql`
   fragment DayFragment on Day {
@@ -50,9 +49,7 @@ const Calendar = () => {
   const [mouth, setMouth] = useState<number>(initialMouth);
   const { currentSeason } = useSeasonContext();
   const [selectedDayToAdd, setSelectedDayToAdd] = useState<Date | null>(null);
-  const [selectedStreets, setSelectedStreets] = useState<AllStreets_streets[]>(
-    []
-  );
+  const [selectedStreets, setSelectedStreets] = useState<string[]>([]);
 
   const handleModalClose = () => setSelectedDayToAdd(null);
   const handleModalOpen = (day: number) =>
@@ -60,7 +57,7 @@ const Calendar = () => {
 
   const handleDayAddition = () => {
     if (selectedStreets.length === 0 || !selectedDayToAdd) return;
-    const assignedStreets = selectedStreets.map(({ id }) => id);
+
     const tempDate = new Date(selectedDayToAdd);
     tempDate.setDate(tempDate.getDate() - 1);
     const reeceDate = tempDate.toISOString();
@@ -68,7 +65,7 @@ const Calendar = () => {
     addDay({
       variables: {
         input: {
-          assignedStreets: assignedStreets,
+          assignedStreets: selectedStreets,
           season: currentSeason.id,
           reeceDate: reeceDate,
           visitDate: selectedDayToAdd.toISOString(),
@@ -130,7 +127,6 @@ const Calendar = () => {
           open
           headerText={"Dodaj dzień"}
           submitText={"Zaplanuj ten dzień"}
-          day={selectedDayToAdd}
           selectedStreets={selectedStreets}
           setSelectedStreets={setSelectedStreets}
           onFormSubmit={handleDayAddition}

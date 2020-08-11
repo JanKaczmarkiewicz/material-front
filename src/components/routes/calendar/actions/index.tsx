@@ -1,7 +1,8 @@
 import { gql } from "apollo-boost";
 
-export const StreetsFragment = gql`
-  fragment StreetsFragment on Street {
+//fragments
+export const StreetFragment = gql`
+  fragment StreetFragment on Street {
     id
     name
   }
@@ -12,10 +13,10 @@ export const HouseFragment = gql`
     id
     number
     street {
-      ...StreetsFragment
+      ...StreetFragment
     }
   }
-  ${StreetsFragment}
+  ${StreetFragment}
 `;
 
 export const EntranceFragment = gql`
@@ -29,36 +30,42 @@ export const EntranceFragment = gql`
   ${HouseFragment}
 `;
 
+export const BaseUserFragment = gql`
+  fragment BaseUserFragment on User {
+    id
+    username
+  }
+`;
 export const PastoralVisitFragment = gql`
   fragment PastoralVisitFragment on PastoralVisit {
     id
     priest {
-      id
-      username
+      ...BaseUserFragment
+    }
+    acolytes {
+      ...BaseUserFragment
     }
     entrances {
       ...EntranceFragment
     }
   }
   ${EntranceFragment}
+  ${BaseUserFragment}
 `;
 
-export const DELETE_ENTRANCE = gql`
-  mutation DeleteEntrance($input: DeleteOneInput!) {
-    deleteEntrance(input: $input) {
-      id
-    }
-  }
-`;
-
+// actions
 export const CHANGE_ASSIGNED_STREETS = gql`
-  mutation ChangeAssignedStreets($id: String!, $streets: [String]!) {
+  mutation ChangeAssignedStreets(
+    $id: String!
+    $streets: [String]!
+    $season: String!
+  ) {
     updateDay(input: { id: $id, assignedStreets: $streets }) {
       assignedStreets {
-        ...StreetsFragment
-      }
-      unusedHouses {
-        ...HouseFragment
+        ...StreetFragment
+        unusedHouses(season: $season) {
+          ...HouseFragment
+        }
       }
       pastoralVisits {
         ...PastoralVisitFragment
@@ -66,21 +73,44 @@ export const CHANGE_ASSIGNED_STREETS = gql`
     }
   }
   ${PastoralVisitFragment}
-  ${StreetsFragment}
+  ${StreetFragment}
   ${HouseFragment}
 `;
 
-export const RELOCATE_ENTRANCE = gql`
-  mutation RelocateEntrance($id: String!, $to: String!) {
-    updateEntrance(input: { id: $id, pastoralVisit: $to }) {
+export const DELETE_ENTRANCES = gql`
+  mutation DeleteEntrances($input: DeleteManyInput!) {
+    deleteEntrances(input: $input)
+  }
+`;
+
+export const ADD_PASTORAL_VISIT = gql`
+  mutation AddPastoralVisit($input: AddPastoralVisitInput!) {
+    addPastoralVisit(input: $input) {
+      ...PastoralVisitFragment
+    }
+  }
+  ${PastoralVisitFragment}
+`;
+
+export const UPDATE_PASTORAL_VISIT = gql`
+  mutation UpdatePastoralVisit($input: UpdatePastoralVisitInput!) {
+    updatePastoralVisit(input: $input) {
       id
     }
   }
 `;
 
-export const ADD_ENTRANCE = gql`
-  mutation AddEntrance($houseId: String!, $pastoralVisitId: String!) {
-    addEntrance(input: { house: $houseId, pastoralVisit: $pastoralVisitId }) {
+export const RELOCATE_ENTRANCES = gql`
+  mutation RelocateEntrances($ids: [String!]!, $to: String!) {
+    updateEntrances(input: { ids: $ids, pastoralVisit: $to }) {
+      id
+    }
+  }
+`;
+
+export const ADD_ENTRANCES = gql`
+  mutation AddEntrances($input: AddEntrancesInput!) {
+    addEntrances(input: $input) {
       ...EntranceFragment
     }
   }
@@ -88,16 +118,16 @@ export const ADD_ENTRANCE = gql`
 `;
 
 export const DAY = gql`
-  query Day($input: FindOneInput!) {
+  query Day($input: FindOneInput!, $season: String!) {
     day(input: $input) {
       id
-      unusedHouses {
-        ...HouseFragment
-      }
       reeceDate
       visitDate
       assignedStreets {
-        ...StreetsFragment
+        ...StreetFragment
+        unusedHouses(season: $season) {
+          ...HouseFragment
+        }
       }
       pastoralVisits {
         ...PastoralVisitFragment
@@ -105,6 +135,6 @@ export const DAY = gql`
     }
   }
   ${PastoralVisitFragment}
-  ${StreetsFragment}
   ${EntranceFragment}
+  ${StreetFragment}
 `;
