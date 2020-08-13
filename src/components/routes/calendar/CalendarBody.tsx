@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Calendar_season_days as Day } from "../../../generated/Calendar";
+import { useSeasonContext } from "../../../context/Season/SeasonContext";
 
 interface Props {
   mouth: number;
@@ -15,12 +16,10 @@ interface Props {
   plannedDays: Day[];
 }
 
-const season = 2020; //TODO
-
-const getMonthDays = (mouth: number) => {
+const getMonthDays = (year: number, mouth: number) => {
   const nextMouth = mouth + 1;
-  const to = new Date(season, nextMouth, 1).getTime();
-  const from = new Date(season, mouth, 1).getTime();
+  const to = new Date(year, nextMouth, 1).getTime();
+  const from = new Date(year, mouth, 1).getTime();
   return Math.floor((to - from) / (1000 * 60 * 60 * 24));
 };
 
@@ -32,7 +31,8 @@ const useStyles = makeStyles(() => ({
 
 const CalendarBody: React.FC<Props> = ({ mouth, plannedDays, onAddNewDay }) => {
   const classnames = useStyles();
-  const days = getMonthDays(mouth);
+  const { currentSeason } = useSeasonContext();
+  const days = getMonthDays(currentSeason.year, mouth);
   return (
     <Grid container spacing={2} className={classnames.root}>
       {new Array(days)
