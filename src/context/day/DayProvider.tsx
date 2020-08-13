@@ -113,15 +113,13 @@ const DayProvider: React.FC<Props> = ({ children, dayId }) => {
 
   const addPastoralVisitHandler: AddPastoralVisitHandler = useCallback(
     (payload) => {
-      if (!data?.day) return;
-
       addPastoralVisitMutation({
         variables: {
-          input: { day: data.day.id, ...payload },
+          input: { day: data?.day?.id!, ...payload },
         },
       });
     },
-    []
+    [data?.day]
   );
 
   const handleFakeEntrancesCreation: CreateEntrancesHandler = useCallback(
