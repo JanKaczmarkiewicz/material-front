@@ -48,6 +48,7 @@ const DraggingLogic: React.FC = ({ children }) => {
   );
 
   const onDragStart = useCallback(({ draggableId, source }: DragStart) => {
+    //TODO checks
     const id = draggableId;
 
     startDrag({ columnId: source.droppableId, itemId: id });
