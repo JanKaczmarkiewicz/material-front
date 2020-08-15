@@ -9,11 +9,17 @@ import {
 import { useSelectionContext } from "../../../../../context/Selection/selectionContext";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { green, red } from "@material-ui/core/colors";
+import { UnselectHandler, SelectHandler } from "../../../../../types/selection";
 
-interface Props {
+interface Props extends ForwardProps {
   odd: string[];
   even: string[];
   columnId: string;
+}
+
+export interface ForwardProps {
+  onSelect: SelectHandler;
+  onUnselect: UnselectHandler;
 }
 
 const GroupMenu: React.FC<Props> = ({ odd, even, columnId }) => {

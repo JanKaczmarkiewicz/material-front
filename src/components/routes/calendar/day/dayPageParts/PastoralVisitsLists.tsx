@@ -7,23 +7,26 @@ import {
   renderEntranceHouseItemContent,
 } from "../dragAndDrop/ItemUtils";
 import { useDayContext } from "../../../../../context/day/DayContext";
-import { Day_day_pastoralVisits_entrances } from "../../../../../generated/Day";
 
-interface Props {}
+interface Props {
+  onOpenSettings: (id: string) => void;
+}
 
-const PastoralVisitsLists: React.FC<Props> = (props) => {
+const PastoralVisitsLists: React.FC<Props> = ({ onOpenSettings }) => {
   const {
     day: { pastoralVisits },
   } = useDayContext();
+
   return useMemo(
     () => (
       <Grid container spacing={3} justify="center">
         {pastoralVisits.map(({ id, priest, entrances }) => (
           <Grid item xs={12} md={2} key={id}>
-            <Column<Day_day_pastoralVisits_entrances>
+            <Column
               key={id}
               items={entrances}
               columnId={id}
+              onOpenSettings={onOpenSettings}
               title={
                 priest ? `ks. ${priest.username.split(" ")[1]}` : "Brak kapłana"
               }
