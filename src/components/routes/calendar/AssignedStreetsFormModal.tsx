@@ -1,10 +1,10 @@
 import React from "react";
 
-import PickAndList from "../../../PickAndList";
+import PickAndList from "./PickAndList";
 import { gql } from "apollo-boost";
-import { AllStreets } from "../../../../../../generated/AllStreets";
+import { AllStreets } from "../../../generated/AllStreets";
 import { useQuery } from "@apollo/react-hooks";
-import ModalForm from "../../ModalForm";
+import ModalForm from "./day/dayPageParts/modals/ModalForm";
 
 const STREETS = gql`
   query AllStreets {

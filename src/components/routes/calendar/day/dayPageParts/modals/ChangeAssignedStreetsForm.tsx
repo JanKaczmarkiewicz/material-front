@@ -9,8 +9,8 @@ import {
   updateStreets,
 } from "../../cacheActions";
 import { useDayContext } from "../../../../../../context/day/DayContext";
-import { CHANGE_ASSIGNED_STREETS } from "../../../actions";
-import AssignedStreetsFormModal from "./AssignedStreetsFormModal";
+import { CHANGE_ASSIGNED_STREETS } from "../../../../../../context/day/actions";
+import AssignedStreetsFormModal from "../../../AssignedStreetsFormModal";
 import { Alert } from "@material-ui/lab";
 
 interface Props {

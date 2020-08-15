@@ -1,4 +1,4 @@
-import { reducer, SelectAction, SelectionState } from "./selectionReducer";
+import { reducer, SelectAction, SelectionState } from "../selectionReducer";
 
 const columnId = "column_id";
 const newColumnId = "new";

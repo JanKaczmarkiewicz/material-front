@@ -5,12 +5,12 @@ import {
   ChangeAssignedStreets,
   ChangeAssignedStreetsVariables,
 } from "../../../../../../generated/ChangeAssignedStreets";
-import { CHANGE_ASSIGNED_STREETS } from "../../../actions";
+import { CHANGE_ASSIGNED_STREETS } from "../../../../../../context/day/actions";
 import {
   assignDayStateAfterAssignedStreetsChanged,
   updateStreets,
 } from "../../cacheActions";
-import AssignedStreetsFormModal from "./AssignedStreetsFormModal";
+import AssignedStreetsFormModal from "../../../AssignedStreetsFormModal";
 import { Alert } from "@material-ui/lab";
 
 interface Props {
