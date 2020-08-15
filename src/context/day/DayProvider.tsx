@@ -10,7 +10,7 @@ import {
   ADD_ENTRANCES,
   ADD_PASTORAL_VISIT,
   UPDATE_PASTORAL_VISIT,
-} from "../../components/routes/calendar/actions";
+} from "./actions";
 import {
   RelocateEntrances,
   RelocateEntrancesVariables,
@@ -62,7 +62,15 @@ const DayProvider: React.FC<Props> = ({ children, dayId }) => {
   const [updatePastoralVisitMutation] = useMutation<
     UpdatePastoralVisit,
     UpdatePastoralVisitVariables
-  >(UPDATE_PASTORAL_VISIT);
+  >(UPDATE_PASTORAL_VISIT, {
+    onCompleted(data) {
+      if (!data.updatePastoralVisit) return;
+      dispathDay({
+        type: ActionTypes.UPDATE_PASTORAL_VISIT,
+        payload: { pastoralVisit: data.updatePastoralVisit },
+      });
+    },
+  });
 
   const [relocateEntrancesMutation] = useMutation<
     RelocateEntrances,
@@ -113,9 +121,11 @@ const DayProvider: React.FC<Props> = ({ children, dayId }) => {
 
   const addPastoralVisitHandler: AddPastoralVisitHandler = useCallback(
     (payload) => {
+      const dayId = data?.day?.id;
+      if (!dayId) return;
       addPastoralVisitMutation({
         variables: {
-          input: { day: data?.day?.id!, ...payload },
+          input: { day: dayId, ...payload },
         },
       });
     },
