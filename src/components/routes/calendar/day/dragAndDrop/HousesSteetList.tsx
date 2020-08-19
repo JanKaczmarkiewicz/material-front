@@ -10,17 +10,10 @@ import {
 
 import { shorterStreetName } from "../../../../../utils/shorterStreetName";
 import Item, { ItemForwardProps } from "./Item";
-import GroupMenu from "./GroupMenu";
+import GroupMenu, { ForwardProps as GroupForwardProps } from "./GroupMenu";
+import { AbstractItemWithIndex } from "../../../../../types/shered";
 
-export interface AbstractItem {
-  id: string;
-}
-
-export interface AbstractItemWithIndex extends AbstractItem {
-  index: number;
-}
-
-interface Props<T> extends ItemForwardProps<T> {
+interface Props<T> extends ItemForwardProps<T>, GroupForwardProps {
   items: T[];
   title: string;
   getItemNumber: (item: T) => string | undefined;
@@ -35,6 +28,8 @@ const HousesSteetList = <T extends AbstractItemWithIndex>({
   title,
   items,
   getItemNumber,
+  onSelect,
+  onUnselect,
   ...restProps
 }: Props<T>) => {
   const classes = useStyles();
@@ -57,6 +52,8 @@ const HousesSteetList = <T extends AbstractItemWithIndex>({
     odd,
     even,
     columnId: restProps.columnId,
+    onSelect,
+    onUnselect,
   };
 
   return (

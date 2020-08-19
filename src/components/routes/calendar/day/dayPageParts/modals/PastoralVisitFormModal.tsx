@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModalForm from "../../ModalForm";
+import ModalForm from "./ModalForm";
 import PickAndList from "../../../PickAndList";
 
 import {

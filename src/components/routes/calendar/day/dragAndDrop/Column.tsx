@@ -1,18 +1,74 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { Paper, Typography } from "@material-ui/core";
+import { Paper, Typography, IconButton } from "@material-ui/core";
 import { splitByLabel } from "../../../../../utils/splitByLabel";
 import { getKeys } from "../../../../Layout/DataTable/util";
-import HousesSteetList, { AbstractItem } from "./HousesSteetList";
+import HousesSteetList from "./HousesSteetList";
 import { useSelectionContext } from "../../../../../context/Selection/selectionContext";
 import { ItemForwardProps } from "./Item";
+import { AbstractItem } from "../../../../../types/shered";
+import { ForwardProps as GroupForwardProps } from "./GroupMenu";
+import SettingsIcon from "@material-ui/icons/Settings";
 
 interface Props<T>
-  extends Omit<Omit<InnerListProps<T>, "selectionData">, "toggle"> {
+  extends Pick<
+    InnerListProps<T>,
+    | "renderListItemContent"
+    | "getElementCategory"
+    | "items"
+    | "columnId"
+    | "getItemNumber"
+  > {
   title: string;
+  onOpenSettings?: (id: string) => void;
 }
 
-interface InnerListProps<T> extends ItemForwardProps<T> {
+const Column = <T extends AbstractItem>({
+  title,
+  onOpenSettings,
+  ...restProps
+}: Props<T>) => {
+  const {
+    selection,
+    toggle,
+    select: onSelect,
+    unselect: onUnselect,
+  } = useSelectionContext();
+
+  const selectionData =
+    selection.currentColumnId === restProps.columnId
+      ? {
+          draggedItemId: selection.currentDraggedItemId,
+          selectedItems: selection.selectedItems,
+        }
+      : null;
+
+  return (
+    <Droppable droppableId={restProps.columnId}>
+      {(provided) => (
+        <div ref={provided.innerRef} {...provided.droppableProps}>
+          <Typography variant={"h6"}>{title}</Typography>
+          {onOpenSettings ? (
+            <IconButton onClick={() => onOpenSettings(restProps.columnId)}>
+              <SettingsIcon />
+            </IconButton>
+          ) : null}
+          <Paper>
+            <InnerListMemorized<T>
+              {...restProps}
+              toggle={toggle}
+              onSelect={onSelect}
+              onUnselect={onUnselect}
+              selectionData={selectionData}
+            />
+          </Paper>
+        </div>
+      )}
+    </Droppable>
+  );
+};
+
+interface InnerListProps<T> extends ItemForwardProps<T>, GroupForwardProps {
   items: T[];
   getElementCategory: (item: T) => string | undefined;
   getItemNumber: (item: T) => string | undefined;
@@ -40,34 +96,5 @@ const InnerList = <T extends AbstractItem>({
 };
 
 const InnerListMemorized = React.memo(InnerList) as typeof InnerList;
-
-const Column = <T extends AbstractItem>({ title, ...restProps }: Props<T>) => {
-  const { selection, toggle } = useSelectionContext();
-
-  const selectionData =
-    selection.currentColumnId === restProps.columnId
-      ? {
-          draggedItemId: selection.currentDraggedItemId,
-          selectedItems: selection.selectedItems,
-        }
-      : null;
-
-  return (
-    <Droppable droppableId={restProps.columnId}>
-      {(provided) => (
-        <div ref={provided.innerRef} {...provided.droppableProps}>
-          <Typography variant={"h6"}>{title}</Typography>
-          <Paper>
-            <InnerListMemorized<T>
-              {...restProps}
-              toggle={toggle}
-              selectionData={selectionData}
-            />
-          </Paper>
-        </div>
-      )}
-    </Droppable>
-  );
-};
 
 export default Column;

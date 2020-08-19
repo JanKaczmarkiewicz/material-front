@@ -12,7 +12,7 @@ import {
 import { AddDay, AddDayVariables } from "../../../generated/AddDay";
 import { client } from "../../../context/client/ApolloClient";
 import { useHistory } from "react-router-dom";
-import DayMenagerFormModal from "./day/dayPageParts/modals/AssignedStreetsFormModal";
+import DayMenagerFormModal from "./AssignedStreetsFormModal";
 
 const DayFragment = gql`
   fragment DayFragment on Day {

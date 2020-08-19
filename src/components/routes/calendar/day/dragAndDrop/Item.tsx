@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { AbstractItemWithIndex, SelectionData } from "./HousesSteetList";
+import { SelectionData } from "./HousesSteetList";
 import {
   Draggable,
   DraggingStyle,
@@ -8,6 +8,7 @@ import {
 } from "react-beautiful-dnd";
 import { ListItem } from "@material-ui/core";
 import { ToggleHandler } from "../../../../../types/selection";
+import { AbstractItemWithIndex } from "../../../../../types/shered";
 
 export interface ItemForwardProps<T> {
   renderListItemContent: (item: T) => React.ReactNode;
@@ -62,7 +63,7 @@ const Item = <T extends AbstractItemWithIndex>({
         }}
       </Draggable>
     ),
-    [selectionData, columnId]
+    [selectionData]
   );
 
 export default Item;

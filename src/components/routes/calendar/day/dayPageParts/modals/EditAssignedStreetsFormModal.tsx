@@ -1,15 +1,15 @@
 import React, { useState } from "react";
+import { useDayContext } from "../../../../../../context/day/DayContext";
 import { useMutation } from "@apollo/react-hooks";
 import {
   ChangeAssignedStreets,
   ChangeAssignedStreetsVariables,
 } from "../../../../../../generated/ChangeAssignedStreets";
+import { CHANGE_ASSIGNED_STREETS } from "../../../../../../context/day/actions";
 import {
   assignDayStateAfterAssignedStreetsChanged,
   updateStreets,
 } from "../../cacheActions";
-import { useDayContext } from "../../../../../../context/day/DayContext";
-import { CHANGE_ASSIGNED_STREETS } from "../../../../../../context/day/actions";
 import AssignedStreetsFormModal from "../../../AssignedStreetsFormModal";
 import { Alert } from "@material-ui/lab";
 
@@ -17,7 +17,7 @@ interface Props {
   onModalClose: () => void;
 }
 
-const ChangeAssignedStreetsForm: React.FC<Props> = ({ onModalClose }) => {
+const EditAssignedStreetsFormModal: React.FC<Props> = ({ onModalClose }) => {
   const {
     day: { assignedStreets },
     dayQueryVariables,
@@ -28,7 +28,6 @@ const ChangeAssignedStreetsForm: React.FC<Props> = ({ onModalClose }) => {
   const [tempAssignedStreets, setTempAssignedStreets] = useState<string[]>(
     assignedStreetsIds
   );
-
   const [changeAssignedStreets] = useMutation<
     ChangeAssignedStreets,
     ChangeAssignedStreetsVariables
@@ -77,4 +76,4 @@ const ChangeAssignedStreetsForm: React.FC<Props> = ({ onModalClose }) => {
   );
 };
 
-export default ChangeAssignedStreetsForm;
+export default EditAssignedStreetsFormModal;

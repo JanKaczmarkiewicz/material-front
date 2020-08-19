@@ -6,7 +6,7 @@ import {
   DayVariables,
 } from "../../generated/Day";
 import produce from "immer";
-import { DAY } from "../../components/routes/calendar/actions";
+import { DAY } from "./actions";
 import { client } from "../client/ApolloClient";
 import { splitByLabel } from "../../utils/splitByLabel";
 import {
@@ -14,6 +14,7 @@ import {
   DeleteEntrancesPayload,
   CreateEntrancesPayload,
 } from "../../types/day";
+import { UpdatePastoralVisit_updatePastoralVisit } from "../../generated/UpdatePastoralVisit";
 
 export enum ActionTypes {
   RELOCATE_ENTRANCES,
@@ -22,6 +23,7 @@ export enum ActionTypes {
   CREATE_ENTRANCES,
   CHANGE_ASSIGNED_STREETS,
   ADD_PASTORAL_VISIT,
+  UPDATE_PASTORAL_VISIT,
 }
 
 type Action =
@@ -50,6 +52,10 @@ type Action =
   | {
       type: ActionTypes.ADD_PASTORAL_VISIT;
       payload: { pastoralVisit: Day_day_pastoralVisits };
+    }
+  | {
+      type: ActionTypes.UPDATE_PASTORAL_VISIT;
+      payload: { pastoralVisit: UpdatePastoralVisit_updatePastoralVisit };
     };
 
 type State = Day_day;
@@ -221,6 +227,22 @@ export const reducer = (state: State, action: Action): State => {
     case ActionTypes.ADD_PASTORAL_VISIT:
       return produce(state, (draft) => {
         draft.pastoralVisits.push(action.payload.pastoralVisit);
+      });
+
+    case ActionTypes.UPDATE_PASTORAL_VISIT:
+      return produce(state, (draft) => {
+        const { pastoralVisit } = action.payload;
+
+        const visitIndex = draft.pastoralVisits.findIndex(
+          ({ id }) => id === pastoralVisit.id
+        );
+
+        if (!visitIndex) return;
+
+        draft.pastoralVisits[visitIndex] = {
+          ...draft.pastoralVisits[visitIndex],
+          ...pastoralVisit,
+        };
       });
 
     default:

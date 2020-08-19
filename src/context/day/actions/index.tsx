@@ -45,6 +45,7 @@ export const PastoralVisitFragment = gql`
     acolytes {
       ...BaseUserFragment
     }
+    hour
     entrances {
       ...EntranceFragment
     }
@@ -96,8 +97,16 @@ export const UPDATE_PASTORAL_VISIT = gql`
   mutation UpdatePastoralVisit($input: UpdatePastoralVisitInput!) {
     updatePastoralVisit(input: $input) {
       id
+      priest {
+        ...BaseUserFragment
+      }
+      acolytes {
+        ...BaseUserFragment
+      }
+      hour
     }
   }
+  ${BaseUserFragment}
 `;
 
 export const RELOCATE_ENTRANCES = gql`

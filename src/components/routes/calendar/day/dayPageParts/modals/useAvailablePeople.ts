@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/react-hooks";
 import { AllUsers } from "../../../../../../generated/AllUsers";
 import { useDayContext } from "../../../../../../context/day/DayContext";
-import { BaseUserFragment } from "../../../actions";
+import { BaseUserFragment } from "../../../../../../context/day/actions";
 import { gql } from "apollo-boost";
 
 const USERS = gql`

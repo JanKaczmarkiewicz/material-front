@@ -5,7 +5,7 @@ import {
   DayVariables,
 } from "../../../../generated/Day";
 import { client } from "../../../../context/client/ApolloClient";
-import { DAY } from "../actions";
+import { DAY } from "../../../../context/day/actions";
 import { gql } from "apollo-boost";
 import produce from "immer";
 import { splitByLabelWithoutIndex } from "../../../../utils/splitByLabel";
