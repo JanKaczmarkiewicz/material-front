@@ -1,0 +1,12 @@
+{
+  "name": "@monorepo/common",
+  "private": "true",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC"
+}

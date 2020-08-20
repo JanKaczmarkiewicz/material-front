@@ -1,7 +1,7 @@
 {
-  "name": "kolenda-client",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.0.1",
+  "name": "@monorepo/web",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
