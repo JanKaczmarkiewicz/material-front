@@ -1,5 +1,5 @@
 {
-  "name": "@monorepo/mobile",
+  "name": "@koleda/mobile",
   "private": true,
   "version": "1.0.0",
   "main": "__generated__/AppEntry.js",
