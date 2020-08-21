@@ -1,8 +1,8 @@
 {
-  "private": true,
+  "private":true,
+  "name": "monorepo",
+  "version": "1.0.0",
   "workspaces": [
     "packages/*"
-  ],
-  "scripts": {},
-  "devDependencies": {}
+  ]
 }
