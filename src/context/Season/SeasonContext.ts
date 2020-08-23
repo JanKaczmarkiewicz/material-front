@@ -1,4 +1,4 @@
-import { createContext } from "shered/dist/context/util";
+import { createContext } from "@koleda/common-utils";
 import { Seasons_seasons as Season } from "../../generated/Seasons";
 
 export type SeasonAPI = {

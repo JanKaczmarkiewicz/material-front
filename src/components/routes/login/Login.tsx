@@ -4,7 +4,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { Avatar, Button, TextField, Typography } from "@material-ui/core";
 
 import MainContainer from "../../Layout/container/MainContainer";
-import { useAuthContext } from "shered/dist/context/Auth/AuthContext";
+import { useAuthContext } from "@koleda/common-context";
 
 export default function SignIn() {
   const classes = useStyles();

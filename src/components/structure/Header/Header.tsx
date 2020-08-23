@@ -15,7 +15,7 @@ import { Menu as MenuIcon } from "@material-ui/icons";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 
 import { seed } from "../../routes";
-import { useAuthContext } from "shered/dist/context/Auth/AuthContext";
+import { useAuthContext } from "@koleda/common-context";
 type Props = {
   handleToggle: () => void;
 };

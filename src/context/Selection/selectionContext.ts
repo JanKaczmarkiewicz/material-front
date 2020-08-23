@@ -1,4 +1,4 @@
-import { createContext } from "shered/dist/context/util";
+import { createContext } from "@koleda/common-utils";
 import { SelectionState } from "./selectionReducer";
 import {
   ToggleHandler,

@@ -1,4 +1,4 @@
-import { createContext } from "shered/dist/context/util";
+import { createContext } from "@koleda/common-utils";
 
 import {
   AddPastoralVisitHandler,
@@ -7,6 +7,7 @@ import {
   CreateEntrancesHandler,
   UpdatePastoralVisitHandler,
 } from "../../types/day";
+
 import { DayVariables, Day_day } from "../../generated/Day";
 
 export type DayAPI = {

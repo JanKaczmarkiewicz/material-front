@@ -4,12 +4,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { BrowserRouter } from "react-router-dom";
 
 import { ApolloProvider } from "@apollo/client";
-import { client } from "shered/dist/context/Client/ApolloClient";
-import AuthProvider, {SReact} from "shered/dist/context/Auth/AuthProvider";
+import { client, AuthProvider } from "@koleda/common-context";
 import App from "./components/App";
-
-console.log(React, SReact)
-
 
 ReactDOM.render(
   <ApolloProvider client={client}>

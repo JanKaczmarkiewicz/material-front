@@ -7,7 +7,7 @@ import {
 } from "../../generated/Day";
 import produce from "immer";
 import { DAY } from "./actions";
-import { client } from "shered/dist/context/Client/ApolloClient";
+import { client } from "@koleda/common-context";
 import { splitByLabel } from "../../utils/splitByLabel";
 import {
   RelocateEntrancesPayload,

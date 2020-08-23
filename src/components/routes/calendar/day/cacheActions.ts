@@ -4,7 +4,7 @@ import {
   Day,
   DayVariables,
 } from "../../../../generated/Day";
-import { client } from "shered/dist/context/Client/ApolloClient";
+import { client } from "@koleda/common-context";
 import { DAY } from "../../../../context/day/actions";
 import { gql } from "@apollo/client";
 import produce from "immer";

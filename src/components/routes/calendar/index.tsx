@@ -10,7 +10,7 @@ import {
   CalendarVariables as ICalendarVariables,
 } from "../../../generated/Calendar";
 import { AddDay, AddDayVariables } from "../../../generated/AddDay";
-import { client } from "shered/dist/context/Client/ApolloClient";
+import { client } from "@koleda/common-context";
 import { useHistory } from "react-router-dom";
 import DayMenagerFormModal from "./AssignedStreetsFormModal";
 
