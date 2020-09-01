@@ -7,14 +7,16 @@ import {
 } from "../../generated/Day";
 import produce from "immer";
 import { DAY } from "./actions";
-import { client } from "@koleda/common-context";
-import { splitByLabel } from "../../utils/splitByLabel";
+import {
+  client, splitByLabel
+} from "@koleda/common";
 import {
   RelocateEntrancesPayload,
   DeleteEntrancesPayload,
   CreateEntrancesPayload,
 } from "../../types/day";
 import { UpdatePastoralVisit_updatePastoralVisit } from "../../generated/UpdatePastoralVisit";
+
 
 export enum ActionTypes {
   RELOCATE_ENTRANCES,
@@ -28,35 +30,35 @@ export enum ActionTypes {
 
 type Action =
   | {
-      type: ActionTypes.RELOCATE_ENTRANCES;
-      payload: RelocateEntrancesPayload;
-    }
+    type: ActionTypes.RELOCATE_ENTRANCES;
+    payload: RelocateEntrancesPayload;
+  }
   | {
-      type: ActionTypes.DELETE_ENTRANCES;
-      payload: DeleteEntrancesPayload;
-    }
+    type: ActionTypes.DELETE_ENTRANCES;
+    payload: DeleteEntrancesPayload;
+  }
   | {
-      type: ActionTypes.CREATE_ENTRANCES;
-      payload: {
-        entrances: Day_day_pastoralVisits_entrances[];
-      };
-    }
-  | {
-      type: ActionTypes.CREATE_FAKE_ENTRANCES;
-      payload: CreateEntrancesPayload;
-    }
-  | {
-      type: ActionTypes.CHANGE_ASSIGNED_STREETS;
-      payload: { assignedStreetsIds: string[] };
-    }
-  | {
-      type: ActionTypes.ADD_PASTORAL_VISIT;
-      payload: { pastoralVisit: Day_day_pastoralVisits };
-    }
-  | {
-      type: ActionTypes.UPDATE_PASTORAL_VISIT;
-      payload: { pastoralVisit: UpdatePastoralVisit_updatePastoralVisit };
+    type: ActionTypes.CREATE_ENTRANCES;
+    payload: {
+      entrances: Day_day_pastoralVisits_entrances[];
     };
+  }
+  | {
+    type: ActionTypes.CREATE_FAKE_ENTRANCES;
+    payload: CreateEntrancesPayload;
+  }
+  | {
+    type: ActionTypes.CHANGE_ASSIGNED_STREETS;
+    payload: { assignedStreetsIds: string[] };
+  }
+  | {
+    type: ActionTypes.ADD_PASTORAL_VISIT;
+    payload: { pastoralVisit: Day_day_pastoralVisits };
+  }
+  | {
+    type: ActionTypes.UPDATE_PASTORAL_VISIT;
+    payload: { pastoralVisit: UpdatePastoralVisit_updatePastoralVisit };
+  };
 
 type State = Day_day;
 
