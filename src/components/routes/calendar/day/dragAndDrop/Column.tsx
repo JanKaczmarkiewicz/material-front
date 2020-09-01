@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { Paper, Typography, IconButton } from "@material-ui/core";
-import { splitByLabel } from "../../../../../utils/splitByLabel";
+import { splitByLabel } from "@koleda/common";
 import { getKeys } from "../../../../Layout/DataTable/util";
 import HousesSteetList from "./HousesSteetList";
 import { useSelectionContext } from "../../../../../context/Selection/selectionContext";
@@ -79,15 +79,16 @@ const InnerList = <T extends AbstractItem>({
   getElementCategory,
   ...restProps
 }: InnerListProps<T>) => {
-  const spitedItems = splitByLabel(items, getElementCategory);
+  const itemsWithIndex = items.map((item, index) => ({ ...item, index }));
+  const splitedItems = splitByLabel(itemsWithIndex, getElementCategory);
 
   return (
     <>
-      {getKeys(spitedItems).map((key) => (
+      {getKeys(splitedItems).map((key) => (
         <HousesSteetList
           key={`c-in-${key}`}
           title={key as string}
-          items={spitedItems[key]}
+          items={splitedItems[key]}
           {...restProps}
         />
       ))}

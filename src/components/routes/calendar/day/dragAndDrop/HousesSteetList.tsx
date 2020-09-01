@@ -1,14 +1,13 @@
 import React from "react";
 
-import { stringToColour } from "../../../../../utils/stringToColor";
 import { List, ListSubheader, Typography, makeStyles } from "@material-ui/core";
 
 import {
   sortByHouseNumber,
-  parseHouseNumber,
-} from "../../../../../utils/sortByHouseNumber";
-
-import { shorterStreetName } from "../../../../../utils/shorterStreetName";
+  stringToColour,
+  shorterStreetName,
+  houseNumberToValue,
+} from "@koleda/common";
 import Item, { ItemForwardProps } from "./Item";
 import GroupMenu, { ForwardProps as GroupForwardProps } from "./GroupMenu";
 import { AbstractItemWithIndex } from "../../../../../types/shered";
@@ -42,7 +41,7 @@ const HousesSteetList = <T extends AbstractItemWithIndex>({
   for (const item of items) {
     const num = getItemNumber(item);
     if (!num) continue;
-    const numValue = parseHouseNumber(num);
+    const numValue = houseNumberToValue(num);
     if (Number.isNaN(numValue)) continue;
     const resultArray = numValue % 2 === 0 ? even : odd;
     resultArray.push(item.id);

@@ -1,15 +1,15 @@
+import { splitByLabel, client } from "@koleda/common";
 import {
   Day_day_pastoralVisits_entrances_house,
   Day_day_assignedStreets,
   Day,
   DayVariables,
 } from "../../../../generated/Day";
-import { client } from "@koleda/common-context";
 import { DAY } from "../../../../context/day/actions";
 import { gql } from "@apollo/client";
 import produce from "immer";
-import { splitByLabelWithoutIndex } from "../../../../utils/splitByLabel";
 import { ChangeAssignedStreets_updateDay } from "../../../../generated/ChangeAssignedStreets";
+
 
 export const updateStreets = (
   removedStreetsIds: string[],
@@ -31,7 +31,7 @@ export const updateStreets = (
         .map(({ house }) => house) as Day_day_pastoralVisits_entrances_house[]
   );
 
-  const splitedRemovedHouses = splitByLabelWithoutIndex(
+  const splitedRemovedHouses = splitByLabel(
     removedHouses,
     (house) => house?.street?.id
   );

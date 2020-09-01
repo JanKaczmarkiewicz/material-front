@@ -4,7 +4,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { BrowserRouter } from "react-router-dom";
 
 import { ApolloProvider } from "@apollo/client";
-import { client, AuthProvider } from "@koleda/common-context";
+import { client, AuthProvider } from "@koleda/common";
 import App from "./components/App";
 
 ReactDOM.render(
